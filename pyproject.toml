@@ -1,15 +1,81 @@
 [tool.poetry]
 name = "spikify"
 version = "0.1.0"
-description = ""
-authors = ["benedettoleto <benny91998@gmail.com>"]
+description = "A Python package to conver signal data to spike data"
+authors = ["Neuromorphic Polito <email@example.com>"]
 readme = "README.md"
+exclude = ["docs", "tests"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 numpy = "^2.1.0"
 scipy = "^1.14.1"
 
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+pytest-cov = "^5.0.0"
+
+[tool.poetry.group.code-quality]
+optional = true
+
+[tool.poetry.group.code-quality.dependencies]
+pyproject-flake8 = '7.0.0'
+black = '24.8.0'
+pydocstyle = '6.3.0'
+
+
+[tool.black]
+line-length = 120
+
+[tool.flake8]
+count = true
+statistics = true
+show-source = true
+max-line-length = 120
+extend-ignore = ["E203"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = [
+    "tests/*",
+]
+
+[tool.coverage.run]
+branch = true
+include = [
+    "spikify/*",
+]
+omit = [
+    "examples/*",
+    "docs/*",
+    "tests/*",
+]
+
+
+[tool.coverage.report]
+
+exclude_also = [
+    "def __repr__",
+    "if self\\.debug",
+    "raise AssertionError",
+    "raise NotImplementedError",
+
+    # Don't complain if non-runnable code isn't run:
+    "if 0:",
+    "if __name__ == .__main__.:",
+
+    # Don't complain about abstract methods, they aren't run:
+    "@(abc\\.)?abstractmethod",
+    ]
+
+ignore_errors = true
+format = 'markdown'
+
+[tool.coverage.xml]
+output = "coverage/reports/coverage.xml"
 
 [build-system]
 requires = ["poetry-core"]
