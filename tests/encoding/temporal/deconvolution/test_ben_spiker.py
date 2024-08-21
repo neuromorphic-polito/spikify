@@ -38,7 +38,6 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         with self.assertRaises(ValueError):
             ben_spiker(signal, bsa_filter_window, bsa_threshold)
 
-
     def test_filter_window_greater_than_signal_length(self):
         """Ensure the function raises an appropriate error when the filter window size is greater than the signal
         length."""
@@ -120,7 +119,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
     def test_non_numeric_input(self):
         """Ensure the function raises an appropriate error when provided with non-numeric input."""
 
-        signal = np.array(['a', 'b', 'c'])
+        signal = np.array(["a", "b", "c"])
         bsa_filter_window = 2
         bsa_threshold = 1
         with self.assertRaises(TypeError):

@@ -1,3 +1,5 @@
+"""Ben Spiker Algorithm."""
+
 import numpy as np
 from scipy.signal.windows import boxcar
 
@@ -33,13 +35,13 @@ def ben_spiker(signal: np.array, bsa_filter_window: int, bsa_threshold: float) -
     # Iterate over the signal to detect spikes
     for t in range(len(signal) - bsa_filter_window + 1):
         # Calculate errors using the filter window
-        segment = signal_copy[t:t + bsa_filter_window]
+        segment = signal_copy[t : t + bsa_filter_window]
         error1 = np.sum(np.abs(segment - filter_window))
         error2 = np.sum(np.abs(segment))
 
         # Update signal and spike array if a spike is detected
         if error1 <= (error2 - bsa_threshold):
-            signal_copy[t:t + bsa_filter_window] -= filter_window
+            signal_copy[t : t + bsa_filter_window] -= filter_window
             spikes[t] = 1
 
     return spikes
