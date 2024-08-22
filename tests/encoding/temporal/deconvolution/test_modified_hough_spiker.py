@@ -42,7 +42,14 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array([0, 0, 0, 0])
         window_length = 3
-        expected_spikes = np.array([0, 0, 0, 0,])
+        expected_spikes = np.array(
+            [
+                0,
+                0,
+                0,
+                0,
+            ]
+        )
         threshold = 0.5
         result = modified_hough_spiker(signal, window_length, threshold)
         np.testing.assert_array_equal(result, expected_spikes)
@@ -118,5 +125,5 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
         signal = np.array([0, 1, 2, 3, 4, 5, 6, 3, 2, 1, 0]) + np.random.randn(11)
         window_length = 3
         threshold = 2
-        result = modified_hough_spiker(signal, window_length,  threshold)
+        result = modified_hough_spiker(signal, window_length, threshold)
         self.assertTrue(np.any(result))

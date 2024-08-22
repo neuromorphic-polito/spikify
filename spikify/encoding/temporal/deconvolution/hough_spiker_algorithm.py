@@ -34,11 +34,11 @@ def hough_spiker(signal: np.array, window_length: int) -> np.array:
     # Iterate over the signal to detect spikes
     for t in range(len(signal_copy) - window_length + 1):
         # Count how many values match or exceed the filter window values
-        match_count = np.sum(signal_copy[t:t + window_length] >= filter_window)
+        match_count = np.sum(signal_copy[t : t + window_length] >= filter_window)
 
         # If all values match or exceed, a spike is detected
         if match_count == window_length:
-            signal_copy[t:t + window_length] -= filter_window
+            signal_copy[t : t + window_length] -= filter_window
             spikes[t] = 1
 
     return spikes

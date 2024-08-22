@@ -41,7 +41,7 @@ def modified_hough_spiker(signal: np.array, window_length: int, threshold: float
 
         # Extract the relevant segment of the signal and the corresponding filter window
         signal_segment = signal_copy[t:end_index]
-        filter_segment = filter_window[:end_index - t]
+        filter_segment = filter_window[: end_index - t]
 
         # Calculate the error for this segment
         error = np.sum(np.maximum(filter_segment - signal_segment, 0))
