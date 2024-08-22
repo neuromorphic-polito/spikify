@@ -4,7 +4,7 @@ import numpy as np
 from scipy.signal.windows import boxcar
 
 
-def ben_spiker(signal: np.array, bsa_filter_window: int, bsa_threshold: float) -> np.ndarray:
+def ben_spiker(signal: np.array, bsa_filter_window: int, bsa_threshold: float) -> np.array:
     """
     Detect spikes in a signal based on a boxcar filter window and a specified threshold.
 
