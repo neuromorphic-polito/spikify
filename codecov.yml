@@ -1,0 +1,24 @@
+codecov:
+  notify:
+    require_ci_to_pass: yes
+
+coverage:
+  status:
+    project:
+      default:
+        target: 100%
+        threshold: 5%
+
+comment:
+  layout: "header, diff, flags, components"
+
+component_management:
+  default_rules:
+    statuses:
+      - type: patch
+        target: auto
+  individual_components:
+    - component_id: encoding_temporal_deconvolution
+      name: Encoding Temporal Deconvolution
+      paths:
+        - "tests/encoding/temporal/deconvolution/**"
