@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 
 
-class TestBenSpikerAlgorithm(unittest.TestCase):
+class TestHoughSpikerAlgorithm(unittest.TestCase):
     """Tests hough_spiker function."""
 
     def test_basic_functionality(self):
