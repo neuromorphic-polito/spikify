@@ -16,6 +16,13 @@ coverage:
 comment:
   layout: "header, diff, flags, components"
 
+project_coverage:
+  statuses:
+    - type: project
+      target: auto
+      branches:
+        - "!main, !dev"
+
 component_management:
   default_rules:  # default rules that will be inherited by all components
     statuses:
