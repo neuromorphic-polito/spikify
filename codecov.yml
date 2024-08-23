@@ -13,10 +13,12 @@ comment:
   layout: "header, diff, flags, components"
 
 component_management:
-  default_rules:
+  default_rules:  # default rules that will be inherited by all components
     statuses:
-      - type: patch
+      - type: project # in this case every component that doens't have a status defined will have a project type one
         target: auto
+        branches:
+          - "!main", "!dev"
   individual_components:
     - component_id: encoding_temporal_deconvolution
       name: Encoding Temporal Deconvolution
