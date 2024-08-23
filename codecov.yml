@@ -19,12 +19,12 @@ component_management:
         target: auto
   individual_components:
     - component_id: ben_spiker_algorithm
-      name: Ben Spiker Algorithm
+      name: BenSpikerAlgorithm
       paths:
         - "spikify/encoding/temporal/deconvolution/ben_spiker_algorithm.py"
         - "tests/encoding/temporal/deconvolution/test_ben_spiker.py"
     - component_id: hough_spiker_algorithm
-      name: Hough Spiker Algorithm
+      name: HoughSpikerAlgorithm
       paths:
         - "spikify/encoding/temporal/deconvolution/hough_spiker_algorithm.py"
         - "tests/encoding/temporal/deconvolution/test_hough_spiker.py"
