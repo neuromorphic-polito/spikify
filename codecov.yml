@@ -21,6 +21,8 @@ component_management:
     statuses:
       - type: project # in this case every component that doesn't have a status defined will have a project type one
         target: auto
+        branches:
+          - "!main, !dev"
   individual_components:
     - component_id: ben_spiker_algorithm
       name: BenSpikerAlgorithm
