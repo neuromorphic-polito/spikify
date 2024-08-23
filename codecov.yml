@@ -1,7 +1,3 @@
-codecov:
-  notify:
-    require_ci_to_pass: yes
-
 coverage:
   status:
     project:
@@ -17,8 +13,6 @@ component_management:
     statuses:
       - type: project # in this case every component that doens't have a status defined will have a project type one
         target: auto
-        branches:
-          - "!dev"
   individual_components:
     - component_id: encoding_temporal_deconvolution
       name: Encoding Temporal Deconvolution
