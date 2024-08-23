@@ -37,5 +37,5 @@ component_management:
       name: PhaseEncodingAlgorithm
       paths:
         - "spikify/encoding/temporal/global_referenced/phase_encoding_algorithm.py"
-        - "tests/encoding/temporal/global_referenced/phase_encoding.py"
+        - "tests/encoding/temporal/global_referenced/test_phase_encoding.py"
 
