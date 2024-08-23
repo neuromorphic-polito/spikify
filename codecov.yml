@@ -23,4 +23,4 @@ component_management:
     - component_id: encoding_temporal_deconvolution
       name: Encoding Temporal Deconvolution
       paths:
-        - "spikify/"
+        - "spikify/encoding/temporal/deconvolution/"
