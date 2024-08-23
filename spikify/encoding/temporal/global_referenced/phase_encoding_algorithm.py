@@ -1,4 +1,5 @@
 """Phase Encoding Algorithm."""
+
 import numpy as np
 
 
@@ -13,7 +14,7 @@ def phase_encoding(signal: np.array, num_bits: int) -> np.array:
     Returns:
      - spikes: A numpy array of the same shape as the signal, with 1 indicating a detected spike, 0 otherwise.
     """
-
+    # Check for invalid inputs
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
@@ -32,14 +33,13 @@ def phase_encoding(signal: np.array, num_bits: int) -> np.array:
     phase = np.arcsin(signal)
 
     # Create phase bins and quantize the phase
-    bins = np.linspace(0, np.pi / 2, 2 ** num_bits + 1)
+    bins = np.linspace(0, np.pi / 2, 2**num_bits + 1)
     levels = np.searchsorted(bins, phase)
 
     # Adjust levels to avoid out-of-range values
-    levels = np.clip(levels, 0, 2 ** num_bits - 1)
+    levels = np.clip(levels, 0, 2**num_bits - 1)
 
     # Convert levels to binary and flatten the result to a 1D spike array
-    spikes = np.unpackbits(levels[:, None].astype(np.uint8), axis=1, bitorder='big')[:, -num_bits:].reshape(
-        -1)
+    spikes = np.unpackbits(levels[:, None].astype(np.uint8), axis=1, bitorder="big")[:, -num_bits:].reshape(-1)
 
     return spikes
