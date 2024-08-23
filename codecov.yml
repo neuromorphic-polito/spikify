@@ -33,4 +33,8 @@ component_management:
       paths:
         - "spikify/encoding/temporal/deconvolution/hough_spiker_algorithm.py"
         - "tests/encoding/temporal/deconvolution/test_hough_spiker.py"
+    - component_id: phase_encoding_algorithm
+      name: PhaseEncodingAlgorithm
+      paths:
+        - "spikify/encoding/temporal/global_referenced/phase_encoding_algorithm.py"
 
