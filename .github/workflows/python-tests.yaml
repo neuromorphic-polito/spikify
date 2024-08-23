@@ -75,6 +75,6 @@ jobs:
           fail_ci_if_error: true
           files: ./coverage.xml,!./cache
           flags: unittests
-          name: coverage-neurobench
+          name: coverage-spikify
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
