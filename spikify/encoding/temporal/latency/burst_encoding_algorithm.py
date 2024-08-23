@@ -1,4 +1,5 @@
 """Burst Encoding Algorithm."""
+
 import numpy as np
 
 
