@@ -3,33 +3,23 @@ codecov:
     require_ci_to_pass: yes
 
 coverage:
+  precision: 2
+  round: down
+  range: "70...90"
+
   status:
-    project:
-      default:
-        target: 100%
-        threshold: 5%
-    patch:
-      default:
-        target: 100%
-        threshold: 5%
+    project: yes
+    patch: yes
+    changes: no
 
 comment:
   layout: "header, diff, flags, components"
-
-project_coverage:
-  statuses:
-    - type: project
-      target: auto
-      branches:
-        - "!main, !dev"
 
 component_management:
   default_rules:  # default rules that will be inherited by all components
     statuses:
       - type: project # in this case every component that doesn't have a status defined will have a project type one
         target: auto
-        branches:
-          - "!main, !dev"
   individual_components:
     - component_id: ben_spiker_algorithm
       name: BenSpikerAlgorithm
@@ -41,3 +31,4 @@ component_management:
       paths:
         - "spikify/encoding/temporal/deconvolution/hough_spiker_algorithm.py"
         - "tests/encoding/temporal/deconvolution/test_hough_spiker.py"
+
