@@ -26,16 +26,11 @@ component_management:
     - component_id: ben_spiker_algorithm
       name: BenSpikerAlgorithm
       paths:
-        - "spikify/encoding/temporal/deconvolution/ben_spiker_algorithm.py"
-        - "tests/encoding/temporal/deconvolution/test_ben_spiker.py"
-    - component_id: hough_spiker_algorithm
-      name: HoughSpikerAlgorithm
-      paths:
-        - "spikify/encoding/temporal/deconvolution/hough_spiker_algorithm.py"
-        - "tests/encoding/temporal/deconvolution/test_hough_spiker.py"
+        - "spikify/encoding/temporal/deconvolution/**"
+        - "tests/encoding/temporal/deconvolution/**"
     - component_id: phase_encoding_algorithm
       name: PhaseEncodingAlgorithm
       paths:
-        - "spikify/encoding/temporal/global_referenced/phase_encoding_algorithm.py"
-        - "tests/encoding/temporal/global_referenced/test_phase_encoding.py"
+        - "spikify/encoding/temporal/global_referenced/**"
+        - "tests/encoding/temporal/global_referenced/**"
 
