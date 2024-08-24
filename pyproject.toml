@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "A Python package to conver signal data to spike data"
 authors = ["Neuromorphic Polito <email@example.com>"]
 readme = "README.md"
-exclude = ["docs", "tests"]
 # homepage = ""
 repository = "https://github.com/neuromorphic-polito/spikify"
 # documentation = "https://hudson-and-thames-arbitragelab.readthedocs-hosted.com/en/latest/index.html"
@@ -24,11 +23,8 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
-[tool.poetry.urls]
-"Bug Reports" = "https://github.com/neuromorphic-polito/spikify/issues"
-
 packages = [
-    { include = "spikify" }
+    { include = "spikify"}
 ]
 
 exclude = ["docs", "tests"]
