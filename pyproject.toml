@@ -5,6 +5,33 @@ description = "A Python package to conver signal data to spike data"
 authors = ["Neuromorphic Polito <email@example.com>"]
 readme = "README.md"
 exclude = ["docs", "tests"]
+# homepage = ""
+repository = "https://github.com/neuromorphic-polito/spikify"
+# documentation = "https://hudson-and-thames-arbitragelab.readthedocs-hosted.com/en/latest/index.html"
+keywords = ["artificial intelligence", "neuromorphic computing", "signal processing", "education"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[tool.poetry.urls]
+"Bug Reports" = "https://github.com/neuromorphic-polito/spikify/issues"
+
+packages = [
+    { include = "spikify" }
+]
+
+exclude = ["docs", "tests"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
