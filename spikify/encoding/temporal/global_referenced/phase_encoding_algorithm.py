@@ -18,6 +18,11 @@ def phase_encoding(signal: np.array, num_bits: int) -> np.array:
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
+    if len(signal) % num_bits != 0:
+        raise ValueError(
+            f"The phase_encoding num_bits ({num_bits}) is not a multiple of the signal length ({len(signal)})."
+        )
+
     # Ensure non-negative signal values
     signal = np.clip(signal, 0, None)
 

@@ -16,5 +16,6 @@ repos:
     - id: flake8
       types: [ python ]
       args:
-      - --ignore= E203,
+        - --max-line-length=120
+        - --ignore= E203,
       #- E203, W503, F401, F403, C901
