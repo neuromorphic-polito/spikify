@@ -52,6 +52,12 @@ black = '24.8.0'
 pydocstyle = '6.3.0'
 pre-commit = "3.8.0"
 
+[too.poetry.group.release]
+optional = true
+
+[too.poetry.group.release.dependencies]
+bump-my-version ="0.26.0"
+
 
 [tool.black]
 line-length = 120
