@@ -21,7 +21,7 @@ def step_forward(signal: np.array, threshold: float) -> np.array:
     for t, value in enumerate(signal):
         if value > base + threshold:
             spike[t] = 1
-            base += thresholds
+            base += threshold
         elif value < base - threshold:
             spike[t] = -1
             base -= threshold
