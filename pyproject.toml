@@ -7,12 +7,14 @@ readme = "README.md"
 # homepage = ""
 repository = "https://github.com/neuromorphic-polito/spikify"
 # documentation = "https://hudson-and-thames-arbitragelab.readthedocs-hosted.com/en/latest/index.html"
+license = "Apache-2.0"
 keywords = ["artificial intelligence", "neuromorphic computing", "signal processing", "education"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Intended Audience :: Education",
     "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
