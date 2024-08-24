@@ -50,6 +50,7 @@ optional = true
 pyproject-flake8 = '7.0.0'
 black = '24.8.0'
 pydocstyle = '6.3.0'
+pre-commit = "3.8.0"
 
 
 [tool.black]

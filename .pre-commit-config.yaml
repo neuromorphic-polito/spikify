@@ -1,0 +1,20 @@
+repos:
+- repo: https://github.com/psf/black
+  rev: 24.8.0
+  hooks:
+    - id: black
+      language_version: python3
+
+- repo: https://github.com/PyCQA/pydocstyle
+  rev: 6.3.0
+  hooks:
+    - id: pydocstyle
+
+- repo: https://github.com/PyCQA/flake8
+  rev: 7.0.0
+  hooks:
+    - id: flake8
+      types: [ python ]
+      args:
+      - --ignore= E203,
+      #- E203, W503, F401, F403, C901
