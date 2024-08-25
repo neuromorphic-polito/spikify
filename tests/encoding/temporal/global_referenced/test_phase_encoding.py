@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 from spikify.encoding.temporal.global_referenced.phase_encoding_algorithm import (
     phase_encoding,
-)  # Adjust this import based on your actual module structure
+)
 
 
 class TestPhaseEncoding(unittest.TestCase):
@@ -14,8 +14,6 @@ class TestPhaseEncoding(unittest.TestCase):
         signal = np.array([0, 1, 2, 3, 4, 5, 6, 3, 2, 1])
         num_bits = 2
         result = phase_encoding(signal, num_bits)
-
-        # Check the length of the result matches the expected length
         self.assertEqual(len(result), len(signal))
 
     def test_empty_signal(self):
@@ -40,8 +38,6 @@ class TestPhaseEncoding(unittest.TestCase):
         signal = np.array([1, 2, 3, 4])
         num_bits = 2
         result = phase_encoding(signal, num_bits)
-
-        # Check that the resulting spike array contains only 0s and 1s
         self.assertTrue(np.all(np.logical_or(result == 0, result == 1)))
 
     def test_single_value_signal(self):
@@ -58,6 +54,4 @@ class TestPhaseEncoding(unittest.TestCase):
         signal = np.random.randn(10000)
         num_bits = 2
         result = phase_encoding(signal, num_bits)
-
-        # Ensure the result length is as expected
         self.assertEqual(len(result), len(signal))
