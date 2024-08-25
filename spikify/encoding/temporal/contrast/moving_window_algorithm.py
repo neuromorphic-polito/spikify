@@ -15,6 +15,10 @@ def moving_window(signal: np.array, window_length: int, threshold: float) -> np.
     Returns:
     - spike (ndarray): Output spike train with 1/-1 values based on moving window logic.
     """
+    # Check for empty signal
+    if len(signal) == 0:
+        raise ValueError("Signal cannot be empty.")
+
     spikes = np.zeros_like(signal, dtype=np.int8)
 
     # Compute the moving window mean and apply thresholds

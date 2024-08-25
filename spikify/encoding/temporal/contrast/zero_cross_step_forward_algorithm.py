@@ -14,6 +14,9 @@ def zero_cross_step_forward(signal: np.array, threshold: int) -> np.array:
     Returns:
     - spike (ndarray): Output spike train based on zero-crossing threshold.
     """
+    if len(signal) == 0:
+        raise ValueError("Signal cannot be empty.")
+
     spike = np.zeros_like(signal, dtype=np.int8)
 
     # Zero out negative values
