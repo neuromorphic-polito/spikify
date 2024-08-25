@@ -61,6 +61,16 @@ class TestBurstEncoding(unittest.TestCase):
         actual_spike_counts = np.sum(result)
         self.assertEqual(actual_spike_counts, expected_spike_counts)
 
+    def test_invalid_stream_length(self):
+        np.random.seed(42)
+        signal = np.random.rand(240)
+        n_max = 4
+        t_min = 2
+        t_max = 6
+        length = 10
+        with self.assertRaises(ValueError):
+            burst_encoding(signal, n_max, t_min, t_max, length)
+
     def test_insufficient_length_for_spikes(self):
         """Test that the function raises an error if the length is insufficient for the spikes and ISI."""
         signal = np.array([1, 1])
