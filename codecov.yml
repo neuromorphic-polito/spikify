@@ -29,8 +29,23 @@ component_management:
         - "spikify/encoding/temporal/deconvolution/**"
         - "tests/encoding/temporal/deconvolution/**"
     - component_id: temporal_encoding_global_referenced_algorithms
-      name: TemplEncGlobAlgo
+      name: TempEncGlobAlgo
       paths:
         - "spikify/encoding/temporal/global_referenced/**"
         - "tests/encoding/temporal/global_referenced/**"
+    - component_id: temporal_encoding_contrast_algorithms
+      name: TempEncContAlgo
+      paths:
+        - "spikify/encoding/temporal/contrast/**"
+        - "tests/encoding/temporal/contrast/**"
+    - component_id: temporal_encoding_latency_algorithms
+      name: TempEncLatAlgo
+      paths:
+        - "spikify/encoding/temporal/latency/**"
+        - "tests/encoding/temporal/latency/**"
+    - component_id: temporal_encoding_rate_algorithms
+      name: TempEncRateAlgo
+      paths:
+        - "spikify/encoding/temporal/rate/**"
+        - "tests/encoding/temporal/rate/**"
 

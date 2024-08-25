@@ -14,6 +14,9 @@ def step_forward(signal: np.array, threshold: float) -> np.array:
     Returns:
     - spike (ndarray): Output spike train with 1/-1 values based on threshold step logic.
     """
+    if len(signal) == 0:
+        raise ValueError("Signal cannot be empty.")
+
     spike = np.zeros_like(signal, dtype=np.int8)
 
     # Base value initialized at the start of the signal
