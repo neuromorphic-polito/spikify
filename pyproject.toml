@@ -77,9 +77,6 @@ testpaths = [
 
 [tool.coverage.run]
 branch = true
-include = [
-    "spikify/*",
-]
 omit = [
     "examples/*",
     "docs/*",
