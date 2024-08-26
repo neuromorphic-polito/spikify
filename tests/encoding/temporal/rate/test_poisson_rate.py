@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from spikify.encoding.temporal.rate.poisson_rate_algorithm import poisson_rate
+from spikify.encoding.rate.poisson_rate_algorithm import poisson_rate
 
 
 class TestPoissonRateEncoding(unittest.TestCase):
