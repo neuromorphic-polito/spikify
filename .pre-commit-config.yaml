@@ -5,10 +5,11 @@ repos:
     - id: black
       language_version: python3
 
-- repo: https://github.com/PyCQA/pydocstyle
-  rev: 6.3.0
+- repo: https://github.com/myint/docformatter
+  rev: v1.7.5
   hooks:
-    - id: pydocstyle
+    - id: docformatter
+      args: [ "--in-place", "--wrap-summaries=120", "--wrap-descriptions=120", "--pre-summary-newline", "--black", "--recursive", "--blank"]
 
 - repo: https://github.com/PyCQA/flake8
   rev: 7.0.0
