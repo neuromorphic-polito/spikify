@@ -36,7 +36,7 @@ jobs:
 
     - name: Check with docformatter
       run: |
-        poetry run pydocstyle .
+        poetry run docformatter .
 
     - name: Run Flake8
       run: |
