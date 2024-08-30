@@ -13,6 +13,7 @@ def threshold_based_representation(signal: np.array, factor: float) -> np.array:
 
     Returns:
     - spike (ndarray): Output spike train based on threshold crossing.
+
     """
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")

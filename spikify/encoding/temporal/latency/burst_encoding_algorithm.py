@@ -16,6 +16,7 @@ def burst_encoding(signal: np.ndarray, n_max: int, t_min: int, t_max: int, lengt
 
     Returns:
         np.ndarray: A 1D array representing the burst-encoded spike train.
+
     """
     # Check for invalid inputs
     if len(signal) == 0:

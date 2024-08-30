@@ -15,6 +15,7 @@ def hough_spiker(signal: np.array, window_length: int) -> np.array:
 
     Returns:
     - spikes: A numpy array of the same shape as the signal, with 1 indicating a detected spike, 0 otherwise.
+
     """
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")

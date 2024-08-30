@@ -3,7 +3,7 @@ name = "spikify"
 version = "0.1.0"
 description = "A Python package to conver signal data to spike data"
 authors = ["Neuromorphic Polito <email@example.com>"]
-readme = "README.md"
+readme = "README.rst"
 # homepage = ""
 repository = "https://github.com/neuromorphic-polito/spikify"
 # documentation = "https://hudson-and-thames-arbitragelab.readthedocs-hosted.com/en/latest/index.html"
@@ -35,6 +35,7 @@ exclude = ["docs", "tests"]
 python = "^3.10"
 numpy = "^2.1.0"
 scipy = "^1.14.1"
+torch = "^2.4.0"
 
 [tool.poetry.group.dev]
 optional = true
@@ -49,7 +50,7 @@ optional = true
 [tool.poetry.group.code-quality.dependencies]
 pyproject-flake8 = '7.0.0'
 black = '24.8.0'
-pydocstyle = '6.3.0'
+docformatter = '1.7.5'
 pre-commit = "3.8.0"
 
 [too.poetry.group.release]
@@ -61,6 +62,15 @@ bump-my-version ="0.26.0"
 
 [tool.black]
 line-length = 120
+
+[tool.docformatter]
+check = true
+recursive = true
+wrap-summaries = 120
+wrap-descriptions = 120
+pre-summary-newline = true
+blank = true
+black = true
 
 [tool.flake8]
 count = true
@@ -105,6 +115,12 @@ format = 'markdown'
 
 [tool.coverage.xml]
 output = "coverage/reports/coverage.xml"
+
+[tool.poetry.extras]
+dev = ["pytest", "pytest-cov"]
+code-quality = ["pyproject-flake8", "black", "docformatter", "pre-commit"]
+release = ["bump-my-version"]
+
 
 [build-system]
 requires = ["poetry-core"]

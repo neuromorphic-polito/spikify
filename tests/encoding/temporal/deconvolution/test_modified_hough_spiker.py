@@ -7,8 +7,8 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
     """Tests modified_hough_spiker function."""
 
     def test_basic_functionality(self):
-        """Ensure the function correctly generates spikes when the signal contains patterns that match the filter
-        window and threshold conditions."""
+        """Ensure the function correctly generates spikes when the signal contains patterns that match the filter window
+        and threshold conditions."""
 
         signal = np.array([0, 1.5, 2, 3, 4, 5, 6, 3, 2, 1, 0])
         window_length = 3
@@ -90,8 +90,8 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
         np.testing.assert_array_equal(result_7, expected_spikes_7)
 
     def test_boundary_conditions(self):
-        """Test how the function handles boundary conditions where the spikes generated occur at the beginning or
-        end of the signal."""
+        """Test how the function handles boundary conditions where the spikes generated occur at the beginning or end of
+        the signal."""
 
         signal = np.array([5, 5, 5, 0, 0])
         window_length = 3

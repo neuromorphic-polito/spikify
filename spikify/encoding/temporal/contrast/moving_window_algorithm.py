@@ -1,4 +1,8 @@
-"""Moving Window Algorithm."""
+"""
+.. raw:: html
+
+    <h2>Moving Window Algorithm</h2>
+"""
 
 import numpy as np
 
@@ -14,6 +18,7 @@ def moving_window(signal: np.array, window_length: int, threshold: float) -> np.
 
     Returns:
     - spike (ndarray): Output spike train with 1/-1 values based on moving window logic.
+
     """
     # Check for empty signal
     if len(signal) == 0:

@@ -1,33 +1,70 @@
 """Poisson Rate Algorithm."""
 
 import numpy as np
+from numpy.typing import NDArray
 
 
-def poisson_rate(signal: np.array, interval: int) -> np.array:
+def poisson_rate(signal: NDArray, interval_lenght: int) -> NDArray:
     """
     Perform Poisson rate encoding on the input signal.
 
-    Args:
-        signal (np.ndarray): The input signal as a NumPy array.
-        interval (int): The interval size for encoding.
+    This function supports both numpy arrays and PyTorch tensors as input. It generates a spike train using a Poisson
+    distribution, where the probability of emitting a spike in a given interval is determined by the normalized rate
+    of the signal.
 
-    Returns:
-        np.ndarray: A 1D array of encoded spike data after Poisson rate encoding.
+    **Algorithm Details**:
+
+    Poisson rate encoding is a type of rate coding used in neural networks to convert continuous signals into spike
+    trains. The Poisson process is a stochastic process that models the occurrence of events (spikes) that are
+    independent of one another and occur with a certain rate over time.
+
+    The probability of observing `n` spikes in a time interval `Δt` is given by the Poisson distribution formula:
+
+    **Usage**::
+
+        import numpy as np
+        try:
+            import torch
+        except ImportError:
+            torch = None  # In case torch is not installed
+
+        # Example with numpy array
+        signal = np.array([0.2, 0.5, 0.8, 1.0])
+        interval_lenght = 2
+        encoded_signal = poisson_rate(signal, interval_lenght)
+
+        # Example with PyTorch tensor
+        if torch:
+            signal_tensor = torch.tensor([0.2, 0.5, 0.8, 1.0])
+            encoded_signal_tensor = poisson_rate(signal_tensor, interval)
+
+    :param signal: The input signal to be encoded. This can be either a numpy ndarray or a torch Tensor.
+    :type signal: Union[np.ndarray, torch.Tensor]
+    :param interval: The size of the interval for encoding the spike train.
+    :type interval: int
+    :return: A 1D array or tensor of encoded spike data after Poisson rate encoding.
+    :rtype: Union[np.ndarray, torch.Tensor]
+    :raises ValueError: If the input signal is empty.
+    :raises ValueError: If the interval is not a multiple of the signal length.
+    :raises TypeError: If the signal is not a numpy ndarray or a torch Tensor.
+
     """
     # Check for invalid inputs
-    if len(signal) == 0:
+    if signal.shape[0] == 0:
         raise ValueError("Signal cannot be empty.")
 
-    if len(signal) % interval != 0:
+    if signal.shape[0] % interval_lenght != 0:
         raise ValueError(
-            f"The poisson_rate interval ({interval}) is not a multiple of the signal length ({len(signal)})."
+            f"The interval ({interval_lenght}) is not a factor of the signal length ({signal.shape[0]}). "
+            "To resolve this, consider trimming or padding the signal to ensure its length is a multiple of the "
+            "interval."
         )
 
     # Ensure non-negative signal values
     signal = np.clip(signal, 0, None)
 
     # Compute mean over the signal reshaped to interval-sized chunks
-    signal = np.mean(signal.reshape(-1, interval), axis=1)
+    signal = np.mean(signal.reshape(-1, interval_lenght), axis=1)
 
     # Normalize the signal
     signal_max = signal.max()
@@ -35,18 +72,21 @@ def poisson_rate(signal: np.array, interval: int) -> np.array:
         signal /= signal_max
 
     # Initialize the spike array
-    spikes = np.zeros((signal.shape[0], interval), dtype=np.int8)
+    spikes = np.zeros((signal.shape[0], interval_lenght), dtype=np.int8)
 
     # Create bins for Poisson rate encoding
-    bins = np.linspace(0, 1, interval + 1)
+    bins = np.linspace(0, 1, interval_lenght + 1)
 
     # Generate Poisson spike trains
     for i, rate in enumerate(signal):
         if rate > 0:
-            ISI = [-np.log(1 - np.random.random()) / (rate * interval)] * interval  # Inter-spike intervals
+            ISI = [
+                -np.log(1 - np.random.random()) / (rate * interval_lenght)
+            ] * interval_lenght  # Inter-spike intervals
             spike_times = np.searchsorted(bins, np.cumsum(ISI)) - 1  # Find spike times
-            spike_times = spike_times[spike_times < interval]  # Clip times within interval
+            spike_times = spike_times[spike_times < interval_lenght]  # Clip times within interval
             spikes[i, spike_times] = 1
 
     # Flatten the 2D array into a 1D spike train
-    return spikes.flatten()
+    spikes = spikes.flatten()
+    return spikes

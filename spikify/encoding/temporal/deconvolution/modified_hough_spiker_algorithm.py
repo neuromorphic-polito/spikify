@@ -17,6 +17,7 @@ def modified_hough_spiker(signal: np.array, window_length: int, threshold: float
 
     Returns:
     - spikes: A numpy array of the same shape as the signal, with 1 indicating a detected spike, 0 otherwise.
+
     """
     # Check for invalid inputs
     if len(signal) == 0:
