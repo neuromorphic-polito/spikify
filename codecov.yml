@@ -46,6 +46,6 @@ component_management:
     - component_id: temporal_encoding_rate_algorithms
       name: TempEncRateAlgo
       paths:
-        - "spikify/encoding/temporal/rate/**"
-        - "tests/encoding/temporal/rate/**"
+        - "spikify/encoding/rate/**"
+        - "tests/encoding/rate/**"
 
