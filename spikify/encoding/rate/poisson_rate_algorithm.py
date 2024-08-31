@@ -12,37 +12,28 @@ def poisson_rate(signal: numpy.ndarray, interval_length: int) -> numpy.ndarray:
     """
     Perform Poisson rate encoding on the input signal.
 
-    This function supports both numpy arrays and PyTorch tensors as input. It generates a spike train using a Poisson
-    distribution, where the probability of emitting a spike in a given interval is determined by the normalized rate
-    of the signal.
+    This function generates a spike train using a Poisson distribution,
+    where the probability of emitting a spike in a given interval is determined by the normalized rate of the signal.
 
-    **Algorithm Details**:
+    See the :ref:`poisson_rate_algorithm_desc` description for a detailed explanation of the Poisson rate encoding
+    algorithm.
 
-    Poisson rate encoding is a type of rate coding used in neural networks to convert continuous signals into spike
-    trains. The Poisson process is a stochastic process that models the occurrence of events (spikes) that are
-    independent of one another and occur with a certain rate over time.
+    **Code Example:**
 
-    The probability of observing `n` spikes in a time interval `Δt` is given by the Poisson distribution formula:
+    .. doctest::
 
-    **Usage**::
+        >>> import numpy as np
+        >>> from spikify.encoding.rate import poisson_rate
+        >>> # Example with numpy array
+        >>> signal = np.array([0.2, 0.5, 0.8, 1.0])
+        >>> # Set seed for reproducibility (optional)
+        >>> np.random.seed(0)
+        >>> interval_length = 2
+        >>> encoded_signal = poisson_rate(signal, interval_length)
+        >>> encoded_signal
+        array([0, 0, 0, 1], dtype=int8)
 
-        import numpy as np
-        try:
-            import torch
-        except ImportError:
-            torch = None  # In case torch is not installed
-
-        # Example with numpy array
-        signal = np.array([0.2, 0.5, 0.8, 1.0])
-        interval_length = 2
-        encoded_signal = poisson_rate(signal, interval_length)
-
-        # Example with PyTorch tensor
-        if torch:
-            signal_tensor = torch.tensor([0.2, 0.5, 0.8, 1.0])
-            encoded_signal_tensor = poisson_rate(signal_tensor, interval)
-
-    :param signal: The input signal to be encoded. This can be either a numpy ndarray or a torch Tensor.
+    :param signal: The input signal to be encoded. This should be a numpy ndarray.
     :type signal: numpy.ndarray
     :param interval_length: The size of the interval for encoding the spike train.
     :type interval_length: int
