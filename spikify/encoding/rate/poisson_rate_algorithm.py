@@ -8,7 +8,7 @@ import numpy
 import numpy as np
 
 
-def poisson_rate(signal: numpy.ndarray, interval_length: int) -> numpy.ndarray:
+def poisson_rate(signal: np.ndarray, interval_length: int) -> np.ndarray:
     """
     Perform Poisson rate encoding on the input signal.
 
@@ -40,8 +40,8 @@ def poisson_rate(signal: numpy.ndarray, interval_length: int) -> numpy.ndarray:
     :return: A 1D array or tensor of encoded spike data after Poisson rate encoding.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty.
-    :raises ValueError: If the interval is not a multiple of the signal length.
-    :raises TypeError: If the signal is not a numpy ndarray
+    :raises ValueError: If the interval is not a factor of the signal length.
+    :raises TypeError: If the signal is not a numpy.ndarray
 
     """
     # Check for invalid inputs

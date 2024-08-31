@@ -1,4 +1,4 @@
-.. _poisson_rate:
+.. _poisson_rate_function:
 
 .. title:: Poisson Rate Algorithm
 
