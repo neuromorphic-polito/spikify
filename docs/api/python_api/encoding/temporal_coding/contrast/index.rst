@@ -8,3 +8,5 @@
 
    moving_window
    step_forward
+   threshold_based
+   zero_cross_step_forward

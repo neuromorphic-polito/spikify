@@ -1,20 +1,42 @@
-"""Zero-crossing Step Forward Algorithm."""
+"""
+.. raw:: html
+
+    <h2>Zero Crossing Step Forward Algorithm</h2>
+"""
 
 import numpy as np
 
 
-def zero_cross_step_forward(signal: np.array, threshold: int) -> np.array:
+def zero_cross_step_forward(signal: np.ndarray, threshold: int) -> np.ndarray:
     """
-    Generate a spike train where positive values crossing a threshold trigger spikes.
+    Perform Zero-Crossing Step-Forward (ZCSF) encoding on the input signal.
 
-    Args:
-    - settings (dict): Configuration settings (requires 'zcsfThreshold').
-    - signal (ndarray): Input signal array.
+    This function generates a spike train based on the positive values of the input signal that exceed a specified
+    threshold. Negative values of the signal are zeroed out (half-wave rectification), and only positive spikes are
+    considered.
 
-    Returns:
-    - spike (ndarray): Output spike train based on zero-crossing threshold.
+    Refer to the :ref:`zero_cross_step_forward_algorithm_desc` for a detailed explanation of the ZCSF encoding
+    algorithm.
+
+    **Usage**::
+
+        import numpy as np
+
+        signal = np.array([-0.2, 0.1, 0.5, 0.0, 1.2, 0.3])
+        threshold = 0.4
+        encoded_signal = zero_cross_step_forward(signal, threshold)
+
+    :param signal: The input signal to be encoded. This should be a numpy ndarray.
+    :type signal: numpy.ndarray
+    :param threshold: The threshold value used to determine spike generation.
+    :type threshold: int
+    :return: A 1D numpy array representing the encoded spike train.
+    :rtype: numpy.ndarray
+    :raises ValueError: If the input signal is empty.
+    :raises TypeError: If the signal is not a numpy ndarray.
 
     """
+
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
