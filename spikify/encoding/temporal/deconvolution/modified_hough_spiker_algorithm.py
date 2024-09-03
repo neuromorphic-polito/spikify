@@ -6,19 +6,7 @@ from scipy.signal.windows import boxcar
 
 
 def modified_hough_spiker(signal: np.array, window_length: int, threshold: float) -> np.array:
-    """
-    Detect spikes in a signal using a modified Hough Spiker method.
-
-    Parameters:
-    - signal: Input signal as a numpy array.
-    - window_length: The length of the boxcar filter window.
-    - threshold: Threshold for detecting spikes. The function detects a spike when the error between the
-                      signal and the filter window is less than or equal to this threshold.
-
-    Returns:
-    - spikes: A numpy array of the same shape as the signal, with 1 indicating a detected spike, 0 otherwise.
-
-    """
+    """Detect spikes in a signal using a modified Hough Spiker method."""
     # Check for invalid inputs
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")

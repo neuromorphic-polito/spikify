@@ -108,7 +108,7 @@ Contents
     :caption: API
     :maxdepth: 1
 
-    api/python_api/index
+    api/python/index
 
 
 
