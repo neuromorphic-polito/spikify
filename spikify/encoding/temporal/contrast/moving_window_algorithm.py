@@ -7,22 +7,48 @@
 import numpy as np
 
 
-def moving_window(signal: np.array, window_length: int, threshold: float) -> np.array:
+def moving_window(signal: np.ndarray, window_length: int) -> np.ndarray:
     """
-    Generate a spike train using a moving window for threshold comparison.
+    Perform Moving Window encoding on the input signal.
 
-    Args:
-    - signal (ndarray): Input signal array.
-    - window_length (int): Length of the moving window.
-    - threshold (float): Threshold value for spike generation
+    This function takes a continuous signal and converts it into a spike train using a moving window and
+    threshold-based approach. A spike is generated when the signal exceeds the calculated `Base` plus or minus a
+    specified `Threshold`.
 
-    Returns:
-    - spike (ndarray): Output spike train with 1/-1 values based on moving window logic.
+    Refer to the :ref:`moving_window_algorithm_desc` for a detailed explanation of the Moving Window encoding
+    algorithm.
+
+    **Code Example:**
+
+    .. doctest::
+
+        >>> import numpy as np
+        >>> from spikify.encoding.temporal.contrast import moving_window
+
+        >>> signal = np.array([0.1, 0.3, 0.2, 0.5, 0.8, 1.0])
+        >>> window_length = 3
+        >>> encoded_signal = moving_window(signal, window_length)
+        >>> encoded_signal
+        array([0, 0, 0, 1, 1, 1], dtype=int8)
+
+    :param signal: The input signal to be encoded. This should be a numpy ndarray.
+    :type signal: numpy.ndarray
+    :param window_length: The size of the sliding window for calculating the base mean.
+    :type window_length: int
+    :return: A 1D numpy array representing the encoded spike train.
+    :rtype: numpy.ndarray
+    :raises ValueError: If the input signal is empty.
+    :raises ValueError: If the window length is greater than the length of the signal.
+    :raises TypeError: If the signal is not a numpy ndarray.
 
     """
+
     # Check for empty signal
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
+
+    variation = np.diff(signal[1:], prepend=signal[0])
+    threshold = np.mean(np.abs(variation))
 
     spikes = np.zeros_like(signal, dtype=np.int8)
 

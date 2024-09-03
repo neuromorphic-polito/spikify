@@ -64,7 +64,6 @@ bump-my-version ="0.26.0"
 line-length = 120
 
 [tool.docformatter]
-check = true
 recursive = true
 wrap-summaries = 120
 wrap-descriptions = 120
