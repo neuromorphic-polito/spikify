@@ -1,4 +1,4 @@
-.. _moving_window:
+.. _moving_window_function:
 
 .. title:: Moving Window
 

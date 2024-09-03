@@ -24,7 +24,6 @@ def moving_window(signal: np.ndarray, window_length: int) -> np.ndarray:
 
         >>> import numpy as np
         >>> from spikify.encoding.temporal.contrast import moving_window
-
         >>> signal = np.array([0.1, 0.3, 0.2, 0.5, 0.8, 1.0])
         >>> window_length = 3
         >>> encoded_signal = moving_window(signal, window_length)

@@ -4,7 +4,6 @@
     <h2>Poisson Rate Algorithm</h2>
 """
 
-import numpy
 import numpy as np
 
 

@@ -7,3 +7,4 @@ Encoding
    :maxdepth: 1
 
    rate/index
+   temporal/index
