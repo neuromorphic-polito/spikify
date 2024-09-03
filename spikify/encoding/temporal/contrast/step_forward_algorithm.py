@@ -19,6 +19,8 @@ def step_forward(signal: np.ndarray, threshold: float) -> np.ndarray:
 
     **Code Example**
 
+    .. doctest::
+
         >>> import numpy as np
         >>> from spikify.encoding.temporal.contrast import step_forward
         >>> signal = np.array([0.1, 0.3, 0.4, 0.2, 0.5, 0.6])
