@@ -119,7 +119,7 @@ Contents
    support
    contributing
    changelog
-   licence_doc
+   licence
 
 * :ref:`genindex`
 * :ref:`modindex`
