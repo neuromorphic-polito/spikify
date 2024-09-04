@@ -17,7 +17,7 @@ def step_forward(signal: np.ndarray, threshold: float) -> np.ndarray:
 
     Refer to the :ref:`step_forward_algorithm_desc` for a detailed explanation of the Step-Forward encoding algorithm.
 
-    **Code Example**
+    **Code Example:**
 
     .. doctest::
 

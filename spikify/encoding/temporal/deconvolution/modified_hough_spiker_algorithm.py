@@ -1,12 +1,50 @@
-"""Modified Hough Spiker Algorithm."""
+"""
+.. raw:: html
+
+    <h2>Modified Hough Spiker Algorithm</h2>
+"""
 
 import numpy as np
-
 from scipy.signal.windows import boxcar
 
 
-def modified_hough_spiker(signal: np.array, window_length: int, threshold: float) -> np.array:
-    """Detect spikes in a signal using a modified Hough Spiker method."""
+def modified_hough_spiker(signal: np.ndarray, window_length: int, threshold: float) -> np.ndarray:
+    """
+    Detect spikes in a signal using the Modified Hough Spiker Algorithm.
+
+    This function detects spikes in an input signal by incorporating a threshold-based
+    error accumulation mechanism. The signal is compared with a convolution result
+    using a boxcar filter, and the error is accumulated over time. If the error remains
+    within a specified threshold, a spike is detected, and the signal is modified.
+
+    Refer to the :ref:`modified_hough_spiker_algorithm_desc` for a detailed explanation of the Modified Hough Spiker
+    Algorithm.
+
+    **Code Example:**
+
+    .. doctest::
+
+        >>> import numpy as np
+        >>> from spikify.encoding.temporal.deconvolution import modified_hough_spiker
+        >>> signal = np.array([0.1, 0.2, 0.3, 1.0, 0.5, 0.3, 0.1])
+        >>> window_length = 3
+        >>> threshold = 0.5
+        >>> spikes = modified_hough_spiker(signal, window_length, threshold)
+        >>> spikes
+        array([0, 0, 0, 0, 0, 0, 0], dtype=int8)
+
+    :param signal: The input signal to be analyzed. This should be a numpy ndarray.
+    :type signal: numpy.ndarray
+    :param window_length: The length of the boxcar filter window.
+    :type window_length: int
+    :param threshold: The threshold value for error accumulation.
+    :type threshold: float
+    :return: A 1D numpy array representing the detected spikes.
+    :rtype: numpy.ndarray
+    :raises ValueError: If the input signal is empty or if the window length is greater than the signal length.
+    :raises TypeError: If the signal is not a numpy ndarray.
+
+    """
     # Check for invalid inputs
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")

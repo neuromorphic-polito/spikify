@@ -1,20 +1,46 @@
-"""Ben Spiker Algorithm."""
+"""
+.. raw:: html
+
+    <h2>Ben Spiker Algorithm</h2>
+"""
 
 import numpy as np
 from scipy.signal.windows import boxcar
 
 
-def ben_spiker(signal: np.array, window_length: int, threshold: float) -> np.array:
+def ben_spiker(signal: np.ndarray, window_length: int, threshold: float) -> np.ndarray:
     """
-    Detect spikes in a signal based on a boxcar filter window and a specified threshold.
+    Perform spike detection using Ben's Spiker Algorithm.
 
-    Parameters:
-    - signal: Input signal as a numpy array.
-    - window_length: The length of the boxcar filter window.
-    - threshold: Threshold for spike detection.
+    This function detects spikes in an input signal based on the comparison of cumulative errors calculated over a
+    segment of the signal, which is filtered using a boxcar window. A spike is detected if the cumulative error between
+    the filtered signal and the raw signal is below a certain threshold.
 
-    Returns:
-    - spikes: A numpy array of the same shape as the signal, with 1 indicating a detected spike, 0 otherwise.
+    Refer to the :ref:`ben_spiker_algorithm_desc` for a detailed explanation of the Ben's Spiker algorithm.
+
+    **Code Example:**
+
+    .. doctest::
+
+        >>> import numpy as np
+        >>> from spikify.encoding.temporal.deconvolution import ben_spiker
+        >>> signal = np.array([0.1, 0.2, 0.3, 1.0, 0.5, 0.3, 0.1])
+        >>> window_length = 3
+        >>> threshold = 0.5
+        >>> spikes = ben_spiker(signal, window_length, threshold)
+        >>> spikes
+        array([0, 0, 1, 0, 0, 0, 0], dtype=int8)
+
+    :param signal: The input signal to be analyzed. This should be a numpy ndarray.
+    :type signal: numpy.ndarray
+    :param window_length: The length of the boxcar filter window.
+    :type window_length: int
+    :param threshold: Threshold value used to detect spikes.
+    :type threshold: float
+    :return: A 1D numpy array representing the detected spikes.
+    :rtype: numpy.ndarray
+    :raises ValueError: If the input signal is empty or if the window length is greater than the signal length.
+    :raises TypeError: If the signal is not a numpy ndarray.
 
     """
     # Check for invalid inputs

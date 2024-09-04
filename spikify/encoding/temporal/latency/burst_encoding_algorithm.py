@@ -1,4 +1,8 @@
-"""Burst Encoding Algorithm."""
+"""
+.. raw:: html
+
+    <h2>Burst Encoding Algorithm</h2>
+"""
 
 import numpy as np
 
@@ -7,15 +11,43 @@ def burst_encoding(signal: np.ndarray, n_max: int, t_min: int, t_max: int, lengt
     """
     Perform burst encoding on the input signal.
 
-    Args:
-        signal (np.ndarray): The input signal as a NumPy array.
-        n_max (int): Maximum number of spikes.
-        t_min (int): Minimum inter-spike interval (ISI).
-        t_max (int): Maximum inter-spike interval (ISI).
-        length (int): The total length of the encoding.
+    This function encodes the input signal by generating bursts of spikes
+    based on the number of spikes and the inter-spike interval (ISI).
+    The encoding process takes into account the maximum number of spikes (n_max),
+    the minimum (t_min) and maximum (t_max) ISI, and the desired length of the encoded signal.
 
-    Returns:
-        np.ndarray: A 1D array representing the burst-encoded spike train.
+    Refer to the :ref:`burst_encoding_algorithm_desc` for a detailed explanation of the Burst Encoding Algorithm.
+
+    **Code Example:**
+
+    .. doctest::
+
+        >>> import numpy as np
+        >>> from spikify.encoding.temporal.latency import burst_encoding
+        >>> np.random.seed(42)
+        >>> signal = np.random.rand(16)
+        >>> n_max = 4
+        >>> t_min = 2
+        >>> t_max = 6
+        >>> length = 16
+        >>> encoded_signal = burst_encoding(signal, n_max, t_min, t_max, length)
+        >>> encoded_signal
+        array([1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0], dtype=int8)
+
+    :param signal: The input signal to be encoded. This should be a numpy ndarray.
+    :type signal: numpy.ndarray
+    :param n_max: The maximum number of spikes in each burst.
+    :type n_max: int
+    :param t_min: The minimum inter-spike interval (ISI).
+    :type t_min: int
+    :param t_max: The maximum inter-spike interval (ISI).
+    :type t_max: int
+    :param length: The total length of the encoded signal.
+    :type length: int
+    :return: A 1D numpy array representing the burst-encoded spike train.
+    :rtype: numpy.ndarray
+    :raises ValueError: If the input signal is empty or the length is not a multiple of the signal length.
+    :raises ValueError: If the required spike train length exceeds the provided length.
 
     """
     # Check for invalid inputs
@@ -48,7 +80,7 @@ def burst_encoding(signal: np.ndarray, n_max: int, t_min: int, t_max: int, lengt
         raise ValueError(f"Invalid stream length, the min length is {required_length}")
 
     # Initialize the spike array
-    spikes = np.zeros((len(signal), length), dtype=int)
+    spikes = np.zeros((len(signal), length), dtype=np.int8)
 
     # Populate the spike train based on ISI and spike number
     for i in range(len(signal)):

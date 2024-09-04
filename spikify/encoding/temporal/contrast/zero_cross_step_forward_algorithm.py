@@ -18,13 +18,17 @@ def zero_cross_step_forward(signal: np.ndarray, threshold: int) -> np.ndarray:
     Refer to the :ref:`zero_cross_step_forward_algorithm_desc` for a detailed explanation of the ZCSF encoding
     algorithm.
 
-    **Usage**::
+    **Code Example:**
 
-        import numpy as np
+    .. doctest::
 
-        signal = np.array([-0.2, 0.1, 0.5, 0.0, 1.2, 0.3])
-        threshold = 0.4
-        encoded_signal = zero_cross_step_forward(signal, threshold)
+        >>> import numpy as np
+        >>> from spikify.encoding.temporal.contrast import zero_cross_step_forward
+        >>> signal = np.array([-0.2, 0.1, 0.5, 0.0, 1.2, 0.3])
+        >>> threshold = 0.4
+        >>> encoded_signal = zero_cross_step_forward(signal, threshold)
+        >>> encoded_signal
+        array([0, 0, 1, 0, 1, 0], dtype=int8)
 
     :param signal: The input signal to be encoded. This should be a numpy ndarray.
     :type signal: numpy.ndarray

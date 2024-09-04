@@ -17,13 +17,17 @@ def threshold_based_representation(signal: np.ndarray, factor: float) -> np.ndar
     Refer to the :ref:`threshold_based_representation_algorithm_desc` for a detailed explanation of the TBR
     encoding algorithm.
 
-    **Usage**::
+    **Code Example:**
 
-        import numpy as np
+    .. doctest::
 
-        signal = np.array([0.1, 0.3, 0.4, 0.2, 0.5, 0.6])
-        factor = 0.5
-        encoded_signal = threshold_based_representation(signal, factor)
+        >>> import numpy as np
+        >>> from spikify.encoding.temporal.contrast import threshold_based_representation
+        >>> signal = np.array([0.1, 0.3, 0.4, 0.2, 0.5, 0.6])
+        >>> factor = 0.5
+        >>> encoded_signal = threshold_based_representation(signal, factor)
+        >>> encoded_signal
+        array([ 0,  1,  0, -1,  1,  0], dtype=int8)
 
     :param signal: The input signal to be encoded. This should be a numpy ndarray.
     :type signal: numpy.ndarray
