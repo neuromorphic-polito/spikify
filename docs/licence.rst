@@ -2,5 +2,3 @@
 
 License
 =======
-
-.. include:: ../LICENSE
