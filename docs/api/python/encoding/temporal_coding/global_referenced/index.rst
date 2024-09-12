@@ -1,6 +1,6 @@
 .. _global_referenced:
 
-:octicon:`file-directory;1.5em;sd-mr-1 fill-primary` global_reference
+:octicon:`file-directory;0.9em;sd-mr-1 fill-primary` global_reference
 ================================================================
 
 The ``global_referenced`` folder includes algorithms that encode spikes based on global temporal characteristics of the input signal. These methods are particularly useful when timing relative to a global reference, such as an oscillatory signal or stimulus onset, is crucial for encoding information.

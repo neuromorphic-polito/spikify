@@ -55,47 +55,73 @@ To work on spikify from the source code, follow these steps:
 Library Structure
 --------------------
 
-Once installed, you can explore the Spikify library. The general structure of the library is as follows:
+Once cloned, you can explore the spikify library. The general structure of the library is as follows:
 
 .. code-block::
 
     spikify/
+    ├── .github/
+    ├── docs/
     ├── spikify/
-    │   ├── __init__.py
     │   ├── encoding/
-    │   │   ├── __init__.py
-    │   │   ├── phase_encoding.py
-    │   │   ├── rate_encoding.py
-    │   ├── filtering/
-    │   │   ├── __init__.py
-    │   │   ├── low_pass_filter.py
-    │   │   ├── high_pass_filter.py
-    │   ├── utils/
-    │   │   ├── __init__.py
-    │   │   ├── validation.py
-    │   │   ├── visualization.py
-    │   ├── core.py
+    │   │   ├── rate/
+    │   │   │   └── ...
+    │   │   └── temporal/
+    │   │        ├── contrast/
+    │   │        │   └── ...
+    │   │        ├── deconvolution/
+    │   │        │   └── ...
+    │   │        ├── global_referenced/
+    │   │        │   └── ...
+    │   │        └── latency/
+    │   │            └── ...
+    │   └── filtering/
+    │       └── ...
     ├── tests/
-    │   ├── __init__.py
-    │   ├── test_encoding.py
-    │   ├── test_filtering.py
-    │   ├── test_utils.py
-    ├── examples/
-    │   ├── example_script.py
-    ├── README.md
-    ├── setup.py
-    └── requirements.txt
+    │   ├── encoding/
+    │   │   └── ...
+    │   └── filtering/
+    │       └── ...
+    ├── .bumpversion.toml
+    ├── .gitignore
+    ├── .pre-commit-config.yaml
+    ├── AUTHORS
+    ├── CITATION.cff
+    ├── codecov.yml
+    ├── LICENSE
+    ├── poetry.lock
+    ├── pyproject.toml
+    ├── README.rst
+    └── RELEASE.rst
 
-- **spikify/**: The main package directory containing all the core modules and submodules.
-  - **encoding/**: Contains encoding algorithms like phase and rate encoding.
-  - **filtering/**: Includes various signal filtering methods.
-  - **utils/**: Contains utility functions for validation and visualization.
-  - **core.py**: The main entry point of the library.
-- **tests/**: Directory for unit tests covering different parts of the library.
-- **examples/**: Provides example scripts demonstrating how to use Spikify.
-- **README.md**: The main documentation file.
-- **setup.py**: The setup script for installing the package.
-- **requirements.txt**: Lists the package dependencies.
+**Directory Structure**:
+
+- **.github/**: Contains GitHub-specific configuration files.
+- **coverage/**: Stores coverage reports for code testing.
+- **docs/**: The documentation folder for Sphinx.
+- **spikify/**: The main package directory containing core submodules.
+   - **encoding/**: Encoding algorithms for converting raw data into spike trains, organized into:
+      - **rate/**: Rate-based encoding methods.
+      - **temporal/**: Time-based encoding methods:
+
+        - **contrast/**: Contrast-based encoding algorithms.
+        - **deconvolution/**: Deconvolution algorithms.
+        - **global_referenced/**: Global reference-based algorithms (e.g., phase encoding).
+        - **latency/**: Latency-based encoding algorithms.
+   - **filtering/**: Signal filtering methods.
+- **tests/**: Contains unit tests to validate the functionality of different parts of the library.
+- **.bumpversion.toml**: Configuration file for version bumping using `bumpversion`.
+- **.coverage**: File for storing test coverage data.
+- **.gitignore**: Specifies files and directories ignored by Git.
+- **.pre-commit-config.yaml**: Configuration file for pre-commit hooks.
+- **AUTHORS**: A file listing contributors to the project.
+- **CITATION.cff**: Citation file for the project.
+- **codecov.yml**: Configuration for the Codecov service.
+- **LICENSE**: License for the project.
+- **poetry.lock**: Lockfile for dependency management with Poetry.
+- **pyproject.toml**: Configuration file for Python project tools.
+- **README.rst**: The main documentation file providing an overview of the project.
+- **RELEASE.rst**: File that lists release notes and changelogs for the project.
 
 For more detailed information on how to use the various modules and features, please refer to the relevant API documentation:
 

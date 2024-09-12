@@ -28,6 +28,7 @@ Features
 
 - **Multiple Spike Encoding Techniques**: Includes both rate-based and temporal encoding schemes.
 - **Signal Preprocessing**: Tools for preprocessing signals, including filter banks inspired by the human cochlea.
+
 Installation
 ============
 
@@ -77,9 +78,9 @@ These datasets are preprocessed and converted into spike trains to evaluate the 
 Contributing
 ============
 
-We welcome contributions from the community. Please see our `CONTRIBUTING.md <CONTRIBUTING.md>`_ file for more details on how to get involved.
+We welcome contributions from the community. Please see our `CONTRIBUTING.rst <CONTRIBUTING.rst>`_ file for more details on how to get involved.
 
 License
 =======
 
-This project is licensed under the Apache 2.0 License - see the `LICENSE <LICENSE.txt>`_ file for details.
+This project is licensed under the Apache 2.0 License - see the `LICENSE <LICENSE>`_ file for details.

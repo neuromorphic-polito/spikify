@@ -1,6 +1,6 @@
 .. _encoding:
 
-:octicon:`file-directory;1.5em;sd-mr-1 fill-primary` encoding
+:octicon:`file-directory;0.9em;sd-mr-1 fill-primary` encoding
 =============================================================
 
 The ``encoding`` folder within the spikify library contains the essential components for converting raw data into spike trains, a fundamental step in spiking neural networks. This section is organized to reflect the primary structure of the encoding algorithms included in the library:

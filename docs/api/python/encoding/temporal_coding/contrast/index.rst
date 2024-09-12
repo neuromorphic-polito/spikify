@@ -1,6 +1,6 @@
 .. _contrast:
 
-:octicon:`file-directory;1.5em;sd-mr-1 fill-primary` contrast
+:octicon:`file-directory;0.9em;sd-mr-1 fill-primary` contrast
 ================================================================
 
 The ``contrast`` folder within the temporal coding module includes algorithms that focus on detecting variations in the signal over time to encode information. These methods are particularly useful for signals where changes or transitions are more informative than steady states.

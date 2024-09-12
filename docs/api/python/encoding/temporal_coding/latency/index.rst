@@ -1,6 +1,6 @@
 .. _latency:
 
-:octicon:`file-directory;1.5em;sd-mr-1 fill-primary` latency
+:octicon:`file-directory;0.9em;sd-mr-1 fill-primary` latency
 ================================================================
 
 The ``latency`` folder contains algorithms that encode information based on the timing between spikes, known as the inter-spike interval (ISI). This approach leverages the temporal dynamics of spike trains, particularly when bursts of spikes are involved, to enhance the reliability and efficiency of neural communication.
