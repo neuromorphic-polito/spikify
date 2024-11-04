@@ -54,6 +54,8 @@ def poisson_rate(signal: np.ndarray, interval_length: int) -> np.ndarray:
             "interval."
         )
 
+    np.random.seed(0)
+
     # Ensure non-negative signal values
     signal = np.clip(signal, 0, None)
 
@@ -75,8 +77,8 @@ def poisson_rate(signal: np.ndarray, interval_length: int) -> np.ndarray:
     for i, rate in enumerate(signal):
         if rate > 0:
             ISI = [
-                -np.log(1 - np.random.random()) / (rate * interval_length)
-            ] * interval_length  # Inter-spike intervals
+                -np.log(1 - np.random.random()) / (rate * interval_length) for _ in range(interval_length)
+            ]  # Inter-spike intervals
             spike_times = np.searchsorted(bins, np.cumsum(ISI)) - 1  # Find spike times
             spike_times = spike_times[spike_times < interval_length]  # Clip times within interval
             spikes[i, spike_times] = 1

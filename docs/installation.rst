@@ -28,7 +28,7 @@ Installation
 
 Using pip
 ---------
-**Spikify** can be installed via `pip`. If you wish to contribute, you can refer to  the :ref:`contributing` section.
+**spikify** can be installed via `pip`. If you wish to contribute, you can refer to  the :ref:`contributing` section.
 
 To install spikify via `pip`, run the following command:
 

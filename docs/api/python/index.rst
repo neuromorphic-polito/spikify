@@ -1,6 +1,6 @@
 .. _python_api:
 
-Python API
+Python
 ==========
 
 This section provides detailed documentation on the Python interface of the **spikify** library.
@@ -19,5 +19,5 @@ Below, you will find links to the specific modules within the Python API:
 .. toctree::
    :maxdepth: 1
 
-   encoding/index
    filtering/index
+   encoding/index

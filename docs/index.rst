@@ -17,11 +17,11 @@ Introduction
 
       .. div:: sd-font-weight-bold
          
-         Transforming Raw Data into Spiking Neural Signals.
+         Transforming Raw Data into Spiking Signals
 
       .. div:: sd-fs-5 sd-font-italic
 
-         Transforming Raw Data into Spiking Neural Signals: Converting Diverse Datasets with Precision for Advanced Neural Network Applications.
+         Get ready for neuromorphic computing: convert your data for spiking neural network applications.
 
       .. grid:: 1 1 2 2
          :gutter: 2 2 3 3
@@ -47,7 +47,7 @@ Introduction
                :color: primary
                :class: sd-rounded-pill sd-px-4 sd-fs-5
 
-               About Neuromorphic Polito
+               Neuromorphic PoliTo
 
    .. grid-item::
       :columns: 12 4 4 4
@@ -60,29 +60,29 @@ Introduction
 .. grid:: 1 1 2 2
    :gutter: 2
 
-   .. grid-item-card:: :octicon:`plug;1.5em;sd-mr-1 fill-primary` Signal-to-Spike Transformation
+   .. grid-item-card:: :octicon:`webhook;1.5em;sd-mr-1 fill-primary` Signal-to-Spike Transformation
 
-      Transform raw signals into spikes by choosing from a variety of encoding algorithms tailored to different data characteristics and application needs.
+      Transform raw signals into spikes with encoding algorithms tailored to different data characteristics and application needs.
 
    .. grid-item-card:: :octicon:`gear;1.5em;sd-mr-1 fill-primary` Custom Encoding
 
-      Select and apply your preferred encoding algorithm with ease, giving you full control over how raw signals are converted into spikes.
+      Select the encoding algorithm that best suits your needs and apply it with ease and full control.
 
-   .. grid-item-card:: :octicon:`globe;1.5em;sd-mr-1 fill-primary` Advanced Filtering
+   .. grid-item-card:: :octicon:`sliders;1.5em;sd-mr-1 fill-primary` Filtering
 
       Leverage optional filtering inspired by the human cochlea to preprocess your signals, enhancing the quality and relevance of the generated spikes.
 
-   .. grid-item-card:: :octicon:`light-bulb;1.5em;sd-mr-1 fill-primary` SNN Integration
+   .. grid-item-card:: :octicon:`command-palette;1.5em;sd-mr-1 fill-primary` SNN Integration
 
       Directly feed the generated spikes into spiking neural network models, ensuring a smooth and efficient workflow from signal to network.
 
-   .. grid-item-card:: :octicon:`graph;1.5em;sd-mr-1 fill-primary` Future-Ready for NeuroBench
+   .. grid-item-card:: :octicon:`light-bulb;1.5em;sd-mr-1 fill-primary` High Flexibility
 
-      Planned integration with NeuroBench as a preprocessing algorithm will make “spikify” an essential tool in the SNN research ecosystem.
+      Whether you’re working with real-time or offline data, spikify offers the flexibility you need for your SNN application.
 
-   .. grid-item-card:: :octicon:`rocket;1.5em;sd-mr-1 fill-primary` High Flexibility
+   .. grid-item-card:: :octicon:`rocket;1.5em;sd-mr-1 fill-primary` Try it with NIR and NeuroBench
 
-      Whether you’re working with real-time data or offline signals, “spikify” offers high flexibility and performance, making it an ideal choice for diverse spiking neural network applications.
+      Empower your end-to-end design with deployment and benchmarking tools: integrate spikify with NIR and NeuroBench.
 
 ----------------
 
@@ -98,19 +98,17 @@ Contents
    tutorial
 
 .. toctree::
-   :caption: Spikify
-   :maxdepth: 1
-
-   spikify/encoding/index
-   spikify/filtering/index
-
-.. toctree::
     :caption: API
     :maxdepth: 1
 
     api/python/index
 
+.. toctree::
+   :caption: Fundamentals
+   :maxdepth: 1
 
+   spikify/filtering/index
+   spikify/encoding/index
 
 .. toctree::
    :caption: Development
