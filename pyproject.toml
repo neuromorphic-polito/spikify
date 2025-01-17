@@ -119,7 +119,6 @@ output = "coverage/reports/coverage.xml"
 dev = ["pytest", "pytest-cov"]
 code-quality = ["pyproject-flake8", "black", "docformatter", "pre-commit"]
 release = ["bump-my-version"]
-docs = []
 
 
 [build-system]
