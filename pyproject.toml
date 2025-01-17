@@ -43,7 +43,6 @@ optional = true
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.2"
 pytest-cov = "^5.0.0"
-bump-my-version ="0.26.0"
 
 [tool.poetry.group.code-quality]
 optional = true
@@ -53,6 +52,12 @@ pyproject-flake8 = '7.0.0'
 black = '24.8.0'
 docformatter = '1.7.5'
 pre-commit = "3.8.0"
+
+[tool.poetry.group.release]
+optional = true
+
+[tool.poetry.group.release.dependencies]
+bump-my-version ="0.26.0"
 
 [tool.poetry.group.docs]
 optional = true
@@ -123,8 +128,9 @@ format = 'markdown'
 output = "coverage/reports/coverage.xml"
 
 [tool.poetry.extras]
-dev = ["pytest", "pytest-cov", "bump-my-version"]
+dev = ["pytest", "pytest-cov"]
 code-quality = ["pyproject-flake8", "black", "docformatter", "pre-commit"]
+release = ["bump-my-version"]
 docs = ["furo", "sphinx", "sphinx-copybutton", "sphinx-data-viewer", "sphinx-needs", "sphinx_design"]
 
 
