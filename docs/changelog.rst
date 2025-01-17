@@ -14,15 +14,15 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 :Released: 2022-03-01
 :Full Changelog: `0.1.0...HEAD <https://github.com/neuromorphic-polito/spikify/compare/0.1.0...HEAD>`__
 
-Improvements
-............
+.. Improvements
+.. ............
 
 
 
-Bug fixes
-.........
+.. Bug fixes
+.. .........
 
 
-Internal improvements
-......................
+.. Internal improvements
+.. ......................
 
