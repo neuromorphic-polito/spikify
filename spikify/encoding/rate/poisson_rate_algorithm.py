@@ -7,13 +7,6 @@
 import numpy as np
 
 
-
-
-
-
-
-
-
 def poisson_rate(signal: np.ndarray, interval_length: int) -> np.ndarray:
     """
     Perform Poisson rate encoding on the input signal.
