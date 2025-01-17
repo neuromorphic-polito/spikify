@@ -71,9 +71,7 @@
               stroke-opacity="0" stroke-width="2" fill="#fff" fill-opacity="0"/>
         <g class="target-group">
             <use xlink:href="#v"
-                 transform="matrix(1,0,0,1,822.0629156508712,470) translate(37.75308641975306 14.61111111111111)"/>
-            <use xlink:href="#w"
-                 transform="matrix(1,0,0,1,822.0629156508712,470) translate(62.41975308641973 14.61111111111111)"/>
+                 transform="matrix(1,0,0,1,822.0629156508712,470) translate(104.41975308641973 14.61111111111111)"/>
             <use xlink:href="#x"
                  transform="matrix(1,0,0,1,822.0629156508712,470) translate(129.45679012345678 14.61111111111111)"/>
             <use xlink:href="#y"

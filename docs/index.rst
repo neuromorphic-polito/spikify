@@ -86,6 +86,11 @@ Introduction
 
 ----------------
 
+Inspiration
+------------
+
+The **spikify**  library is inspired by the research presented in the paper `Spike encoding techniques for IoT time-varying signals benchmarked on a neuromorphic classification task <https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2022.999029/full>`_, which explores various methods for converting continuous signals into spike-based representations for neuromorphic computing.
+
 Contents
 --------
 

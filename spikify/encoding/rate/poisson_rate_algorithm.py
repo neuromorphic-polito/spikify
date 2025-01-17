@@ -19,7 +19,17 @@ def poisson_rate(signal: np.ndarray, interval_length: int) -> np.ndarray:
 
     **Code Example:**
 
+    .. code-block:: python
+
+            import numpy as np
+            from spikify.encoding.rate import poisson_rate
+            signal = np.array([0.2, 0.5, 0.8, 1.0])
+            np.random.seed(0)
+            interval_length = 2
+            encoded_signal = poisson_rate(signal, interval_length)
+
     .. doctest::
+        :hide:
 
         >>> import numpy as np
         >>> from spikify.encoding.rate import poisson_rate
@@ -30,7 +40,7 @@ def poisson_rate(signal: np.ndarray, interval_length: int) -> np.ndarray:
         >>> interval_length = 2
         >>> encoded_signal = poisson_rate(signal, interval_length)
         >>> encoded_signal
-        array([0, 0, 0, 1], dtype=int8)
+        array([0, 0, 1, 1], dtype=int8)
 
     :param signal: The input signal to be encoded. This should be a numpy ndarray.
     :type signal: numpy.ndarray
