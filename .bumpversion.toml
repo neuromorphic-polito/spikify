@@ -21,7 +21,12 @@ filename = "pyproject.toml"
 search = "version = \"{current_version}\""
 replace = "version = \"{new_version}\""
 
-#[[tool.bumpversion.files]]
-#filename = "docs/conf.py"
-#search = "release = \"{current_version}\""
-#replace = "release = \"{new_version}\""
+[[tool.bumpversion.files]]
+filename = "docs/conf.py"
+search = "version = \"{current_version}\""
+replace = "version = \"{new_version}\""
+
+[[tool.bumpversion.files]]
+filename = "spikify/version.py"
+search = "__version__ = \"{current_version}\""
+replace = "__version__ = \"{new_version}\""

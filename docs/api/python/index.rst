@@ -1,6 +1,6 @@
 .. _python_api:
 
-Python
+Python API
 ==========
 
 This section provides detailed documentation on the Python interface of the **spikify** library.

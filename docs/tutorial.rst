@@ -3,5 +3,39 @@
 Tutorial
 ========
 
-In this tutorial, we will demonstrate the use of sphinx-needs to build up a simplified engineering plan for a car.
-We will create need items, link them together, visualize the relationships between them, and generate traceability reports.
+This tutorial walks you through generating a sinusoidal signal and encoding it using different encoding methods from the **spikify** library. By the end of this tutorial, you'll understand how to transform a simple signal into a spike-based representation.
+
+Generating a Sinusoidal Signal
+------------------------------
+First, let's generate a sinusoidal signal using NumPy. This will serve as the input for the encoding process.
+
+.. code-block:: python
+
+   import numpy as np
+
+   # Generate a sinusoidal signal
+   time = np.linspace(0, 2 * np.pi, 100)  # Time from 0 to 2*pi
+   amplitude = np.sin(time)  # Sinusoidal signal
+
+Encoding the Signal with Poisson Rate
+-------------------------------------
+Now, let's encode the sinusoidal signal into spikes using the `poisson_rate` method. This method converts the signal into spike intervals based on the specified encoding interval length.
+
+.. code-block:: python
+
+   from spikify.encoding.rate import poisson_rate
+
+   # Set parameters for encoding
+   np.random.seed(0)  # For reproducibility
+   interval_length = 2  # Length of the encoding interval
+
+   # Encode the sinusoidal signal
+   encoded_signal = poisson_rate(amplitude, interval_length)
+
+Try It Yourself
+---------------
+Feel free to experiment with different signals, interval lengths, and encoding methods. The spikify library offers a variety of encoding techniques tailored to different needs.
+
+Next Steps
+----------
+Once you've encoded your signal, you can integrate it into spiking neural networks or analyze the encoded spikes further. Refer to the :ref:`python_api` for more details on available functions and features.
