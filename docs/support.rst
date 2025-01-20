@@ -15,13 +15,13 @@ If you need support for your research or academic projects, please get in touch 
 
 The fastest way to reach us is via e-mail: support@spikify.com.
 
-Research Highlights
-------------------
+.. Research Highlights
+.. ------------------
 
-Discover how spikify is being utilized in cutting-edge research. Learn about the latest advancements in spiking neural networks and how researchers are applying spikify to push the boundaries of neuromorphic computing.
+.. Discover how spikify is being utilized in cutting-edge research. Learn about the latest advancements in spiking neural networks and how researchers are applying spikify to push the boundaries of neuromorphic computing.
 
-Explore featured publications, ongoing projects, and collaborations within the academic community.
+.. Explore featured publications, ongoing projects, and collaborations within the academic community.
 
-Spikify is inspired by the foundational work in the following papers, which have shaped its development:
+.. Spikify is inspired by the foundational work in the following papers, which have shaped its development:
 
-- `Spike encoding techniques for IoT time-varying signals benchmarked on a neuromorphic classification task <https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2022.999029/full>`_
+.. - `Spike encoding techniques for IoT time-varying signals benchmarked on a neuromorphic classification task <https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2022.999029/full>`_

@@ -2,7 +2,6 @@
 * Situational Awareness Classification Based on EEG Signals and Spiking Neural Network by Yakir Hadad, Moshe Bensimon, Y. Ben-Shimol, S. Greenberg (2024)
 * Adaptive Synaptic Adjustment Mechanism to Improve Learning Performances of Spiking Neural Networks by Hyun-Jong Lee, Jae-Han Lim (2024)
 * WiN-GUI: A graphical tool for neuron-based encoding by Simon F. Müller-Cleve, Fernando M. Quintana, Vittorio Fra, Pedro L. Galindo, Fernando Perez-Peña, Gianvito Urgese, Chiara Bartolozzi (2024)
-
 * Rapid Distance Estimation of Odor Sources by Electronic Nose with Multi-Sensor Fusion based on Spiking Neural Network by Yingying Xue, Shimeng Mou, Changming Chen, Weijie Yu, Hao Wan, L. Zhuang, Ping Wang (2024)
 * Evaluation of Encoding Schemes on Ubiquitous Sensor Signal for Spiking Neural Network by Sizhen Bian, Elisa Donati, Michele Magno (2024)
 * Spiking neural networks for physiological and speech signals: a review by Sung Soo Park, Young-Seok Choi (2024)

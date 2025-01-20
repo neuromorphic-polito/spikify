@@ -27,14 +27,14 @@ Features
 ========
 
 - **Multiple Spike Encoding Techniques**: Includes both rate-based and temporal encoding schemes.
-- **Signal Preprocessing**: Tools for preprocessing signals, including filter banks inspired by the human cochlea.
+- **Signal Preprocessing**: Tools for preprocessing signals, including Gammatone and Butterworth filters.
 
 Installation
 ============
 
 To install the Spikify package, use pip:
 
-::
+.. code-block:: bash
 
     pip install spikify
 
@@ -43,15 +43,23 @@ Usage
 
 Here is a simple example to get started:
 
-::
+.. code-block:: python
 
-    from spikify import moving_average
+    import numpy as np
 
-    # Load your raw signal
-    raw_signal = load_signal('path_to_signal_file')
+    # Generate a sinusoidal signal
+    time = np.linspace(0, 2 * np.pi, 100)  # Time from 0 to 2*pi
+    amplitude = np.sin(time)  # Sinusoidal signal
 
-    # Encode the raw signal into a spike train
-    spike_train = moving_average(raw_signal)
+    # Encode the raw signal into a spike train using Poisson Rate Coding
+    from spikify.encoding.rate import poisson_rate
+
+    # Set parameters for encoding
+    np.random.seed(0)  # For reproducibility
+    interval_length = 2  # Length of the encoding interval
+
+    # Encode the sinusoidal signal
+    encoded_signal = poisson_rate(amplitude, interval_length)
 
 For more detailed examples and usage, please refer to the `documentation <http://example.com>`_.
 
@@ -60,8 +68,53 @@ Encoding Techniques
 
 This package implements several spike encoding families techniques, including:
 
-- **Rate Encoding**:
-- **Temporal Encoding**:
+Rate Encoding
+-------------------
+Rate encoding represents information by the firing rate of neurons. The higher the stimulus intensity, the higher the firing rate.
+
+Algorithms:
+
+- **Poisson Rate**
+
+Temporal Encoding
+-------------------
+Temporal encoding conveys information through the precise timing of spikes. This family contains subcategories for contrast and deconvolution techniques:
+
+Contrast-Based Temporal Encoding
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Algorithms:
+
+- **Moving Window**
+- **Step Forward**
+- **Threshold-Based**
+- **Zero-Cross Step Forward**
+
+Deconvolution-Based Temporal Encoding
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Algorithms:
+
+- **Ben Spiker**
+- **Hough Spiker**
+- **Modified Hough Spiker**
+
+Global Referenced Encoding
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Algorithms:
+
+- **Phase Encoding**
+- **Time-to-Spike**
+
+Latency Encoding
+^^^^^^^^^^^^^^^
+
+Algorithms:
+
+- **Burst Encoding**
+
+
 
 Each technique has its advantages and can be selected based on the type of input data and the desired SNN architecture.
 
@@ -78,7 +131,7 @@ These datasets are preprocessed and converted into spike trains to evaluate the 
 Contributing
 ============
 
-We welcome contributions from the community. Please see our `CONTRIBUTING.rst <CONTRIBUTING.rst>`_ file for more details on how to get involved.
+We welcome contributions from the community. Please see our `CONTRIBUTING.rst <docs/contributing.rst>`_ file for more details on how to get involved.
 
 License
 =======
