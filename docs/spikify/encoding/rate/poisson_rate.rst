@@ -11,7 +11,7 @@ The Poisson rate encoding uses a Poisson distribution to model the probability o
 
 .. math::
 
-   P(n | \Delta t) = \frac{(r \Delta t)^n}{n!} e^{-r \Delta t} \quad (1)
+   P_{n}(\Delta t) = \frac{(r \Delta t)^n}{n!} e^{-r \Delta t} \quad (1)
 
 where:
 
