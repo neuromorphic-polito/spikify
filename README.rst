@@ -12,7 +12,7 @@ Table of Contents
 - `Installation <#installation>`_
 - `Usage <#usage>`_
 - `Encoding Techniques <#encoding-techniques>`_
-- `Datasets <#datasets>`_
+- `Encoded Datasets <#encoded-datasets>`_
 - `Contributing <#contributing>`_
 - `License <#license>`_
 
@@ -118,7 +118,7 @@ Algorithms:
 
 Each technique has its advantages and can be selected based on the type of input data and the desired SNN architecture.
 
-Example usage:
+Encoded datasets:
 ========
 
 The following datasets have been selected to serve as examples for benchmarking spike train encoding techniques:
