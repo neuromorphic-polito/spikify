@@ -22,7 +22,17 @@ def modified_hough_spiker(signal: np.ndarray, window_length: int, threshold: flo
 
     **Code Example:**
 
+    .. code-block:: python
+
+        import numpy as np
+        from spikify.encoding.temporal.deconvolution import modified_hough_spiker
+        signal = np.array([0.1, 0.2, 0.3, 1.0, 0.5, 0.3, 0.1])
+        window_length = 3
+        threshold = 0.5
+        spikes = modified_hough_spiker(signal, window_length, threshold)
+
     .. doctest::
+        :hide:
 
         >>> import numpy as np
         >>> from spikify.encoding.temporal.deconvolution import modified_hough_spiker

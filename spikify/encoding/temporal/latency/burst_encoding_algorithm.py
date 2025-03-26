@@ -20,7 +20,21 @@ def burst_encoding(signal: np.ndarray, n_max: int, t_min: int, t_max: int, lengt
 
     **Code Example:**
 
+    .. code-block:: python
+
+        import numpy as np
+        from spikify.encoding.temporal.latency import burst_encoding
+        np.random.seed(42)
+        signal = np.random.rand(16)
+        n_max = 4
+        t_min = 2
+        t_max = 6
+        length = 16
+        encoded_signal = burst_encoding(signal, n_max, t_min, t_max, length)
+
+
     .. doctest::
+        :hide:
 
         >>> import numpy as np
         >>> from spikify.encoding.temporal.latency import burst_encoding

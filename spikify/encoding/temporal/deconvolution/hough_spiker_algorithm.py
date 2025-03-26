@@ -20,7 +20,16 @@ def hough_spiker(signal: np.ndarray, window_length: int) -> np.ndarray:
 
     **Code Example**
 
+    .. code-block:: python
+
+        import numpy as np
+        from spikify.encoding.temporal.deconvolution import hough_spiker
+        signal = np.array([0.1, 0.2, 4.1, 1.0, 3.0, 0.3, 0.1])
+        window_length = 3
+        spikes = hough_spiker(signal, window_length)
+
     .. doctest::
+        :hide:
 
         >>> import numpy as np
         >>> from spikify.encoding.temporal.deconvolution import hough_spiker

@@ -21,7 +21,16 @@ def time_to_first_spike(signal: np.ndarray, interval: int) -> np.ndarray:
 
     **Code Example:**
 
+    .. code-block:: python
+
+        import numpy as np
+        from spikify.encoding.temporal.global_referenced import time_to_first_spike
+        signal = np.array([0.1, 0.2, 0.3, 1.0, 0.5, 0.3, 0.1, 0.2])
+        interval = 4
+        encoded_signal = time_to_first_spike(signal, interval)
+
     .. doctest::
+        :hide:
 
         >>> import numpy as np
         >>> from spikify.encoding.temporal.global_referenced import time_to_first_spike

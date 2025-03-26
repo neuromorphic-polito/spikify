@@ -20,7 +20,16 @@ def zero_cross_step_forward(signal: np.ndarray, threshold: int) -> np.ndarray:
 
     **Code Example:**
 
+    .. code-block:: python
+
+        import numpy as np
+        from spikify.encoding.temporal.contrast import zero_cross_step_forward
+        signal = np.array([-0.2, 0.1, 0.5, 0.0, 1.2, 0.3])
+        threshold = 0.4
+        encoded_signal = zero_cross_step_forward(signal, threshold)
+
     .. doctest::
+        :hide:
 
         >>> import numpy as np
         >>> from spikify.encoding.temporal.contrast import zero_cross_step_forward

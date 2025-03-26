@@ -20,7 +20,17 @@ def phase_encoding(signal: np.ndarray, num_bits: int) -> np.ndarray:
 
     **Code Example:**
 
+    .. code-block:: python
+
+        import numpy as np
+        from spikify.encoding.temporal.global_referenced import phase_encoding
+        signal = np.array([0.1, 0.2, 0.3, 1.0, 0.5, 0.3, 0.1, 0.2])
+        num_bits = 4
+        encoded_signal = phase_encoding(signal, num_bits)
+
+
     .. doctest::
+        :hide:
 
         >>> import numpy as np
         >>> from spikify.encoding.temporal.global_referenced import phase_encoding

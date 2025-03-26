@@ -20,7 +20,17 @@ def ben_spiker(signal: np.ndarray, window_length: int, threshold: float) -> np.n
 
     **Code Example:**
 
+    .. code-block:: python
+
+        import numpy as np
+        from spikify.encoding.temporal.deconvolution import ben_spiker
+        signal = np.array([0.1, 0.2, 0.3, 1.0, 0.5, 0.3, 0.1])
+        window_length = 3
+        threshold = 0.5
+        spikes = ben_spiker(signal, window_length, threshold)
+
     .. doctest::
+        :hide:
 
         >>> import numpy as np
         >>> from spikify.encoding.temporal.deconvolution import ben_spiker

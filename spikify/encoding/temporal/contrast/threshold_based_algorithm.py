@@ -19,7 +19,16 @@ def threshold_based_representation(signal: np.ndarray, factor: float) -> np.ndar
 
     **Code Example:**
 
+    .. code-block:: python
+
+        import numpy as np
+        from spikify.encoding.temporal.contrast import threshold_based_representation
+        signal = np.array([0.1, 0.3, 0.4, 0.2, 0.5, 0.6])
+        factor = 0.5
+        encoded_signal = threshold_based_representation(signal, factor)
+
     .. doctest::
+        :hide:
 
         >>> import numpy as np
         >>> from spikify.encoding.temporal.contrast import threshold_based_representation
