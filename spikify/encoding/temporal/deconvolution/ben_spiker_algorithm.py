@@ -5,7 +5,7 @@
 """
 
 import numpy as np
-from scipy.signal.windows import boxcar
+from scipy.signal.windows import boxcar  # da sistemare a scelta
 
 
 def ben_spiker(signal: np.ndarray, window_length: int, threshold: float) -> np.ndarray:

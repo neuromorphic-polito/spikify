@@ -29,7 +29,7 @@ Your PR and Commit Messages should conform with the following rules:
 In the next sections you will find a detailed guide on how to contribute to the project.
 
 Set up the Project
---------------
+--------------------------------
 
 1. Fork the project repository to your own GitHub account, clone your fork and configure the remotes.
     .. code-block:: bash
@@ -85,7 +85,7 @@ Run Tests
         poetry run pytest --cov=spikify --cov-report=xml
 
 Build Documentation
------------------
+----------------------------
 
 1. For documentation, follow the `Sphinx docstrings <https://thomas-cokelaer.info/tutorials/sphinx/docstring_python.html>`__  format.
     .. code-block:: bash
