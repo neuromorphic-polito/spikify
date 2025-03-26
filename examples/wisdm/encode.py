@@ -1,5 +1,4 @@
 from pathlib import Path
-import pandas as pd
 import numpy as np
 from spikify.encoding.rate import poisson_rate
 from spikify.encoding.temporal.latency import burst_encoding
@@ -11,6 +10,11 @@ from spikify.encoding.temporal.contrast import (
 )
 from spikify.encoding.temporal.global_referenced import phase_encoding, time_to_first_spike
 from spikify.encoding.temporal.deconvolution import ben_spiker, hough_spiker, modified_hough_spiker
+from datasets import load_dataset
+
+REPO_ID = "neuromorphic-polito/siddha"
+data = load_dataset("neuromorphic-polito/siddha", "main_data", split="full")
+
 
 activities = [
     (0, "A", "walking"),
@@ -45,9 +49,15 @@ def apply_encoding(
     encoding_fn,
     **encoding_args,
 ):
-    dataframe["x"] = dataframe.groupby("label_id")["x"].transform(lambda x: encoding_fn(np.array(x), **encoding_args))
-    dataframe["y"] = dataframe.groupby("label_id")["y"].transform(lambda x: encoding_fn(np.array(x), **encoding_args))
-    dataframe["z"] = dataframe.groupby("label_id")["z"].transform(lambda x: encoding_fn(np.array(x), **encoding_args))
+    dataframe[f"{sensor_type}_x"] = dataframe.groupby("activity")[f"{sensor_type}_x"].transform(
+        lambda x: encoding_fn(np.array(x), **encoding_args)
+    )
+    dataframe[f"{sensor_type}_y"] = dataframe.groupby("activity")[f"{sensor_type}_y"].transform(
+        lambda x: encoding_fn(np.array(x), **encoding_args)
+    )
+    dataframe[f"{sensor_type}_z"] = dataframe.groupby("activity")[f"{sensor_type}_z"].transform(
+        lambda x: encoding_fn(np.array(x), **encoding_args)
+    )
     save_encoded_data(dataframe, path, device, sensor_type, subject, encoding_type)
     return dataframe
 
@@ -57,17 +67,20 @@ def save_encoded_data(dataframe, path, device, sensor_type, subject, encoding_ty
     dir_path = path / encoding_type / device / sensor_type
     dir_path.mkdir(parents=True, exist_ok=True)
     # Check if file exists
-    file_path = dir_path / f"data_{subject + 1600}_{sensor_type}_{device}_spike.csv"
+    file_path = dir_path / f"data_{subject}_{sensor_type}_{device}_spike.csv"
     write_header = not file_path.exists()  # Write header if file doesn't exist
 
     dataframe.to_csv(
-        dir_path / f"data_{subject + 1600}_{sensor_type}_{device}_spike.csv", index=False, mode="a", header=write_header
+        dir_path / f"data_{subject}_{sensor_type}_{device}_spike.csv", index=False, mode="a", header=write_header
     )
 
 
-def convert_dataset_into_spike(path):
+def convert_dataset_into_spike(dataframe):
 
-    # min_len = 3500
+    path = Path("./encoded_data")
+    path.mkdir(parents=True, exist_ok=True)
+
+    min_len = 3500
     devices = ["phone", "watch"]
     subjects = 51
     labels = [activity[1] for activity in activities]
@@ -75,32 +88,36 @@ def convert_dataset_into_spike(path):
     for device in devices:
         for subject in range(subjects):
             # Read accelerometer and gyroscope data
-            dataframe_accel = pd.read_csv(path / device / "accel" / f"data_{subject + 1600}_accel_{device}.csv")
-            dataframe_gyro = pd.read_csv(path / device / "gyro" / f"data_{subject + 1600}_gyro_{device}.csv")
+            dataframe_accel = dataframe[(dataframe["id"] == str(subject)) & (dataframe["device"] == device)].loc[
+                :, ["acc_x", "acc_y", "acc_z", "activity", "timestamp"]
+            ]
+            dataframe_gyro = dataframe[(dataframe["id"] == str(subject)) & (dataframe["device"] == device)].loc[
+                :, ["gyro_x", "gyro_y", "gyro_z", "activity", "timestamp"]
+            ]
 
             # Filter by label_ids present in the labels list
-            dataframe_accel = dataframe_accel[dataframe_accel["label_id"].isin(labels)]
-            dataframe_gyro = dataframe_gyro[dataframe_gyro["label_id"].isin(labels)]
+            dataframe_accel = dataframe_accel[dataframe_accel["activity"].isin(labels)]
+            dataframe_gyro = dataframe_gyro[dataframe_gyro["activity"].isin(labels)]
 
             # Limit samples per label
             dataframe_accel = (
-                dataframe_accel.assign(count=dataframe_accel.groupby("label_id").cumcount())
-                .query("count < @min_len")
+                dataframe_accel.assign(count=dataframe_accel.groupby("activity").cumcount())
+                .query(f"count < {min_len}")
                 .drop(columns="count")
             )
 
             dataframe_gyro = (
-                dataframe_gyro.assign(count=dataframe_gyro.groupby("label_id").cumcount())
-                .query("count < @min_len")
+                dataframe_gyro.assign(count=dataframe_gyro.groupby("activity").cumcount())
+                .query(f"count < {min_len}")
                 .drop(columns="count")
             )
 
             # Apply Poisson rate encoding and save the data
             apply_encoding(
                 dataframe_accel.copy(),
-                path.parent,
+                path,
                 device,
-                "accel",
+                "acc",
                 subject,
                 "poisson_encoded",
                 poisson_rate,
@@ -108,7 +125,7 @@ def convert_dataset_into_spike(path):
             )
             apply_encoding(
                 dataframe_gyro.copy(),
-                path.parent,
+                path,
                 device,
                 "gyro",
                 subject,
@@ -121,9 +138,9 @@ def convert_dataset_into_spike(path):
             # Apply Burst encoding and save the data
             apply_encoding(
                 dataframe_accel.copy(),
-                path.parent,
+                path,
                 device,
-                "accel",
+                "acc",
                 subject,
                 "burst_encoded",
                 burst_encoding,
@@ -134,7 +151,7 @@ def convert_dataset_into_spike(path):
             )
             apply_encoding(
                 dataframe_gyro.copy(),
-                path.parent,
+                path,
                 device,
                 "gyro",
                 subject,
@@ -149,9 +166,9 @@ def convert_dataset_into_spike(path):
             # Apply Moving Window encoding and save the data
             apply_encoding(
                 dataframe_accel.copy(),
-                path.parent,
+                path,
                 device,
-                "accel",
+                "acc",
                 subject,
                 "moving_window_encoded",
                 moving_window,
@@ -159,7 +176,7 @@ def convert_dataset_into_spike(path):
             )
             apply_encoding(
                 dataframe_gyro.copy(),
-                path.parent,
+                path,
                 device,
                 "gyro",
                 subject,
@@ -171,9 +188,9 @@ def convert_dataset_into_spike(path):
             # Apply Threshold Based Representation encoding and save the data
             apply_encoding(
                 dataframe_accel.copy(),
-                path.parent,
+                path,
                 device,
-                "accel",
+                "acc",
                 subject,
                 "threshold_based_encoded",
                 threshold_based_representation,
@@ -181,7 +198,7 @@ def convert_dataset_into_spike(path):
             )
             apply_encoding(
                 dataframe_gyro.copy(),
-                path.parent,
+                path,
                 device,
                 "gyro",
                 subject,
@@ -193,24 +210,24 @@ def convert_dataset_into_spike(path):
             # Apply Phase Encoding and save the data
             apply_encoding(
                 dataframe_accel.copy(),
-                path.parent,
+                path,
                 device,
-                "accel",
+                "acc",
                 subject,
                 "phase_encoded",
                 phase_encoding,
                 num_bits=5,
             )
             apply_encoding(
-                dataframe_gyro.copy(), path.parent, device, "gyro", subject, "phase_encoded", phase_encoding, num_bits=5
+                dataframe_gyro.copy(), path, device, "gyro", subject, "phase_encoded", phase_encoding, num_bits=5
             )
             #
             # Apply Time to First Spike encoding and save the data
             apply_encoding(
                 dataframe_accel.copy(),
-                path.parent,
+                path,
                 device,
-                "accel",
+                "acc",
                 subject,
                 "time_to_first_spike_encoded",
                 time_to_first_spike,
@@ -218,7 +235,7 @@ def convert_dataset_into_spike(path):
             )
             apply_encoding(
                 dataframe_gyro.copy(),
-                path.parent,
+                path,
                 device,
                 "gyro",
                 subject,
@@ -230,9 +247,9 @@ def convert_dataset_into_spike(path):
             # Apply Ben Spiker encoding and save the data
             apply_encoding(
                 dataframe_accel.copy(),
-                path.parent,
+                path,
                 device,
-                "accel",
+                "acc",
                 subject,
                 "ben_spiker_encoded",
                 ben_spiker,
@@ -241,7 +258,7 @@ def convert_dataset_into_spike(path):
             )
             apply_encoding(
                 dataframe_gyro.copy(),
-                path.parent,
+                path,
                 device,
                 "gyro",
                 subject,
@@ -254,9 +271,9 @@ def convert_dataset_into_spike(path):
             # Apply Hough Spiker encoding and save the data
             apply_encoding(
                 dataframe_accel.copy(),
-                path.parent,
+                path,
                 device,
-                "accel",
+                "acc",
                 subject,
                 "hough_spiker_encoded",
                 hough_spiker,
@@ -264,7 +281,7 @@ def convert_dataset_into_spike(path):
             )
             apply_encoding(
                 dataframe_gyro.copy(),
-                path.parent,
+                path,
                 device,
                 "gyro",
                 subject,
@@ -276,9 +293,9 @@ def convert_dataset_into_spike(path):
             # Apply Modified Hough Spiker encoding and save the data
             apply_encoding(
                 dataframe_accel.copy(),
-                path.parent,
+                path,
                 device,
-                "accel",
+                "acc",
                 subject,
                 "modified_hough_spiker_encoded",
                 modified_hough_spiker,
@@ -287,7 +304,7 @@ def convert_dataset_into_spike(path):
             )
             apply_encoding(
                 dataframe_gyro.copy(),
-                path.parent,
+                path,
                 device,
                 "gyro",
                 subject,
@@ -298,12 +315,15 @@ def convert_dataset_into_spike(path):
             )
 
             for label in labels:
-                df_accel_label = dataframe_accel[dataframe_accel["label_id"] == label]
-                df_gyro_label = dataframe_gyro[dataframe_gyro["label_id"] == label]
+                df_accel_label = dataframe_accel[dataframe_accel["activity"] == label]
+                df_gyro_label = dataframe_gyro[dataframe_gyro["activity"] == label]
 
                 # Stack accelerometer and gyroscope data for the current label
                 stacked_data = np.vstack(
-                    [df_accel_label[["x", "y", "z"]].values, df_gyro_label[["x", "y", "z"]].values]
+                    [
+                        df_accel_label[["acc_x", "acc_y", "acc_z"]].values,
+                        df_gyro_label[["gyro_x", "gyro_y", "gyro_z"]].values,
+                    ]
                 )
 
                 # Calculate sfThreshold and zcsfThreshold for the current label
@@ -316,9 +336,9 @@ def convert_dataset_into_spike(path):
                 # Apply Step Forward encoding
                 apply_encoding(
                     df_accel_label.copy(),
-                    path.parent,
+                    path,
                     device,
-                    "accel",
+                    "acc",
                     subject,
                     "step_forward_encoded",
                     step_forward,
@@ -326,7 +346,7 @@ def convert_dataset_into_spike(path):
                 )
                 apply_encoding(
                     df_gyro_label.copy(),
-                    path.parent,
+                    path,
                     device,
                     "gyro",
                     subject,
@@ -338,9 +358,9 @@ def convert_dataset_into_spike(path):
                 # Apply Zero Cross Step Forward encoding
                 apply_encoding(
                     df_accel_label.copy(),
-                    path.parent,
+                    path,
                     device,
-                    "accel",
+                    "acc",
                     subject,
                     "zero_cross_step_forward_encoded",
                     zero_cross_step_forward,
@@ -348,7 +368,7 @@ def convert_dataset_into_spike(path):
                 )
                 apply_encoding(
                     df_gyro_label.copy(),
-                    path.parent,
+                    path,
                     device,
                     "gyro",
                     subject,
@@ -359,5 +379,5 @@ def convert_dataset_into_spike(path):
 
 
 if __name__ == "__main__":
-    path = Path("../../datasets/wisdm-dataset/raw")
-    convert_dataset_into_spike(path)
+    wisdm_data = data.to_pandas()
+    convert_dataset_into_spike(wisdm_data)
