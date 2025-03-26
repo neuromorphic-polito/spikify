@@ -2078,6 +2078,24 @@ Sphinx = ">=1.6"
 test = ["Pillow", "flake8", "pytest"]
 
 [[package]]
+name = "sphinxcontrib-programoutput"
+version = "0.18"
+description = "Sphinx extension to include program output"
+optional = false
+python-versions = ">=3.8"
+groups = ["docs"]
+files = [
+    {file = "sphinxcontrib_programoutput-0.18-py3-none-any.whl", hash = "sha256:8a651bc85de69a808a064ff0e48d06c12b9347da4fe5fdb1e94914b01e1b0c36"},
+    {file = "sphinxcontrib_programoutput-0.18.tar.gz", hash = "sha256:09e68b6411d937a80b6085f4fdeaa42e0dc5555480385938465f410589d2eed8"},
+]
+
+[package.dependencies]
+Sphinx = ">=5.0.0"
+
+[package.extras]
+docs = ["furo"]
+
+[[package]]
 name = "sphinxcontrib-qthelp"
 version = "2.0.0"
 description = "sphinxcontrib-qthelp is a sphinx extension which outputs QtHelp documents"
@@ -2330,4 +2348,4 @@ release = []
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "269961766ea7496d924e1f700ddb2e0158534677039fb3dba9d70cd44456036a"
+content-hash = "7476eb696f97bad4a2f1ab4ef90bae82fe019cbe375db55cb4f7688f5cb58f94"
