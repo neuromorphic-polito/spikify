@@ -42,12 +42,12 @@ Introduction
          .. grid-item::
             :columns: auto
 
-            .. button-link:: https://useblocks.com/
+            .. button-link:: https://innuce.polito.it/
                :outline:
                :color: primary
                :class: sd-rounded-pill sd-px-4 sd-fs-5
 
-               Neuromorphic PoliTo
+               inNuCe Lab
 
    .. grid-item::
       :columns: 12 4 4 4
