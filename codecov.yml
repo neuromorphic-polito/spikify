@@ -1,0 +1,51 @@
+codecov:
+  notify:
+    require_ci_to_pass: yes
+
+coverage:
+  status:
+    project:
+      default:
+        target: 100%
+        threshold: 5%
+    patch:
+      default:
+        target: 100%
+        threshold: 5%
+    changes: yes
+
+comment:
+  layout: "header, diff, flags, components"
+
+component_management:
+  default_rules:  # default rules that will be inherited by all components
+    statuses:
+      - type: project # in this case every component that doesn't have a status defined will have a project type one
+        target: auto
+  individual_components:
+    - component_id: temporal_encoding_deconvolution_algorithms
+      name: TempEncDeconAlgo
+      paths:
+        - "spikify/encoding/temporal/deconvolution/**"
+        - "tests/encoding/temporal/deconvolution/**"
+    - component_id: temporal_encoding_global_referenced_algorithms
+      name: TempEncGlobAlgo
+      paths:
+        - "spikify/encoding/temporal/global_referenced/**"
+        - "tests/encoding/temporal/global_referenced/**"
+    - component_id: temporal_encoding_contrast_algorithms
+      name: TempEncContAlgo
+      paths:
+        - "spikify/encoding/temporal/contrast/**"
+        - "tests/encoding/temporal/contrast/**"
+    - component_id: temporal_encoding_latency_algorithms
+      name: TempEncLatAlgo
+      paths:
+        - "spikify/encoding/temporal/latency/**"
+        - "tests/encoding/temporal/latency/**"
+    - component_id: temporal_encoding_rate_algorithms
+      name: TempEncRateAlgo
+      paths:
+        - "spikify/encoding/rate/**"
+        - "tests/encoding/rate/**"
+

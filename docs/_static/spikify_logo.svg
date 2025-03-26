@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="212px"
+     height="95px" viewBox="-0.5 -0.5 212 95">
+    <defs/>
+    <g>
+        <g data-cell-id="0">
+            <g data-cell-id="1">
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-8">
+                    <g>
+                        <path d="M 125 67 L 125 42" fill="none" stroke="#d6b656" stroke-width="3" stroke-miterlimit="10"
+                              pointer-events="stroke"/>
+                    </g>
+                </g>
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-9">
+                    <g>
+                        <path d="M 41 20 L 41 52" fill="none" stroke="#82b366" stroke-width="3" stroke-miterlimit="10"
+                              pointer-events="stroke"/>
+                    </g>
+                </g>
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-10">
+                    <g>
+                        <path d="M 105.58 44 L 106 22" fill="none" stroke="#b85450" stroke-width="3"
+                              stroke-miterlimit="10" pointer-events="stroke"/>
+                    </g>
+                </g>
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-15">
+                    <g>
+                        <path d="M 151 82 L 151 52" fill="none" stroke="#9673a6" stroke-width="3" stroke-miterlimit="10"
+                              pointer-events="stroke"/>
+                    </g>
+                </g>
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-16">
+                    <g>
+                        <path d="M 61 12 L 61 42" fill="none" stroke="#d79b00" stroke-width="3" stroke-miterlimit="10"
+                              pointer-events="stroke"/>
+                    </g>
+                </g>
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-19">
+                    <g>
+                        <path d="M 181 67 L 181 42" fill="none" stroke="#2d7600" stroke-width="3" stroke-miterlimit="10"
+                              pointer-events="stroke"/>
+                    </g>
+                </g>
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-22">
+                    <g>
+                        <ellipse cx="11" cy="47" rx="4" ry="4" fill="rgb(0, 0, 0)" stroke="none" pointer-events="all"/>
+                        <rect x="1" y="37" width="20" height="20" fill="none" stroke="none" pointer-events="all"/>
+                    </g>
+                </g>
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-23">
+                    <g>
+                        <ellipse cx="201" cy="47" rx="4" ry="4" fill="rgb(0, 0, 0)" stroke="none" pointer-events="all"/>
+                        <rect x="191" y="37" width="20" height="20" fill="none" stroke="none" pointer-events="all"/>
+                    </g>
+                </g>
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-25">
+                    <g>
+                        <path d="M 36 62 L 36 59.5 Q 36 57 41 59.5 L 43.5 60.75 Q 46 62 41 64.5 L 38.5 65.75 Q 36 67 36 64.5 Z"
+                              fill="#82b366" stroke="#82b366" stroke-miterlimit="10" transform="rotate(90,41,62)"
+                              pointer-events="all"/>
+                    </g>
+                </g>
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-26">
+                    <g>
+                        <path d="M 56 52 L 56 49.5 Q 56 47 61 49.5 L 63.5 50.75 Q 66 52 61 54.5 L 58.5 55.75 Q 56 57 56 54.5 Z"
+                              fill="#d79b00" stroke="#d79b00" stroke-miterlimit="10" transform="rotate(90,61,52)"
+                              pointer-events="all"/>
+                    </g>
+                </g>
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-27">
+                    <g>
+                        <path d="M 101 12 L 101 9.5 Q 101 7 106 9.5 L 108.5 10.75 Q 111 12 106 14.5 L 103.5 15.75 Q 101 17 101 14.5 Z"
+                              fill="#b85450" stroke="#b85450" stroke-miterlimit="10" transform="rotate(-90,106,12)"
+                              pointer-events="all"/>
+                    </g>
+                </g>
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-28">
+                    <g>
+                        <path d="M 119 33 L 119 30.5 Q 119 28 124 30.5 L 126.5 31.75 Q 129 33 124 35.5 L 121.5 36.75 Q 119 38 119 35.5 Z"
+                              fill="#d6b656" stroke="#d6b656" stroke-miterlimit="10" transform="rotate(-90,124,33)"
+                              pointer-events="all"/>
+                    </g>
+                </g>
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-29">
+                    <g>
+                        <path d="M 145 42 L 145 39.5 Q 145 37 150 39.5 L 152.5 40.75 Q 155 42 150 44.5 L 147.5 45.75 Q 145 47 145 44.5 Z"
+                              fill="#9673a6" stroke="#9673a6" stroke-miterlimit="10" transform="rotate(-90,150,42)"
+                              pointer-events="all"/>
+                    </g>
+                </g>
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-30">
+                    <g>
+                        <path d="M 175 32 L 175 29.5 Q 175 27 180 29.5 L 182.5 30.75 Q 185 32 180 34.5 L 177.5 35.75 Q 175 37 175 34.5 Z"
+                              fill="#2d7600" stroke="#2d7600" stroke-miterlimit="10" transform="rotate(-90,180,32)"
+                              pointer-events="all"/>
+                    </g>
+                </g>
+                <g data-cell-id="oX_7HyX7NQjUG85f-HDn-7">
+                    <g>
+                        <rect x="11" y="2" width="190" height="90" fill="none" stroke="none" pointer-events="all"/>
+                        <path d="M 11 46.86 C 49.66 2.23 67.88 2 105.99 46.86 C 144.12 91.72 161.98 92 201 46.86"
+                              fill="none" stroke="#000000" stroke-width="5" stroke-miterlimit="10"
+                              pointer-events="all"/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
