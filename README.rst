@@ -130,8 +130,7 @@ These datasets are preprocessed and converted into spike trains to evaluate the 
 Citation
 ============
 
-If you use this framework in your research, please cite the following
-preprint article:
+If you use this framework in your research, please cite the following article:
 
 ::
 
