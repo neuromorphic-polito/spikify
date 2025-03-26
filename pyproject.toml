@@ -69,6 +69,7 @@ sphinx-copybutton = '0.5.2'
 sphinx-data-viewer = '0.1.5'
 sphinx-needs = '4.1.0'
 sphinx_design = '0.6.1'
+sphinxcontrib-plantuml = '0.30'
 
 
 
@@ -131,7 +132,7 @@ output = "coverage/reports/coverage.xml"
 dev = ["pytest", "pytest-cov"]
 code-quality = ["pyproject-flake8", "black", "docformatter", "pre-commit"]
 release = ["bump-my-version"]
-docs = ["furo", "sphinx", "sphinx-copybutton", "sphinx-data-viewer", "sphinx-needs", "sphinx_design"]
+docs = ["furo", "sphinx", "sphinx-copybutton", "sphinx-data-viewer", "sphinx-needs", "sphinx_design", "sphinxcontrib-plantuml"]
 
 
 [build-system]
