@@ -142,8 +142,8 @@ elif DOCS_THEME == "furo":
         "source_repository": "https://github.com/neuromorphic-polito/spikify",
         "source_branch": "main",
         "source_directory": "docs/",
-        "light_logo": "spikify_light.svg",
-        "dark_logo": "spikify_dark.svg",
+        "light_logo": "white_logo.svg",
+        "dark_logo": "dark_logo.svg",
         # "light_css_variables": {
         #     "color-brand-primary": "#FFDE59",
         #     "color-brand-content": "#FFDE59",
