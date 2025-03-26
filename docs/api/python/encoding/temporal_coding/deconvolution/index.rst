@@ -1,7 +1,7 @@
 .. _deconvolution:
 
 :octicon:`file-directory;0.9em;sd-mr-1 fill-primary` deconvolution
-================================================================
+=========================================================================
 
 The ``deconvolution`` folder within the temporal coding module comprises algorithms that focus on reconstructing analog signals from spike trains. These techniques utilize convolution and inverse convolution operations to encode the signal effectively, often by identifying and subtracting features of the input signal.
 

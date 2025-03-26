@@ -1,7 +1,7 @@
 .. _modified_hough_spiker_algorithm_desc:
 
 Modified Hough Spiker Encoding
-============================
+================================
 
 The Modified Hough Spiker Algorithm (Modified HSA) builds upon the original Hough Spiker Algorithm by introducing a threshold mechanism to handle the detection process. While it maintains the core idea of subtractive, deconvolution-based spike detection, the modified version incorporates a threshold value to accumulate and evaluate errors.
 

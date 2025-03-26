@@ -92,7 +92,7 @@ Inspiration
 The **spikify**  library is inspired by the research presented in the paper `Spike encoding techniques for IoT time-varying signals benchmarked on a neuromorphic classification task <https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2022.999029/full>`_, which explores various methods for converting continuous signals into spike-based representations for neuromorphic computing.
 
 Citation
-~~~~~~
+~~~~~~~~~~~~
 
 If you use the **spikify** library in your research or applications, please cite the following paper:
 
@@ -113,7 +113,7 @@ If you use the **spikify** library in your research or applications, please cite
 
 
 Referenced By:
-~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 The following research has cited this work and contributed to the field of neuromorphic computing and spiking neural networks. This growing body of literature continues to expand on the concepts and methodologies introduced in the referenced paper, driving further advancements in the area.
 

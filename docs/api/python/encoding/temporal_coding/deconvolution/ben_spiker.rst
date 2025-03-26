@@ -1,8 +1,8 @@
-.. _ben_spiker_function:
+.. _bens_spiker_function:
 
-.. title:: Ben Spiker
+.. title:: Bens Spiker
 
-.. automodule:: spikify.encoding.temporal.deconvolution.ben_spiker_algorithm
-   :members: ben_spiker
+.. automodule:: spikify.encoding.temporal.deconvolution.bens_spiker_algorithm
+   :members: bens_spiker
    :undoc-members:
    :show-inheritance:

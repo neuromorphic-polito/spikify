@@ -1,43 +1,43 @@
 """
 .. raw:: html
 
-    <h2>Ben Spiker Algorithm</h2>
+    <h2>Bens Spiker Algorithm</h2>
 """
 
 import numpy as np
 from scipy.signal.windows import boxcar  # da sistemare a scelta
 
 
-def ben_spiker(signal: np.ndarray, window_length: int, threshold: float) -> np.ndarray:
+def bens_spiker(signal: np.ndarray, window_length: int, threshold: float) -> np.ndarray:
     """
-    Perform spike detection using Ben's Spiker Algorithm.
+    Perform spike detection using Bens Spiker Algorithm.
 
     This function detects spikes in an input signal based on the comparison of cumulative errors calculated over a
     segment of the signal, which is filtered using a boxcar window. A spike is detected if the cumulative error between
     the filtered signal and the raw signal is below a certain threshold.
 
-    Refer to the :ref:`ben_spiker_algorithm_desc` for a detailed explanation of the Ben's Spiker algorithm.
+    Refer to the :ref:`bens_spiker_algorithm_desc` for a detailed explanation of the Ben's Spiker algorithm.
 
     **Code Example:**
 
     .. code-block:: python
 
         import numpy as np
-        from spikify.encoding.temporal.deconvolution import ben_spiker
+        from spikify.encoding.temporal.deconvolution import bens_spiker
         signal = np.array([0.1, 0.2, 0.3, 1.0, 0.5, 0.3, 0.1])
         window_length = 3
         threshold = 0.5
-        spikes = ben_spiker(signal, window_length, threshold)
+        spikes = bens_spiker(signal, window_length, threshold)
 
     .. doctest::
         :hide:
 
         >>> import numpy as np
-        >>> from spikify.encoding.temporal.deconvolution import ben_spiker
+        >>> from spikify.encoding.temporal.deconvolution import bens_spiker
         >>> signal = np.array([0.1, 0.2, 0.3, 1.0, 0.5, 0.3, 0.1])
         >>> window_length = 3
         >>> threshold = 0.5
-        >>> spikes = ben_spiker(signal, window_length, threshold)
+        >>> spikes = bens_spiker(signal, window_length, threshold)
         >>> spikes
         array([0, 0, 1, 0, 0, 0, 0], dtype=int8)
 

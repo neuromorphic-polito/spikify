@@ -1,7 +1,7 @@
 .. _temporal_coding:
 
 :octicon:`file-directory;0.9em;sd-mr-1 fill-primary` temporal
-================================================
+================================================================
 
 The ``temporal`` folder within the encoding module contains algorithms that focus on encoding information based on the timing of individual spikes. This method is especially effective for scenarios where the timing of events conveys more information than their frequency.
 

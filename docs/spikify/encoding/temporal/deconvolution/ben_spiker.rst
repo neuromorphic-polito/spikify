@@ -1,13 +1,13 @@
-.. _ben_spiker_algorithm_desc:
+.. _bens_spiker_algorithm_desc:
 
 Ben's Spiker Encoding
 ============================
 
-Ben's Spiker Algorithm is a method used to detect spikes within a signal by comparing two cumulative error metrics. These metrics are calculated over a segment of the signal, which is filtered using a boxcar (or rectangular) window of a specified length. The algorithm relies on the comparison of these errors to determine whether a spike is present at a given timestep.
+Bens Spiker Algorithm is a method used to detect spikes within a signal by comparing two cumulative error metrics. These metrics are calculated over a segment of the signal, which is filtered using a boxcar (or rectangular) window of a specified length. The algorithm relies on the comparison of these errors to determine whether a spike is present at a given timestep.
 
 **Algorithm Overview**:
 
-Ben's Spiker Algorithm works as follows:
+Bens Spiker Algorithm works as follows:
 
 1. **Cumulative Error Calculation**:
    
@@ -47,7 +47,7 @@ Here, `error1` is the sum of absolute differences between the signal segment and
 
 Ben's Spiker Algorithm is robust for detecting spikes in signals where the spike characteristics closely match the shape of the filter window. This makes it particularly suitable for signals with regular or repetitive spike-like features.
 
-For a practical implementation in Python, see the :ref:`Ben Spiker Function <ben_spiker_function>`.
+For a practical implementation in Python, see the :ref:`Ben Spiker Function <bens_spiker_function>`.
 
 **References**:
 
