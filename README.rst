@@ -61,7 +61,7 @@ Here is a simple example to get started:
     # Encode the sinusoidal signal
     encoded_signal = poisson_rate(amplitude, interval_length)
 
-For more detailed examples and usage, please refer to the `documentation <http://example.com>`_.
+For more detailed examples and usage, please refer to the `documentation <https://spikify.readthedocs.io/en/latest/>`_.
 
 Encoding Techniques
 ===================
