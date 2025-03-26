@@ -123,10 +123,29 @@ Encoded datasets:
 
 The following datasets have been selected to serve as examples for benchmarking spike train encoding techniques:
 
-- **Free Spoken Digit Dataset (FSD)**: A collection of 8 kHz audio signals, ideal for speech recognition tasks.
 - **WISDM Dataset**: 20 Hz recordings of human activity through mobile and wearable inertial sensors.
 
 These datasets are preprocessed and converted into spike trains to evaluate the performance of different encoding techniques.
+
+Citation
+============
+
+If you use this framework in your research, please cite the following
+preprint article:
+
+::
+
+   @ARTICLE{
+        10.3389/fnins.2022.999029,
+        AUTHOR={Forno, Evelina  and Fra, Vittorio  and Pignari, Riccardo  and Macii, Enrico  and Urgese, Gianvito },
+        TITLE={Spike encoding techniques for IoT time-varying signals benchmarked on a neuromorphic classification task},
+        JOURNAL={Frontiers in Neuroscience},
+        VOLUME={16},
+        YEAR={2022},
+        URL={https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2022.999029},
+        DOI={10.3389/fnins.2022.999029},
+        ISSN={1662-453X},
+    }
 
 Contributing
 ============
