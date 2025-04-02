@@ -13,7 +13,7 @@ Academic Support
 
 If you need support for your research or academic projects, please get in touch with our team. We are a group of passionate developers and researchers specializing in neuromorphic computing, signal processing, and spiking neural networks.
 
-The fastest way to reach us is via e-mail: support@spikify.com.
+The fastest way to reach us is via e-mail: innuce@polito.it.
 
 .. Research Highlights
 .. ------------------

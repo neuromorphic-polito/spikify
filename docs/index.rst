@@ -82,14 +82,14 @@ Introduction
 
    .. grid-item-card:: :octicon:`rocket;1.5em;sd-mr-1 fill-primary` Try it with NIR and NeuroBench
 
-      Empower your end-to-end design with deployment and benchmarking tools: integrate spikify with NIR and NeuroBench.
+      Empower your end-to-end design with deployment and benchmarking tools: couple spikify with NIR and NeuroBench.
 
 ----------------
 
 Inspiration
 ------------
 
-The **spikify**  library is inspired by the research presented in the paper `Spike encoding techniques for IoT time-varying signals benchmarked on a neuromorphic classification task <https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2022.999029/full>`_, which explores various methods for converting continuous signals into spike-based representations for neuromorphic computing.
+The **spikify**  library is inspired by the paper `"Spike encoding techniques for IoT time-varying signals benchmarked on a neuromorphic classification task" <https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2022.999029/full>`_, which explores various methods for converting continuous signals into spike-based representations for neuromorphic computing.
 
 Citation
 ~~~~~~~~~~~~

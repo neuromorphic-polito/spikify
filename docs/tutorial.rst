@@ -1,12 +1,12 @@
 .. _tutorial:
 
-Tutorial
-========
+How to use
+============
 
 This tutorial walks you through generating a sinusoidal signal and encoding it using different encoding methods from the **spikify** library. By the end of this tutorial, you'll understand how to transform a simple signal into a spike-based representation.
 
 Generating a Sinusoidal Signal
-------------------------------
+-------------------------------
 First, let's generate a sinusoidal signal using NumPy. This will serve as the input for the encoding process.
 
 .. code-block:: python
@@ -14,8 +14,8 @@ First, let's generate a sinusoidal signal using NumPy. This will serve as the in
    import numpy as np
 
    # Generate a sinusoidal signal
-   time = np.linspace(0, 2 * np.pi, 100)  # Time from 0 to 2*pi
-   amplitude = np.sin(time)  # Sinusoidal signal
+   time = np.linspace(0, 4 * np.pi, 200)
+   signal = np.sin(2 * t) + 0.5 * np.sin(4 * t)
 
 Encoding the Signal with Poisson Rate
 -------------------------------------
@@ -27,14 +27,15 @@ Now, let's encode the sinusoidal signal into spikes using the `poisson_rate` met
 
    # Set parameters for encoding
    np.random.seed(0)  # For reproducibility
-   interval_length = 2  # Length of the encoding interval
+   interval_length = 5  # Length of the encoding interval
 
    # Encode the sinusoidal signal
-   encoded_signal = poisson_rate(amplitude, interval_length)
-
-Try It Yourself
----------------
-Feel free to experiment with different signals, interval lengths, and encoding methods. The spikify library offers a variety of encoding techniques tailored to different needs.
+   encoded_signal = poisson_rate(signal, interval_length)
+   
+   
+.. image:: _static/spike_encoding.gif
+   :alt: Animation of spike encoding process
+   :align: center
 
 Next Steps
 ----------
