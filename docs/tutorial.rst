@@ -15,7 +15,7 @@ First, let's generate a sinusoidal signal using NumPy. This will serve as the in
 
    # Generate a sinusoidal signal
    time = np.linspace(0, 4 * np.pi, 200)
-   signal = np.sin(2 * t) + 0.5 * np.sin(4 * t)
+   signal = np.sin(2 * time) + 0.5 * np.sin(4 * time)
 
 Encoding the Signal with Poisson Rate
 -------------------------------------
