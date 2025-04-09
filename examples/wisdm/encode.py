@@ -9,7 +9,7 @@ from spikify.encoding.temporal.contrast import (
     zero_cross_step_forward,
 )
 from spikify.encoding.temporal.global_referenced import phase_encoding, time_to_first_spike
-from spikify.encoding.temporal.deconvolution import ben_spiker, hough_spiker, modified_hough_spiker
+from spikify.encoding.temporal.deconvolution import bens_spiker, hough_spiker, modified_hough_spiker
 from datasets import load_dataset
 
 REPO_ID = "neuromorphic-polito/siddha"
@@ -244,15 +244,15 @@ def convert_dataset_into_spike(dataframe):
                 interval=10,
             )
             #
-            # Apply Ben Spiker encoding and save the data
+            # Apply Bens Spiker encoding and save the data
             apply_encoding(
                 dataframe_accel.copy(),
                 path,
                 device,
                 "acc",
                 subject,
-                "ben_spiker_encoded",
-                ben_spiker,
+                "bens_spiker_encoded",
+                bens_spiker,
                 window_length=3,
                 threshold=1.0,
             )
@@ -262,8 +262,8 @@ def convert_dataset_into_spike(dataframe):
                 device,
                 "gyro",
                 subject,
-                "ben_spiker_encoded",
-                ben_spiker,
+                "bens_spiker_encoded",
+                bens_spiker,
                 window_length=3,
                 threshold=1.0,
             )

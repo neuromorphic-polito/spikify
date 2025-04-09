@@ -16,8 +16,8 @@ sys.path.insert(0, os.path.abspath(".."))
 
 project = "spikify"
 now = datetime.datetime.now()
-copyright = f"2024-{now.year}, Team Neuromorphic Polito"
-author = "Team Neuromorphic Polito"
+author = "Benedetto Leto, Gianvito Urgese, Vittorio Fra, Riccardo Pignari"
+copyright = f"{now.year}, {author}."
 version = "0.1.0"
 
 # -- General configuration ---------------------------------------------------
