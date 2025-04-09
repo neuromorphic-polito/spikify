@@ -36,7 +36,7 @@ To install the Spikify package, use pip:
 
 .. code-block:: bash
 
-    pip install spikify
+    pip install innuce-spikify
 
 Usage
 =====
