@@ -21,7 +21,6 @@ Installation
 
 To install the Spikify package, use pip:
 
-```bash
+.. code-block:: bash
 
     pip install innuce-spikify
-```
