@@ -34,7 +34,7 @@ To install spikify via `pip`, run the following command:
 
 .. code-block:: bash
 
-    pip install spikify
+    pip install innuce-spikify
 
 .. note::
 

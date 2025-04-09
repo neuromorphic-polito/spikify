@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "spikify"
+name = "innuce-spikify"
 version = "0.1.0"
 description = "A Python package to conver signal data to spike data"
 authors = ["Neuromorphic Polito <email@example.com>"]
@@ -29,7 +29,7 @@ packages = [
     { include = "spikify"}
 ]
 
-exclude = ["docs", "tests"]
+exclude = ["docs", "tests", "examples"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
