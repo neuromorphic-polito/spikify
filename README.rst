@@ -115,7 +115,8 @@ These datasets are preprocessed and converted into spike trains to evaluate the 
 Citation
 --------
 
-If you use this framework in your research, please cite the following article::
+If you use this framework in your research, please cite the following article
+::
 
     @ARTICLE{
         10.3389/fnins.2022.999029,
