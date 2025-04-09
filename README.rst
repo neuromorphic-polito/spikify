@@ -19,6 +19,9 @@ Features
 Installation
 -----------
 
-To install the Spikify package, use pip::
+To install the Spikify package, use pip:
+
+```bash
 
     pip install innuce-spikify
+```
