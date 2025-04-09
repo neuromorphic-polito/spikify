@@ -2,11 +2,11 @@
 name = "innuce-spikify"
 version = "0.1.0"
 description = "A Python package to conver signal data to spike data"
-authors = ["Neuromorphic Polito <email@example.com>"]
+authors = [Benedetto Leto, Gianvito Urgese, Vittorio Fra, Riccardo Pignari]
 readme = "README.rst"
 # homepage = ""
 repository = "https://github.com/neuromorphic-polito/spikify"
-# documentation = ""
+documentation = "https://spikify.readthedocs.io/en/latest/"
 license = "Apache-2.0"
 keywords = ["artificial intelligence", "neuromorphic computing", "signal processing", "education"]
 classifiers = [
