@@ -2,7 +2,7 @@
 name = "innuce-spikify"
 version = "0.1.0"
 description = "A Python package to conver signal data to spike data"
-authors = [Benedetto Leto, Gianvito Urgese, Vittorio Fra, Riccardo Pignari]
+authors = ["Benedetto Leto <benedetto.leto@polito.it>", "Gianvito Urgese <gianvito.urgese@polito.it>", "Vittorio Fra <vittorio.fra@polito.it>", "Riccardo Pignari <riccardo.pignari@polito.it>"]
 readme = "README.rst"
 # homepage = ""
 repository = "https://github.com/neuromorphic-polito/spikify"
