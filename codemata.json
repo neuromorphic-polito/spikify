@@ -1,0 +1,92 @@
+{
+    "@context": "https://w3id.org/codemeta/3.0",
+    "type": "SoftwareSourceCode",
+    "applicationCategory": "Computer Science",
+    "author": [
+        {
+            "id": "https://orcid.org/0009-0007-8891-5051",
+            "type": "Person",
+            "affiliation": {
+                "type": "Organization",
+                "name": "Department of Control and Computer Engineering, Politecnico di Torino"
+            },
+            "email": "benedetto.leto@polito.it",
+            "familyName": "Leto",
+            "givenName": "Benedetto"
+        },
+        {
+            "id": "https://orcid.org/0000-0001-9175-2838",
+            "type": "Person",
+            "affiliation": {
+                "type": "Organization",
+                "name": "Interuniversity Department of Regional and Urban Studies and Planning, Politecnico di Torino"
+            },
+            "email": "vittorio.fra@polito.it",
+            "familyName": "Fra",
+            "givenName": "Vittorio"
+        },
+        {
+            "id": "https://orcid.org/0000-0003-2672-7593",
+            "type": "Person",
+            "affiliation": {
+                "type": "Organization",
+                "name": "Interuniversity Department of Regional and Urban Studies and Planning, Politecnico di Torino"
+            },
+            "email": "gianvito.urgese@polito.it",
+            "familyName": "Urgese",
+            "givenName": "Gianvito"
+        },
+        {
+            "id": "https://orcid.org/0000-0001-6341-8613",
+            "type": "Person",
+            "affiliation": {
+                "type": "Organization",
+                "name": "Department of Control and Computer Engineering, Politecnico di Torino"
+            },
+            "email": "riccardo.pignari@polito.it",
+            "familyName": "Pignari",
+            "givenName": "Riccardo"
+        }
+    ],
+    "codeRepository": "https://github.com/neuromorphic-polito/spikify",
+    "contributor": {
+        "id": "https://orcid.org/0009-0007-8891-5051",
+        "type": "Person",
+        "affiliation": {
+            "type": "Organization",
+            "name": "Department of Control and Computer Engineering, Politecnico di Torino"
+        },
+        "email": "benedetto.letoi@polito.it",
+        "familyName": "Leto",
+        "givenName": "Benedetto"
+    },
+    "dateCreated": "2025-04-11",
+    "dateModified": "2025-04-11",
+    "datePublished": "2025-04-11",
+    "description": "A fully Convert your data into spike-based signals for efficient and biologically-inspired spiking neural network applications, enabling faster and more energy-efficient computations.",
+    "funder": {
+        "type": "Organization",
+        "name": "NRRP-RI, M4C2, funded by the European Union - NextGenerationEU"
+    },
+    "identifier": "https://doi.org/10.3389/fnins.2022.999029",
+    "isPartOf": "https://innuce.polito.it/",
+    "keywords": [
+        "Spiking Neural Networks",
+        "Events Data"
+    ],
+    "license": "https://spdx.org/licenses/Apache-2.0",
+    "name": "spikify",
+    "operatingSystem": [
+        "Linux",
+        "maxOS",
+        "Windows"
+    ],
+    "programmingLanguage": "Python",
+    "runtimePlatform": "Miniconda",
+    "version": "0.1.0",
+    "developmentStatus": "active",
+    "funding": "Project IR0000011, CUP B51E22000150006, EBRAINS-Italy",
+    "isSourceCodeOf": "inNuCE Lab",
+    "issueTracker": "https://github.com/neuromorphic-polito/spikify/issues",
+    "referencePublication": "https://doi.org/10.3389/fnins.2022.999029"
+}
