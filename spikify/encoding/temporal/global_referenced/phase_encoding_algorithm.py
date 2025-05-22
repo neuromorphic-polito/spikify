@@ -80,6 +80,6 @@ def phase_encoding(signal: np.ndarray, num_bits: int) -> np.ndarray:
     levels = np.clip(levels, 0, 2**num_bits - 1)
 
     # Convert levels to binary and flatten the result to a 1D spike array
-    spikes = np.unpackbits(levels[:, None].astype(np.uint8), axis=1, bitorder="big")[:, -num_bits:].reshape(-1)
+    spikes = np.array([list(map(int, list(f"{level:0{num_bits}b}"))) for level in levels], dtype=np.uint8).reshape(-1)
 
     return spikes
