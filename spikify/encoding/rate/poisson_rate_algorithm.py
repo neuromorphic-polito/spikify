@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def poisson_rate(signal: np.ndarray, interval_length: int) -> np.ndarray:
+def poisson_rate(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.ndarray:
     """
     Perform Poisson rate encoding on the input signal.
 
@@ -46,6 +46,8 @@ def poisson_rate(signal: np.ndarray, interval_length: int) -> np.ndarray:
     :type signal: numpy.ndarray
     :param interval_length: The size of the interval for encoding the spike train.
     :type interval_length: int
+    :param seed: Random seed for reproducibility. Default is 0.
+    :type seed: int
     :return: A 1D array or tensor of encoded spike data after Poisson rate encoding.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty.
@@ -67,7 +69,7 @@ def poisson_rate(signal: np.ndarray, interval_length: int) -> np.ndarray:
         signal = signal.reshape(-1, 1)
     S, F = signal.shape
 
-    np.random.seed(0)
+    np.random.seed(seed)
 
     # Ensure non-negative signal values
     signal = np.clip(signal, 0, None)
