@@ -63,6 +63,9 @@ def poisson_rate(signal: np.ndarray, interval_length: int) -> np.ndarray:
             "To resolve this, consider trimming or padding the signal to ensure its length is a multiple of the "
             "interval."
         )
+    if signal.ndim == 1:
+        signal = signal.reshape(-1, 1)
+    S, F = signal.shape
 
     np.random.seed(0)
 
@@ -70,29 +73,31 @@ def poisson_rate(signal: np.ndarray, interval_length: int) -> np.ndarray:
     signal = np.clip(signal, 0, None)
 
     # Compute mean over the signal reshaped to interval-sized chunks
-    signal = np.mean(signal.reshape(-1, interval_length), axis=1)
+    signal = np.mean(signal.reshape(S // interval_length, interval_length, F), axis=1)
 
     # Normalize the signal
-    signal_max = signal.max()
-    if signal_max > 0:
-        signal /= signal_max
+    signal_max = np.max(signal, axis=0, keepdims=True)
+    if np.any(signal_max > 0):
+        safe_max = np.where(signal_max > 0, signal_max, 1)
+        signal /= safe_max
 
     # Initialize the spike array
-    spikes = np.zeros((signal.shape[0], interval_length), dtype=np.int8)
+    spikes = np.zeros((S // interval_length, interval_length, F), dtype=np.int8)
 
     # Create bins for Poisson rate encoding
     bins = np.linspace(0, 1, interval_length + 1)
 
     # Generate Poisson spike trains
-    for i, rate in enumerate(signal):
-        if rate > 0:
-            ISI = [
-                -np.log(1 - np.random.random()) / (rate * interval_length) for _ in range(interval_length)
-            ]  # Inter-spike intervals
-            spike_times = np.searchsorted(bins, np.cumsum(ISI)) - 1  # Find spike times
-            spike_times = spike_times[spike_times < interval_length]  # Clip times within interval
-            spikes[i, spike_times] = 1
+    for j in range(F):
+        for i, rate in enumerate(signal[:, j]):
+            if rate > 0:
+                ISI = -np.log(1 - np.random.random(interval_length)) / (rate * interval_length)  # Inter-spike intervals
+                spike_times = np.searchsorted(bins, np.cumsum(ISI)) - 1  # Find spike times
+                spike_times = spike_times[spike_times < interval_length]  # Clip times within interval
+                spikes[i, spike_times, j] = 1
 
     # Flatten the 2D array into a 1D spike train
-    spikes = spikes.flatten()
+    spikes = spikes.reshape(S, F)
+    if spikes.shape[-1] == 1:
+        spikes = spikes.flatten()
     return spikes
