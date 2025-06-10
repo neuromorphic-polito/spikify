@@ -83,10 +83,12 @@
     ],
     "programmingLanguage": "Python",
     "runtimePlatform": "Miniconda",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "developmentStatus": "active",
     "funding": "Project IR0000011, CUP B51E22000150006, EBRAINS-Italy",
     "isSourceCodeOf": "inNuCE Lab",
     "issueTracker": "https://github.com/neuromorphic-polito/spikify/issues",
-    "referencePublication": "https://doi.org/10.3389/fnins.2022.999029"
+    "referencePublication": "https://doi.org/10.3389/fnins.2022.999029",
+    "downloadUrl": "https://github.com/neuromorphic-polito/spikify/releases/tag/0.1.1"
+
 }
