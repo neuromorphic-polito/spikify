@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def step_forward(signal: np.ndarray, threshold: float) -> np.ndarray:
+def step_forward(signal: np.ndarray, threshold: float | list[float]) -> np.ndarray:
     """
     Perform Step-Forward encoding on the input signal.
 
@@ -40,8 +40,8 @@ def step_forward(signal: np.ndarray, threshold: float) -> np.ndarray:
 
     :param signal: The input signal to be encoded. This should be a numpy ndarray.
     :type signal: numpy.ndarray
-    :param threshold: The threshold value for spike detection.
-    :type threshold: float
+    :param threshold: The threshold value(s) for spike detection. Can be a float or a list/array of floats.
+    :type threshold: float or list
     :return: A 1D numpy array representing the encoded spike train.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty.
@@ -51,16 +51,27 @@ def step_forward(signal: np.ndarray, threshold: float) -> np.ndarray:
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
+    if isinstance(threshold, (float, int)):
+        threshold = [threshold]
+
+    if signal.ndim == 1:
+        signal = signal.reshape(-1, 1)
+
+    if len(threshold) != signal.shape[1]:
+        raise ValueError("Threshold must match the number of features in the signal.")
+
     spike = np.zeros_like(signal, dtype=np.int8)
 
     # Base value initialized at the start of the signal
-    base = signal[0]
-    for t, value in enumerate(signal):
-        if value > base + threshold:
-            spike[t] = 1
-            base += threshold
-        elif value < base - threshold:
-            spike[t] = -1
-            base -= threshold
-
+    for j in range(signal.shape[1]):
+        base = signal[0, j]
+        for t, value in enumerate(signal[:, j]):
+            if value > base + threshold[j]:
+                spike[t] = 1
+                base += threshold
+            elif value < base - threshold[j]:
+                spike[t] = -1
+                base -= threshold[j]
+    if spike.shape[-1] == 1:
+        spike = spike.flatten()
     return spike
