@@ -58,7 +58,7 @@ def moving_window(signal: np.ndarray, window_length: int) -> np.ndarray:
 
     if signal.ndim == 1:
         signal = signal.reshape(-1, 1)
-    variation = np.diff(signal[1:, :], prepend=signal[0:, :], axis=0)
+    variation = np.diff(signal[1:, :], prepend=signal[[0], :], axis=0)
     threshold = np.mean(np.abs(variation), axis=0)
     spikes = np.zeros_like(signal, dtype=np.int8)
     # Compute the moving window mean and apply thresholds
@@ -74,5 +74,4 @@ def moving_window(signal: np.ndarray, window_length: int) -> np.ndarray:
 
     if spikes.shape[-1] == 1:
         spikes = spikes.flatten()
-
     return spikes
