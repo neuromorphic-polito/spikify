@@ -68,7 +68,7 @@ class TestMovingWindow(unittest.TestCase):
         result_5 = moving_window(signal, window_length_5)
         np.testing.assert_array_equal(result_5, expected_spikes_5)
 
-    def test_shape_with_multiple_features(self):
+    def test_with_multiple_features(self):
         """Test the function with a signal containing multiple features."""
         np.random.seed(42)
         signal = np.random.rand(10, 2)
@@ -77,7 +77,7 @@ class TestMovingWindow(unittest.TestCase):
         self.assertEqual(encoded_signal.shape, signal.shape)
         signal_f1 = signal[:, 0]
         signal_f2 = signal[:, 1]
-        moving_window_f1 = moving_window(signal_f1, interval)
-        moving_window_f2 = moving_window(signal_f2, interval)
-        np.testing.assert_array_equal(encoded_signal[:, 0], moving_window_f1)
-        np.testing.assert_array_equal(encoded_signal[:, 1], moving_window_f2)
+        encoded_signal_f1 = moving_window(signal_f1, interval)
+        encoded_signal_f2 = moving_window(signal_f2, interval)
+        np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
+        np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)

@@ -67,10 +67,10 @@ def step_forward(signal: np.ndarray, threshold: float | list[float]) -> np.ndarr
         base = signal[0, j]
         for t, value in enumerate(signal[:, j]):
             if value > base + threshold[j]:
-                spike[t] = 1
-                base += threshold
+                spike[t, j] = 1
+                base += threshold[j]
             elif value < base - threshold[j]:
-                spike[t] = -1
+                spike[t, j] = -1
                 base -= threshold[j]
     if spike.shape[-1] == 1:
         spike = spike.flatten()
