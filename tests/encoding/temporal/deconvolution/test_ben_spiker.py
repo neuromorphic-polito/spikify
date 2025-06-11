@@ -134,3 +134,18 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         threshold = 1
         result = bens_spiker(signal, window_length, threshold)
         self.assertTrue(np.any(result))
+
+    def test_with_multiple_features(self):
+        """Test the function with a signal containing multiple features."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        threshold = [0.5, 0.3]
+        window_length = 3
+        encoded_signal = bens_spiker(signal, window_length, threshold)
+        self.assertEqual(encoded_signal.shape, signal.shape)
+        signal_f1 = signal[:, 0]
+        signal_f2 = signal[:, 1]
+        encoded_signal_f1 = bens_spiker(signal_f1, window_length, threshold[0])
+        encoded_signal_f2 = bens_spiker(signal_f2, window_length, threshold[1])
+        np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
+        np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
