@@ -52,7 +52,10 @@ def hough_spiker(signal: np.ndarray, window_length: int) -> np.ndarray:
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
-    if window_length > len(signal):
+    if signal.ndim == 1:
+        signal = signal.reshape(-1, 1)
+
+    if window_length > signal.shape[0]:
         raise ValueError("Filter window size must be less than the length of the signal.")
 
     # Initialize the spike array
@@ -64,14 +67,17 @@ def hough_spiker(signal: np.ndarray, window_length: int) -> np.ndarray:
     # Copy the signal for modification
     signal_copy = np.copy(np.array(signal, dtype=np.float64))
 
-    # Iterate over the signal to detect spikes
-    for t in range(len(signal_copy) - window_length + 1):
-        # Count how many values match or exceed the filter window values
-        match_count = np.sum(signal_copy[t : t + window_length] >= filter_window)
+    for j in range(signal_copy.shape[1]):
+        # Iterate over the signal to detect spikes
+        for t in range(len(signal_copy[:, j]) - window_length + 1):
+            # Count how many values match or exceed the filter window values
+            match_count = np.sum(signal_copy[t : t + window_length, j] >= filter_window)
 
-        # If all values match or exceed, a spike is detected
-        if match_count == window_length:
-            signal_copy[t : t + window_length] -= filter_window
-            spikes[t] = 1
+            # If all values match or exceed, a spike is detected
+            if match_count == window_length:
+                signal_copy[t : t + window_length, j] -= filter_window
+                spikes[t, j] = 1
 
+    if spikes.shape[-1] == 1:
+        spikes = spikes.flatten()
     return spikes

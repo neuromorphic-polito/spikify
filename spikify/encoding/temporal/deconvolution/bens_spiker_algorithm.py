@@ -57,7 +57,7 @@ def bens_spiker(signal: np.ndarray, window_length: int, threshold: float | list[
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
-    if window_length > len(signal):
+    if window_length > signal.shape[0]:
         raise ValueError("Filter window size must be less than the length of the signal.")
     if isinstance(threshold, (float, int)):
         threshold = [threshold]
