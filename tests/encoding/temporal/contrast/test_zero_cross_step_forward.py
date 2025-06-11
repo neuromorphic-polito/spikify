@@ -67,3 +67,17 @@ class TestZeroCrossStepForward(unittest.TestCase):
         expected_spikes = np.array([0, 0, 1, 1, 1])
         result = zero_cross_step_forward(signal, threshold)
         np.testing.assert_array_equal(result, expected_spikes)
+
+    def test_shape_with_multiple_features(self):
+        """Test the function with a signal containing multiple features."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        threshold = [0.5, 0.3]
+        encoded_signal = zero_cross_step_forward(signal, threshold)
+        self.assertEqual(encoded_signal.shape, signal.shape)
+        signal_f1 = signal[:, 0]
+        signal_f2 = signal[:, 1]
+        encoded_signal_f1 = zero_cross_step_forward(signal_f1, threshold[0])
+        encoded_signal_f2 = zero_cross_step_forward(signal_f2, threshold[1])
+        np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
+        np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)

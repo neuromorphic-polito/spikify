@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def zero_cross_step_forward(signal: np.ndarray, threshold: int) -> np.ndarray:
+def zero_cross_step_forward(signal: np.ndarray, threshold: float | list[float]) -> np.ndarray:
     """
     Perform Zero-Crossing Step-Forward (ZCSF) encoding on the input signal.
 
@@ -41,8 +41,8 @@ def zero_cross_step_forward(signal: np.ndarray, threshold: int) -> np.ndarray:
 
     :param signal: The input signal to be encoded. This should be a numpy ndarray.
     :type signal: numpy.ndarray
-    :param threshold: The threshold value used to determine spike generation.
-    :type threshold: int
+    :param threshold: The threshold value used to determine spike generation. Can be a float or a list/array of floats.
+    :type threshold: float
     :return: A 1D numpy array representing the encoded spike train.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty.
@@ -53,6 +53,15 @@ def zero_cross_step_forward(signal: np.ndarray, threshold: int) -> np.ndarray:
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
+    if isinstance(threshold, (float, int)):
+        threshold = [threshold]
+
+    if signal.ndim == 1:
+        signal = signal.reshape(-1, 1)
+
+    if len(threshold) != signal.shape[1]:
+        raise ValueError("Threshold must match the number of features in the signal.")
+
     spike = np.zeros_like(signal, dtype=np.int8)
 
     # Zero out negative values
@@ -60,5 +69,8 @@ def zero_cross_step_forward(signal: np.ndarray, threshold: int) -> np.ndarray:
 
     # Apply threshold condition
     spike[signal > threshold] = 1
+
+    if spike.shape[-1] == 1:
+        spike = spike.flatten()
 
     return spike
