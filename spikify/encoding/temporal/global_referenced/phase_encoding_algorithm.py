@@ -58,16 +58,19 @@ def phase_encoding(signal: np.ndarray, num_bits: int) -> np.ndarray:
             f"The phase_encoding num_bits ({num_bits}) is not a multiple of the signal length ({len(signal)})."
         )
 
+    if signal.ndim == 1:
+        signal = signal.reshape(-1, 1)
+
     # Ensure non-negative signal values
     signal = np.clip(signal, 0, None)
 
     # Compute mean over the signal reshaped to bit-sized chunks
-    signal = np.mean(signal.reshape(-1, num_bits), axis=1)
+    signal = np.mean(signal.reshape(signal.shape[0] // num_bits, num_bits, signal.shape[1]), axis=1)
+    signal_max = signal.max(axis=0)  # shape (F,)
 
-    # Normalize the signal if the maximum is greater than 0
-    signal_max = signal.max()
-    if signal_max > 0:
-        signal /= signal_max
+    for i in range(signal.shape[1]):  # per ogni feature
+        if signal_max[i] > 0:
+            signal[:, i] /= signal_max[i]
 
     # Compute the phase angles based on the signal
     phase = np.arcsin(signal)
@@ -79,7 +82,14 @@ def phase_encoding(signal: np.ndarray, num_bits: int) -> np.ndarray:
     # Adjust levels to avoid out-of-range values
     levels = np.clip(levels, 0, 2**num_bits - 1)
 
-    # Convert levels to binary and flatten the result to a 1D spike array
-    spikes = np.array([list(map(int, list(f"{level:0{num_bits}b}"))) for level in levels], dtype=np.uint8).reshape(-1)
+    N, F = levels.shape
+    spikes = np.zeros((N * num_bits, F), dtype=np.uint8)
+
+    # Vectorized bit extraction for all features and samples
+    bits_arr = ((levels[..., None] >> np.arange(num_bits - 1, -1, -1)) & 1).astype(np.uint8)
+    spikes = bits_arr.transpose(0, 2, 1).reshape(N * num_bits, F)
+
+    if spikes.shape[-1] == 1:
+        spikes = spikes.flatten()
 
     return spikes

@@ -55,3 +55,17 @@ class TestPhaseEncoding(unittest.TestCase):
         num_bits = 2
         result = phase_encoding(signal, num_bits)
         self.assertEqual(len(result), len(signal))
+
+    def test_with_multiple_features(self):
+        """Test the function with a signal containing multiple features."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        num_bit = 2
+        encoded_signal = phase_encoding(signal, num_bit)
+        self.assertEqual(encoded_signal.shape, signal.shape)
+        signal_f1 = signal[:, 0]
+        signal_f2 = signal[:, 1]
+        encoded_signal_f1 = phase_encoding(signal_f1, num_bit)
+        encoded_signal_f2 = phase_encoding(signal_f2, num_bit)
+        np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
+        np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
