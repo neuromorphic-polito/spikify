@@ -64,42 +64,39 @@ def burst_encoding(signal: np.ndarray, n_max: int, t_min: int, t_max: int, lengt
     :raises ValueError: If the required spike train length exceeds the provided length.
 
     """
-    # Check for invalid inputs
-    if len(signal) == 0:
+    is_1d = signal.ndim == 1
+    if is_1d:
+        signal = signal[:, None]
+
+    if signal.shape[0] == 0:
         raise ValueError("Signal cannot be empty.")
 
-    if len(signal) % length != 0:
+    if signal.shape[0] % length != 0:
         raise ValueError(
             f"The burst_encoding length ({length}) is not a multiple of the signal length ({len(signal)})."
         )
 
-    # Ensure non-negative signal values
     signal = np.clip(signal, 0, None)
+    signal = np.mean(signal.reshape(-1, length, signal.shape[1]), axis=1)
 
-    # Compute mean over the signal reshaped to length-sized chunks
-    signal = np.mean(signal.reshape(-1, length), axis=1)
+    signal_max = signal.max(axis=0)
+    signal_max[signal_max == 0] = 1
+    signal /= signal_max
 
-    # Normalize the signal
-    signal_max = signal.max()
-    if signal_max > 0:
-        signal /= signal_max
-
-    # Calculate spike numbers and ISI values
     spike_num = np.ceil(signal * n_max).astype(int)
     ISI = np.ceil(t_max - signal * (t_max - t_min)).astype(int)
 
-    # Ensure the signal length can accommodate the spikes
     required_length = np.max(spike_num * (ISI + 1))
     if length < required_length:
         raise ValueError(f"Invalid stream length, the min length is {required_length}")
 
-    # Initialize the spike array
-    spikes = np.zeros((len(signal), length), dtype=np.int8)
+    spikes = np.zeros((signal.shape[0], length, signal.shape[1]), dtype=np.int8)
 
-    # Populate the spike train based on ISI and spike number
-    for i in range(len(signal)):
-        spike_times = np.arange(0, spike_num[i] * (ISI[i] + 1), ISI[i] + 1)
-        spikes[i, spike_times[:length]] = 1
+    for i in range(signal.shape[0]):
+        for f in range(signal.shape[1]):
+            spike_times = np.arange(0, spike_num[i, f] * (ISI[i, f] + 1), ISI[i, f] + 1)
+            spikes[i, spike_times[spike_times < length], f] = 1
 
-    # Reshape the spike train into a 1D array
-    return spikes.reshape(-1)
+    spikes = spikes.reshape(-1, signal.shape[1])
+
+    return spikes.ravel() if is_1d else spikes
