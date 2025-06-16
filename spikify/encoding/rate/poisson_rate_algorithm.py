@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def poisson_rate(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.ndarray:
+def poisson_rate(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.ndarray:  # interval_lenght simile
     """
     Perform Poisson rate encoding on the input signal.
 
@@ -65,8 +65,10 @@ def poisson_rate(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.
             "To resolve this, consider trimming or padding the signal to ensure its length is a multiple of the "
             "interval."
         )
+
     if signal.ndim == 1:
         signal = signal.reshape(-1, 1)
+
     S, F = signal.shape
 
     np.random.seed(seed)
@@ -100,6 +102,7 @@ def poisson_rate(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.
 
     # Flatten the 2D array into a 1D spike train
     spikes = spikes.reshape(S, F)
-    if spikes.shape[-1] == 1:
+
+    if F == 1:
         spikes = spikes.flatten()
     return spikes

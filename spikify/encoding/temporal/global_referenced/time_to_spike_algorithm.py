@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def time_to_first_spike(signal: np.ndarray, interval: int) -> np.ndarray:
+def time_to_first_spike(signal: np.ndarray, interval: int) -> np.ndarray:  # uguale per tutti
     """
     Perform time-to-first-spike encoding on the input signal.
 

@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def moving_window(signal: np.ndarray, window_length: int) -> np.ndarray:
+def moving_window(signal: np.ndarray, window_length: int) -> np.ndarray:  # uguale
     """
     Perform Moving Window encoding on the input signal.
 

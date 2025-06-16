@@ -7,7 +7,9 @@
 import numpy as np
 
 
-def burst_encoding(signal: np.ndarray, n_max: int, t_min: int, t_max: int, length: int) -> np.ndarray:
+def burst_encoding(
+    signal: np.ndarray, n_max: int, t_min: int, t_max: int, length: int
+) -> np.ndarray:  # uguale per tutti
     """
     Perform burst encoding on the input signal.
 

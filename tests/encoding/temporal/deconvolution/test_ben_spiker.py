@@ -12,7 +12,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array([0, 1.5, 2, 3, 4, 5, 6, 3, 2, 1, 0])
         window_length = 3
-        threshold = 2
+        threshold = 2.0
         expected_spikes = np.array([0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0])
         result = bens_spiker(signal, window_length, threshold)
         np.testing.assert_array_equal(result, expected_spikes)
@@ -22,8 +22,8 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array([0, 1, 2, 3, 5, 3, 2, 1, 0])
         window_length = 3
-        threshold_low = 1
-        threshold_high = 5
+        threshold_low = 1.0
+        threshold_high = 5.0
         result_low = bens_spiker(signal, window_length, threshold_low)
         result_high = bens_spiker(signal, window_length, threshold_high)
         self.assertTrue(np.any(result_low))
@@ -34,7 +34,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array([])
         window_length = 0
-        threshold = 1
+        threshold = 1.0
         with self.assertRaises(ValueError):
             bens_spiker(signal, window_length, threshold)
 
@@ -44,7 +44,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array([0, 1, 2, 3, 4, 5])
         window_length = 7
-        threshold = 1
+        threshold = 1.0
         with self.assertRaises(ValueError):
             bens_spiker(signal, window_length, threshold)
 
@@ -54,7 +54,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array([0, 0, 0, 0, 0])
         window_length = 3
-        threshold = 1
+        threshold = 1.0
         expected_spikes = np.array([0, 0, 0, 0, 0])
         result = bens_spiker(signal, window_length, threshold)
         np.testing.assert_array_equal(result, expected_spikes)
@@ -64,7 +64,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array([0, 0, 5, 0, 0])
         window_length = 1
-        threshold = 1
+        threshold = 1.0
         expected_spikes = np.array([0, 0, 1, 0, 0])
         result = bens_spiker(signal, window_length, threshold)
         np.testing.assert_array_equal(result, expected_spikes)
@@ -75,7 +75,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         # Test case for filter window size of 3
         signal_3 = np.array([0, 1, 2, 3, 4, 5, 2, 1, 0])
         window_length_3 = 3
-        threshold_3 = 1
+        threshold_3 = 1.0
         expected_spikes_3 = np.array([1, 1, 1, 1, 1, 1, 0, 0, 0])
         result_3 = bens_spiker(signal_3, window_length_3, threshold_3)
         np.testing.assert_array_equal(result_3, expected_spikes_3)
@@ -83,7 +83,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         # Test case for filter window size of 5
         signal_5 = np.array([0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0])
         window_length_5 = 5
-        threshold_5 = 1
+        threshold_5 = 1.0
         expected_spikes_5 = np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0])
         result_5 = bens_spiker(signal_5, window_length_5, threshold_5)
         np.testing.assert_array_equal(result_5, expected_spikes_5)
@@ -91,7 +91,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         # Test case for filter window size of 7
         signal_7 = np.array([0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, 0])
         window_length_7 = 7
-        threshold_7 = 1
+        threshold_7 = 1.0
         expected_spikes_7 = np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0])
         result_7 = bens_spiker(signal_7, window_length_7, threshold_7)
         np.testing.assert_array_equal(result_7, expected_spikes_7)
@@ -102,7 +102,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array([5, 5, 5, 0, 0])
         window_length = 3
-        threshold = 1
+        threshold = 1.0
         expected_spikes = np.array([1, 1, 0, 0, 0])
         result = bens_spiker(signal, window_length, threshold)
         np.testing.assert_array_equal(result, expected_spikes)
@@ -112,7 +112,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
 
         signal = np.random.randn(10000)
         window_length = 10
-        threshold = 5
+        threshold = 5.0
         result = bens_spiker(signal, window_length, threshold)
         self.assertEqual(len(result), len(signal))
 
@@ -121,7 +121,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array(["a", "b", "c"])
         window_length = 2
-        threshold = 1
+        threshold = 1.0
         with self.assertRaises(ValueError):
             bens_spiker(signal, window_length, threshold)
 
@@ -131,7 +131,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         np.random.seed(0)
         signal = np.array([0, 1, 2, 3, 4, 5, 6, 3, 2, 1, 0]) + np.random.randn(11)
         window_length = 3
-        threshold = 1
+        threshold = 1.0
         result = bens_spiker(signal, window_length, threshold)
         self.assertTrue(np.any(result))
 

@@ -8,7 +8,9 @@ import numpy as np
 from scipy.signal.windows import boxcar
 
 
-def modified_hough_spiker(signal: np.ndarray, window_length: int, threshold: float | list[float]) -> np.ndarray:
+def modified_hough_spiker(
+    signal: np.ndarray, window_length: int, threshold: float | list[float]
+) -> np.ndarray:  # puo cambiare
     """
     Detect spikes in a signal using the Modified Hough Spiker Algorithm.
 

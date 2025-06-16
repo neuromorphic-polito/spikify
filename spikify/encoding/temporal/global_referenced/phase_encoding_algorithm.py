@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def phase_encoding(signal: np.ndarray, num_bits: int) -> np.ndarray:
+def phase_encoding(signal: np.ndarray, num_bits: int) -> np.ndarray:  # uguale per tutti
     """
     Perform phase encoding on the input signal based on the given settings.
 

@@ -5,10 +5,63 @@
 """
 
 import numpy as np
-from scipy.signal.windows import boxcar
+from scipy.signal.windows import get_window
+from typing import Literal
+
+WindowType = Literal[
+    "barthann",
+    "brthan",
+    "bth",
+    "bartlett",
+    "bart",
+    "brt",
+    "blackman",
+    "black",
+    "blk",
+    "blackmanharris",
+    "blackharr",
+    "bkh",
+    "bohman",
+    "bman",
+    "bmn",
+    "boxcar",
+    "box",
+    "ones",
+    "rect",
+    "rectangular",
+    "cosine",
+    "halfcosine",
+    "exponential",
+    "poisson",
+    "flattop",
+    "flat",
+    "flt",
+    "hamming",
+    "hamm",
+    "ham",
+    "hann",
+    "han",
+    "lanczos",
+    "sinc",
+    "nuttall",
+    "nutl",
+    "nut",
+    "parzen",
+    "parz",
+    "par",
+    "taylor",
+    "taylorwin",
+    "triangle",
+    "triang",
+    "tri",
+    "tukey",
+    "tuk",
+]
 
 
-def hough_spiker(signal: np.ndarray, window_length: int) -> np.ndarray:
+def hough_spiker(
+    signal: np.ndarray, window_length: int, window_type: WindowType = "boxcar"
+) -> np.ndarray:  # può cambiare
     """
     Perform spike detection using the Hough Spiker Algorithm (HSA).
 
@@ -62,7 +115,7 @@ def hough_spiker(signal: np.ndarray, window_length: int) -> np.ndarray:
     spikes = np.zeros_like(signal, dtype=np.int8)
 
     # Create the boxcar filter window
-    filter_window = boxcar(window_length)
+    filter_window = get_window(window_type, window_length)
 
     # Copy the signal for modification
     signal_copy = np.copy(np.array(signal, dtype=np.float64))
