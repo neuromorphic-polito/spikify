@@ -5,12 +5,66 @@
 """
 
 import numpy as np
-from scipy.signal.windows import boxcar
+from typing import Literal
+from scipy.signal.windows import get_window
+
+WindowType = Literal[
+    "barthann",
+    "brthan",
+    "bth",
+    "bartlett",
+    "bart",
+    "brt",
+    "blackman",
+    "black",
+    "blk",
+    "blackmanharris",
+    "blackharr",
+    "bkh",
+    "bohman",
+    "bman",
+    "bmn",
+    "boxcar",
+    "box",
+    "ones",
+    "rect",
+    "rectangular",
+    "cosine",
+    "halfcosine",
+    "exponential",
+    "poisson",
+    "flattop",
+    "flat",
+    "flt",
+    "hamming",
+    "hamm",
+    "ham",
+    "hann",
+    "han",
+    "lanczos",
+    "sinc",
+    "nuttall",
+    "nutl",
+    "nut",
+    "parzen",
+    "parz",
+    "par",
+    "taylor",
+    "taylorwin",
+    "triangle",
+    "triang",
+    "tri",
+    "tukey",
+    "tuk",
+]
 
 
 def modified_hough_spiker(
-    signal: np.ndarray, window_length: int, threshold: float | list[float]
-) -> np.ndarray:  # puo cambiare
+    signal: np.ndarray,
+    window_lengths: int | list[int],
+    threshold: float | list[float],
+    window_type: WindowType = "boxcar",
+) -> np.ndarray:
     """
     Detect spikes in a signal using the Modified Hough Spiker Algorithm.
 
@@ -48,7 +102,7 @@ def modified_hough_spiker(
     :param signal: The input signal to be analyzed. This should be a numpy ndarray.
     :type signal: numpy.ndarray
     :param window_length: The length of the boxcar filter window.
-    :type window_length: int
+    :type window_length: int | list[int]
     :param threshold: The threshold value for error accumulation. Can be a float or a list/array of floats.
     :type threshold: float or list of float
     :return: A 1D numpy array representing the detected spikes.
@@ -66,39 +120,43 @@ def modified_hough_spiker(
     if signal.ndim == 1:
         signal = signal.reshape(-1, 1)
 
+    S, F = signal.shape
+
     if len(threshold) != signal.shape[1]:
         raise ValueError("Threshold must match the number of features in the signal.")
 
-    if window_length > signal.shape[0]:
+    if isinstance(window_lengths, int):
+        window_lengths = [window_lengths] * F
+
+    if max(window_lengths) > signal.shape[0]:
         raise ValueError("Filter window size must be less than the length of the signal.")
 
     # Initialize the spikes array
     spikes = np.zeros_like(signal, dtype=np.int8)
 
     # Create the boxcar filter window
-    filter_window = boxcar(window_length)
-
+    filter_window = [get_window(window_type, w) for w in window_lengths]
     # Copy the signal for modification
     signal_copy = np.copy(np.array(signal, dtype=np.float64))
 
-    for j in range(signal_copy.shape[1]):
+    for feature in range(F):
         # Iterate over the signal to detect spikes
-        for t in range(len(signal[:, j])):
+        for t in range(len(signal[:, feature])):
             # Determine the end index for the current window
-            end_index = min(t + window_length, signal.shape[0])
+            end_index = min(t + window_lengths[feature], S)
 
             # Extract the relevant segment of the signal and the corresponding filter window
-            signal_segment = signal_copy[t:end_index, j]
-            filter_segment = filter_window[: end_index - t]
+            signal_segment = signal_copy[t:end_index, feature]
+            filter_segment = filter_window[feature][: end_index - t]
 
             # Calculate the error for this segment
             error = np.sum(np.maximum(filter_segment - signal_segment, 0))
 
             # If the cumulative error is within the threshold, a spike is detected
-            if error <= threshold[j]:
-                signal_copy[t:end_index, j] -= filter_segment
-                spikes[t, j] = 1
+            if error <= threshold[feature]:
+                signal_copy[t:end_index, feature] -= filter_segment
+                spikes[t, feature] = 1
 
-    if spikes.shape[-1] == 1:
+    if F == 1:
         spikes = spikes.flatten()
     return spikes

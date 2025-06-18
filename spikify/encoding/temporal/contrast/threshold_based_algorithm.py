@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def threshold_based_representation(signal: np.ndarray, factor: float) -> np.ndarray:  # multiple
+def threshold_based_representation(signal: np.ndarray, factors: float | list[float]) -> np.ndarray:
     """
     Perform Threshold-Based Representation (TBR) encoding on the input signal.
 
@@ -52,23 +52,30 @@ def threshold_based_representation(signal: np.ndarray, factor: float) -> np.ndar
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
-    if isinstance(factor, float):
-        factors = [factor]
     if signal.ndim == 1:
         signal = signal.reshape(-1, 1)
 
-    if len(factors) != signal.shape[1]:
+    S, F = signal.shape
+
+    if isinstance(factors, float):
+        factors = [factors] * F
+
+    if len(factors) != F:
         raise ValueError("Factor must match the number of features in the signal.")
 
     spike = np.zeros_like(signal, dtype=np.int8)
+    threshold = np.zeros(F, dtype=np.float64)
     variation = np.diff(signal[1:, :], prepend=signal[[0], :], axis=0)
+    print("variation:", variation.shape)
+
     threshold = np.mean(variation, axis=0) + factors * np.std(variation, axis=0)
     variation = np.insert(variation, 0, variation[1, :], axis=0)
-
+    print("variation:", variation.shape)
+    print("threshold:", threshold.shape)
     # Apply threshold conditions
     threshold = threshold.reshape(1, threshold.shape[0])
     spike[variation > threshold] = 1
     spike[variation < -threshold] = -1
-    if spike.shape[-1] == 1:
+    if F == 1:
         spike = spike.flatten()
     return spike

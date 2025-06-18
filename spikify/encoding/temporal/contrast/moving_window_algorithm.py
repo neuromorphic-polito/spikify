@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def moving_window(signal: np.ndarray, window_length: int) -> np.ndarray:  # uguale
+def moving_window(signal: np.ndarray, window_length: int) -> np.ndarray:
     """
     Perform Moving Window encoding on the input signal.
 
@@ -58,20 +58,24 @@ def moving_window(signal: np.ndarray, window_length: int) -> np.ndarray:  # ugua
 
     if signal.ndim == 1:
         signal = signal.reshape(-1, 1)
+
+    S, F = signal.shape
     variation = np.diff(signal[1:, :], prepend=signal[[0], :], axis=0)
     threshold = np.mean(np.abs(variation), axis=0)
     spikes = np.zeros_like(signal, dtype=np.int8)
     # Compute the moving window mean and apply thresholds
-    for j in range(signal.shape[1]):
-        for t in range(len(signal[:, j])):
+    for feature in range(F):
+        for t in range(len(signal[:, feature])):
             base = (
-                np.mean(signal[:window_length, j]) if t < window_length else np.mean(signal[t - window_length : t, j])
+                np.mean(signal[:window_length, feature])
+                if t < window_length
+                else np.mean(signal[t - window_length : t, feature])
             )
-            if signal[t, j] > base + threshold[j]:
-                spikes[t, j] = 1
-            elif signal[t, j] < base - threshold[j]:
-                spikes[t, j] = -1
+            if signal[t, feature] > base + threshold[feature]:
+                spikes[t, feature] = 1
+            elif signal[t, feature] < base - threshold[feature]:
+                spikes[t, feature] = -1
 
-    if spikes.shape[-1] == 1:
+    if F == 1:
         spikes = spikes.flatten()
     return spikes

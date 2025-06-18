@@ -142,3 +142,18 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
         encoded_signal_f2 = modified_hough_spiker(signal_f2, window_length, threshold[1])
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
+
+    def test_with_multiple_features_multiple_windows(self):
+        """Test the function with a signal containing multiple features and multiple window length."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        window_length = [3, 2]
+        threshold = [3, 5]
+        encoded_signal = modified_hough_spiker(signal, window_length, threshold)
+        self.assertEqual(encoded_signal.shape, signal.shape)
+        signal_f1 = signal[:, 0]
+        signal_f2 = signal[:, 1]
+        encoded_signal_f1 = modified_hough_spiker(signal_f1, window_length[0], threshold[0])
+        encoded_signal_f2 = modified_hough_spiker(signal_f2, window_length[1], threshold[1])
+        np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
+        np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)

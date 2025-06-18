@@ -59,9 +59,7 @@ WindowType = Literal[
 ]
 
 
-def hough_spiker(
-    signal: np.ndarray, window_length: int, window_type: WindowType = "boxcar"
-) -> np.ndarray:  # può cambiare
+def hough_spiker(signal: np.ndarray, window_lengths: int | list[int], window_type: WindowType = "boxcar") -> np.ndarray:
     """
     Perform spike detection using the Hough Spiker Algorithm (HSA).
 
@@ -95,7 +93,7 @@ def hough_spiker(
     :param signal: The input signal to be analyzed. This should be a numpy ndarray.
     :type signal: numpy.ndarray
     :param window_length: The length of the boxcar filter window.
-    :type window_length: int
+    :type window_length: int | list[int]
     :return: A 1D numpy array representing the detected spikes.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty or if the window length is greater than the signal length.
@@ -108,28 +106,36 @@ def hough_spiker(
     if signal.ndim == 1:
         signal = signal.reshape(-1, 1)
 
-    if window_length > signal.shape[0]:
+    S, F = signal.shape
+
+    if window_lengths > signal.shape[0]:
         raise ValueError("Filter window size must be less than the length of the signal.")
+
+    if isinstance(window_lengths, int):
+        window_lengths = [window_lengths] * F
+
+    if len(window_lengths) != F:
+        raise ValueError("Window lengths must match the number of features in the signal.")
 
     # Initialize the spike array
     spikes = np.zeros_like(signal, dtype=np.int8)
 
     # Create the boxcar filter window
-    filter_window = get_window(window_type, window_length)
+    filter_window = [get_window(window_type, w) for w in window_lengths]
 
     # Copy the signal for modification
     signal_copy = np.copy(np.array(signal, dtype=np.float64))
 
-    for j in range(signal_copy.shape[1]):
+    for feature in range(F):
         # Iterate over the signal to detect spikes
-        for t in range(len(signal_copy[:, j]) - window_length + 1):
+        for t in range(len(signal_copy[:, feature]) - window_lengths[feature] + 1):
             # Count how many values match or exceed the filter window values
-            match_count = np.sum(signal_copy[t : t + window_length, j] >= filter_window)
+            match_count = np.sum(signal_copy[t : t + window_lengths[feature], feature] >= filter_window[feature])
 
             # If all values match or exceed, a spike is detected
-            if match_count == window_length:
-                signal_copy[t : t + window_length, j] -= filter_window
-                spikes[t, j] = 1
+            if match_count == window_lengths[feature]:
+                signal_copy[t : t + window_lengths[feature], feature] -= filter_window[feature]
+                spikes[t, feature] = 1
 
     if spikes.shape[-1] == 1:
         spikes = spikes.flatten()

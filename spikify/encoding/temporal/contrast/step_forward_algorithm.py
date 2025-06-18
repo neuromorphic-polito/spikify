@@ -57,21 +57,23 @@ def step_forward(signal: np.ndarray, threshold: float | list[float]) -> np.ndarr
     if signal.ndim == 1:
         signal = signal.reshape(-1, 1)
 
-    if len(threshold) != signal.shape[1]:
+    S, F = signal.shape
+
+    if len(threshold) != F:
         raise ValueError("Threshold must match the number of features in the signal.")
 
     spike = np.zeros_like(signal, dtype=np.int8)
 
     # Base value initialized at the start of the signal
-    for j in range(signal.shape[1]):
-        base = signal[0, j]
-        for t, value in enumerate(signal[:, j]):
-            if value > base + threshold[j]:
-                spike[t, j] = 1
-                base += threshold[j]
-            elif value < base - threshold[j]:
-                spike[t, j] = -1
-                base -= threshold[j]
-    if spike.shape[-1] == 1:
+    for feature in range(F):
+        base = signal[0, feature]
+        for t, value in enumerate(signal[:, feature]):
+            if value > base + threshold[feature]:
+                spike[t, feature] = 1
+                base += threshold[feature]
+            elif value < base - threshold[feature]:
+                spike[t, feature] = -1
+                base -= threshold[feature]
+    if F == 1:
         spike = spike.flatten()
     return spike

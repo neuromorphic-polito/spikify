@@ -61,6 +61,7 @@ def phase_encoding(signal: np.ndarray, num_bits: int) -> np.ndarray:  # uguale p
     if signal.ndim == 1:
         signal = signal.reshape(-1, 1)
 
+    S, F = signal.shape
     # Ensure non-negative signal values
     signal = np.clip(signal, 0, None)
 
@@ -89,7 +90,7 @@ def phase_encoding(signal: np.ndarray, num_bits: int) -> np.ndarray:  # uguale p
     bits_arr = ((levels[..., None] >> np.arange(num_bits - 1, -1, -1)) & 1).astype(np.uint8)
     spikes = bits_arr.transpose(0, 2, 1).reshape(N * num_bits, F)
 
-    if spikes.shape[-1] == 1:
+    if F == 1:
         spikes = spikes.flatten()
 
     return spikes

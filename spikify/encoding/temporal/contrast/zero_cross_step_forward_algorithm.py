@@ -59,7 +59,9 @@ def zero_cross_step_forward(signal: np.ndarray, threshold: float | list[float]) 
     if signal.ndim == 1:
         signal = signal.reshape(-1, 1)
 
-    if len(threshold) != signal.shape[1]:
+    S, F = signal.shape
+
+    if len(threshold) != F:
         raise ValueError("Threshold must match the number of features in the signal.")
 
     spike = np.zeros_like(signal, dtype=np.int8)
@@ -70,7 +72,7 @@ def zero_cross_step_forward(signal: np.ndarray, threshold: float | list[float]) 
     # Apply threshold condition
     spike[signal > threshold] = 1
 
-    if spike.shape[-1] == 1:
+    if F == 1:
         spike = spike.flatten()
 
     return spike

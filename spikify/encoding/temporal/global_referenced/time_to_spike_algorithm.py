@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def time_to_first_spike(signal: np.ndarray, interval: int) -> np.ndarray:  # uguale per tutti
+def time_to_first_spike(signal: np.ndarray, interval: int) -> np.ndarray:
     """
     Perform time-to-first-spike encoding on the input signal.
 
@@ -52,6 +52,8 @@ def time_to_first_spike(signal: np.ndarray, interval: int) -> np.ndarray:  # ugu
 
     if signal.ndim == 1:
         signal = signal.reshape(-1, 1)
+
+    S, F = signal.shape
     # Check for invalid inputs
     if signal.shape[0] == 0:
         raise ValueError("Signal cannot be empty.")
@@ -69,9 +71,9 @@ def time_to_first_spike(signal: np.ndarray, interval: int) -> np.ndarray:  # ugu
 
     signal_max = signal.max(axis=0)  # shape (F,)
 
-    for i in range(signal.shape[1]):  # per ogni feature
-        if signal_max[i] > 0:
-            signal[:, i] /= signal_max[i]
+    for feature in range(F):
+        if signal_max[feature] > 0:
+            signal[:, feature] /= signal_max[feature]
 
     # Calculate intensity based on the signal
     with np.errstate(divide="ignore"):  # Avoid division warnings
@@ -83,8 +85,8 @@ def time_to_first_spike(signal: np.ndarray, interval: int) -> np.ndarray:  # ugu
 
     # Create the spike matrix and set spikes
     spike = np.zeros((signal.shape[0], interval, signal.shape[1]), dtype=np.int8)
-    for i in range(signal.shape[1]):
-        spike[np.arange(signal.shape[0]), np.clip(levels[:, i], 0, interval - 1), i] = 1
+    for feature in range(signal.shape[1]):
+        spike[np.arange(signal.shape[0]), np.clip(levels[:, feature], 0, interval - 1), feature] = 1
 
     # Reshape the spike array into 1D
     if spike.shape[2] == 1:

@@ -5,12 +5,66 @@
 """
 
 import numpy as np
-from scipy.signal.windows import boxcar  # da sistemare a scelta
+from scipy.signal.windows import get_window
+from typing import Literal
+
+WindowType = Literal[
+    "barthann",
+    "brthan",
+    "bth",
+    "bartlett",
+    "bart",
+    "brt",
+    "blackman",
+    "black",
+    "blk",
+    "blackmanharris",
+    "blackharr",
+    "bkh",
+    "bohman",
+    "bman",
+    "bmn",
+    "boxcar",
+    "box",
+    "ones",
+    "rect",
+    "rectangular",
+    "cosine",
+    "halfcosine",
+    "exponential",
+    "poisson",
+    "flattop",
+    "flat",
+    "flt",
+    "hamming",
+    "hamm",
+    "ham",
+    "hann",
+    "han",
+    "lanczos",
+    "sinc",
+    "nuttall",
+    "nutl",
+    "nut",
+    "parzen",
+    "parz",
+    "par",
+    "taylor",
+    "taylorwin",
+    "triangle",
+    "triang",
+    "tri",
+    "tukey",
+    "tuk",
+]
 
 
 def bens_spiker(
-    signal: np.ndarray, window_length: int | list[int], threshold: float | list[float]
-) -> np.ndarray:  # window_length può cambiare
+    signal: np.ndarray,
+    window_lengths: int | list[int],
+    threshold: float | list[float],
+    window_type: WindowType = "boxcar",
+) -> np.ndarray:
     """
     Perform spike detection using Bens Spiker Algorithm.
 
@@ -64,10 +118,13 @@ def bens_spiker(
 
     S, F = signal.shape
 
-    if isinstance(window_length, int):
-        window_length = [window_length] * F
+    if isinstance(window_lengths, int):
+        window_lengths = [window_lengths] * F
 
-    if np.any(np.array(window_length) > S):
+    if len(window_lengths) != F:
+        raise ValueError("Window lengths must match the number of features in the signal.")
+
+    if np.any(np.array(window_lengths) > S):
         raise ValueError("All filter window sizes must be less than the length of the signal.")
 
     if isinstance(threshold, float):
@@ -80,24 +137,24 @@ def bens_spiker(
     spikes = np.zeros_like(signal, dtype=np.int8)
 
     # Create the boxcar filter window
-    filter_window = [boxcar(w) for w in window_length]
+    filter_window = [get_window(window_type, w) for w in window_lengths]
 
     # Copy of the signal to avoid modifying the original input
     signal_copy = np.copy(np.array(signal, dtype=np.float64))
 
     # Iterate over the signal to detect spikes
-    for j in range(signal.shape[1]):
-        for t in range(len(signal[:, j]) - window_length[j] + 1):
+    for feature in range(F):
+        for t in range(len(signal[:, feature]) - window_lengths[feature] + 1):
             # Calculate errors using the filter window
-            segment = signal_copy[t : t + window_length[j], j]
-            error1 = np.sum(np.abs(segment - filter_window[j]), axis=0)
+            segment = signal_copy[t : t + window_lengths[feature], feature]
+            error1 = np.sum(np.abs(segment - filter_window[feature]), axis=0)
             error2 = np.sum(np.abs(segment), axis=0)
 
             # Update signal and spike array if a spike is detected
-            if error1 <= (error2 - threshold[j]):
-                signal_copy[t : t + window_length[j], j] -= filter_window[j]
-                spikes[t, j] = 1
-    if spikes.shape[-1] == 1:
+            if error1 <= (error2 - threshold[feature]):
+                signal_copy[t : t + window_lengths[feature], feature] -= filter_window[feature]
+                spikes[t, feature] = 1
+    if F == 1:
         spikes = spikes.flatten()
 
     return spikes
