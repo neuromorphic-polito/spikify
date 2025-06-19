@@ -73,3 +73,24 @@ class TestThresholdBasedRepresentation(unittest.TestCase):
         encoded_signal_f2 = threshold_based_representation(signal_f2, threshold[1])
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
+
+    def test_factor_type(self):
+        """Test the function with an Integer factor."""
+        signal = np.random.rand(10)
+        factor = 3
+        with self.assertRaises(TypeError):
+            threshold_based_representation(signal, factor)
+
+    def test_factors_type(self):
+        """Test the function with a list of Integer factors."""
+        signal = np.random.rand(10, 2)
+        factors = [5, 1]
+        with self.assertRaises(TypeError):
+            threshold_based_representation(signal, factors)
+
+    def test_factors_length(self):
+        """Test the function with a list of factors with dimension different from feature."""
+        signal = np.random.rand(10, 2)
+        factors = [5.0, 1.0, 3.0]
+        with self.assertRaises(ValueError):
+            threshold_based_representation(signal, factors)

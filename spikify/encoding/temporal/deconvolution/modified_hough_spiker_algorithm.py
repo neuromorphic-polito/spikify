@@ -73,12 +73,21 @@ def modified_hough_spiker(
     if isinstance(threshold, float):
         thresholds = [threshold] * F
     elif isinstance(threshold, list):
+        if not all(isinstance(w, float) for w in threshold):
+            raise TypeError("All elements in threshold list must be float.")
         thresholds = threshold
+    else:
+        raise TypeError("Threshold must be a float or a list of floats.")
+
+    if len(thresholds) != F:
+        raise ValueError("Thresholds must match the number of features in the signal.")
 
     if isinstance(window_length, int):
         window_lengths = [window_length] * F
     elif isinstance(window_length, list):
         window_lengths = window_length
+    else:
+        raise TypeError("Window length must be an int or a list of ints.")
 
     if len(window_lengths) != F:
         raise ValueError("Window lengths must match the number of features in the signal.")

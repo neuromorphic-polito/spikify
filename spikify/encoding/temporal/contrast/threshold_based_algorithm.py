@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def threshold_based_representation(signal: np.ndarray, factors: float | list[float]) -> np.ndarray:
+def threshold_based_representation(signal: np.ndarray, factor: float | list[float]) -> np.ndarray:
     """
     Perform Threshold-Based Representation (TBR) encoding on the input signal.
 
@@ -57,23 +57,28 @@ def threshold_based_representation(signal: np.ndarray, factors: float | list[flo
 
     S, F = signal.shape
 
-    if isinstance(factors, float):
-        factors = [factors] * F
-
+    if isinstance(factor, float):
+        factors = [factor] * F
+    elif isinstance(factor, list):
+        if not all(isinstance(w, float) for w in factor):
+            raise TypeError("All elements in factor list must be float.")
+        factors = factor
+    else:
+        raise TypeError("factor must be a float or a list of floats.")
     if len(factors) != F:
         raise ValueError("Factor must match the number of features in the signal.")
 
     spike = np.zeros_like(signal, dtype=np.int8)
-    threshold = np.zeros(F, dtype=np.float64)
+    factor = np.zeros(F, dtype=np.float64)
     variation = np.diff(signal[1:, :], prepend=signal[[0], :], axis=0)
 
-    threshold = np.mean(variation, axis=0) + factors * np.std(variation, axis=0)
+    factor = np.mean(variation, axis=0) + factors * np.std(variation, axis=0)
     variation = np.insert(variation, 0, variation[1, :], axis=0)
 
     # Apply threshold conditions
-    threshold = threshold.reshape(1, threshold.shape[0])
-    spike[variation > threshold] = 1
-    spike[variation < -threshold] = -1
+    factor = factor.reshape(1, factor.shape[0])
+    spike[variation > factor] = 1
+    spike[variation < -factor] = -1
 
     if F == 1:
         spike = spike.flatten()

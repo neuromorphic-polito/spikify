@@ -61,7 +61,11 @@ def hough_spiker(signal: np.ndarray, window_length: int | list[int], window_type
     if isinstance(window_length, int):
         window_lengths = [window_length] * F
     elif isinstance(window_length, list):
+        if not all(isinstance(w, int) for w in window_length):
+            raise TypeError("All elements in window_length list must be integers.")
         window_lengths = window_length
+    else:
+        raise TypeError("Window lengths must be an int or a list of ints.")
 
     if len(window_lengths) != F:
         raise ValueError("Window lengths must match the number of features in the signal.")

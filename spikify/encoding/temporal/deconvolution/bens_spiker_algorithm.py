@@ -71,7 +71,11 @@ def bens_spiker(
     if isinstance(window_length, int):
         window_lengths = [window_length] * F
     elif isinstance(window_length, list):
+        if not all(isinstance(w, int) for w in window_length):
+            raise TypeError("All elements in window_length list must be integers.")
         window_lengths = window_length
+    else:
+        raise TypeError("Window lengths must be an int or a list of ints.")
 
     if len(window_lengths) != F:
         raise ValueError("Window lengths must match the number of features in the signal.")
@@ -81,9 +85,12 @@ def bens_spiker(
 
     if isinstance(threshold, float):
         thresholds = [threshold] * F
-
     elif isinstance(threshold, list):
+        if not all(isinstance(w, float) for w in threshold):
+            raise TypeError("All elements in threshold list must be float.")
         thresholds = threshold
+    else:
+        raise TypeError("Threshold must be a float or a list of floats.")
 
     if len(thresholds) != F:
         raise ValueError("Threshold must match the number of features in the signal.")

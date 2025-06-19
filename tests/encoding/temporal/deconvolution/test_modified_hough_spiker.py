@@ -157,3 +157,75 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
         encoded_signal_f2 = modified_hough_spiker(signal_f2, window_length[1], threshold[1])
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
+
+    def test_list_window_length_float(self):
+        """Test the function with a list of of float in window length."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        window_length = [3, 4.0]
+        thresholds = [3.0, 5.0]
+        with self.assertRaises(TypeError):
+            modified_hough_spiker(signal, window_length, thresholds)
+
+    def test_window_length_float(self):
+        """Test the function with a float in window length."""
+        np.random.seed(42)
+        signal = np.random.rand(10)
+        window_length = 4.0
+        thresholds = 5.0
+        with self.assertRaises(TypeError):
+            modified_hough_spiker(signal, window_length, thresholds)
+
+    def test_list_window_length_len_signal(self):
+        """Test the function with a size window length major of signal length."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        window_length = [3, 20]
+        thresholds = [3.0, 5.0]
+        with self.assertRaises(ValueError):
+            modified_hough_spiker(signal, window_length, thresholds)
+
+    def test_list_window_length_len_features(self):
+        """Test the function with a window length different from features."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        window_length = [3, 5, 7]
+        thresholds = [3.0, 5.0]
+        with self.assertRaises(ValueError):
+            modified_hough_spiker(signal, window_length, thresholds)
+
+    def test_list_window_lenth_float(self):
+        """Test the function with a list of of int in threshold."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        window_length = [3, 4.0]
+        thresholds = [3.0, 5.0]
+        with self.assertRaises(TypeError):
+            modified_hough_spiker(signal, window_length, thresholds)
+
+    def test_list_thresholds_int(self):
+        """Test the function with a list of of int in threshold."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        window_length = [3, 4]
+        thresholds = [3.0, 5]
+        with self.assertRaises(TypeError):
+            modified_hough_spiker(signal, window_length, thresholds)
+
+    def test_threshold_int(self):
+        """Test the function with a int in threshold."""
+        np.random.seed(42)
+        signal = np.random.rand(10)
+        window_length = 4
+        thresholds = 5
+        with self.assertRaises(TypeError):
+            modified_hough_spiker(signal, window_length, thresholds)
+
+    def test_list_thresholds_len_features(self):
+        """Test the function with a len of threshold different from features."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        window_length = [3, 5]
+        thresholds = [3.0, 5.0, 1.0]
+        with self.assertRaises(ValueError):
+            modified_hough_spiker(signal, window_length, thresholds)

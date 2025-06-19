@@ -124,3 +124,35 @@ class TestHoughSpikerAlgorithm(unittest.TestCase):
         encoded_signal_f2 = hough_spiker(signal_f2, window_length)
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
+
+    def test_list_window_length_float(self):
+        """Test the function with a list of of float in window length."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        window_length = [3, 4.0]
+        with self.assertRaises(TypeError):
+            hough_spiker(signal, window_length)
+
+    def test_window_length_float(self):
+        """Test the function with a float in window length."""
+        np.random.seed(42)
+        signal = np.random.rand(10)
+        window_length = 4.0
+        with self.assertRaises(TypeError):
+            hough_spiker(signal, window_length)
+
+    def test_list_window_length_len_signal(self):
+        """Test the function with a size window length major of signal length."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        window_length = [3, 20]
+        with self.assertRaises(ValueError):
+            hough_spiker(signal, window_length)
+
+    def test_list_window_length_len_features(self):
+        """Test the function with a window length different from features."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        window_length = [3, 5, 7]
+        with self.assertRaises(ValueError):
+            hough_spiker(signal, window_length)

@@ -164,3 +164,66 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         encoded_signal_f2 = bens_spiker(signal_f2, window_length[1], threshold[1], "lanczos")
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
+
+    def test_list_window_length_float(self):
+        """Test the function with a list of of float in window length."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        threshold = [0.5, 0.3]
+        window_length = [3, 4.0]
+        with self.assertRaises(TypeError):
+            bens_spiker(signal, window_length, threshold, "lanczos")
+
+    def test_window_length_float(self):
+        """Test the function with a float in window length."""
+        np.random.seed(42)
+        signal = np.random.rand(10)
+        threshold = 0.5
+        window_length = 4.0
+        with self.assertRaises(TypeError):
+            bens_spiker(signal, window_length, threshold, "lanczos")
+
+    def test_list_window_length_len_signal(self):
+        """Test the function with a size window length major of signal length."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        threshold = [0.5, 0.3]
+        window_length = [3, 20]
+        with self.assertRaises(ValueError):
+            bens_spiker(signal, window_length, threshold, "lanczos")
+
+    def test_list_window_length_len_features(self):
+        """Test the function with a window length different from features."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        threshold = [0.5, 0.3]
+        window_length = [3, 5, 7]
+        with self.assertRaises(ValueError):
+            bens_spiker(signal, window_length, threshold, "lanczos")
+
+    def test_threshold_int(self):
+        """Test the function with a ineteger in threshold."""
+        np.random.seed(42)
+        signal = np.random.rand(10)
+        threshold = 2
+        window_length = 4.0
+        with self.assertRaises(TypeError):
+            bens_spiker(signal, window_length, threshold, "lanczos")
+
+    def test_list_threshold_differnt_features(self):
+        """Test the function with a size window length major of signal length."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        threshold = [0.5, 0.3, 0.1]
+        window_length = [3, 20]
+        with self.assertRaises(ValueError):
+            bens_spiker(signal, window_length, threshold, "lanczos")
+
+    def test_list_threshold_integer(self):
+        """Test the function with a window length different from features."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        threshold = [0.5, 1]
+        window_length = [3, 5]
+        with self.assertRaises(TypeError):
+            bens_spiker(signal, window_length, threshold, "lanczos")

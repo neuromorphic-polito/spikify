@@ -61,7 +61,11 @@ def zero_cross_step_forward(signal: np.ndarray, threshold: float | list[float]) 
     if isinstance(threshold, float):
         thresholds = [threshold] * F
     elif isinstance(threshold, list):
+        if not all(isinstance(w, float) for w in threshold):
+            raise TypeError("All elements in threshold list must be float.")
         thresholds = threshold
+    else:
+        raise TypeError("Threshold must be a float or a list of floats.")
 
     if len(thresholds) != F:
         raise ValueError("Threshold must match the number of features in the signal.")

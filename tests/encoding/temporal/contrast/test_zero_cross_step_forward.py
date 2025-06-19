@@ -81,3 +81,24 @@ class TestZeroCrossStepForward(unittest.TestCase):
         encoded_signal_f2 = zero_cross_step_forward(signal_f2, threshold[1])
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
+
+    def test_factor_type(self):
+        """Test the function with an Integer factor."""
+        signal = np.random.rand(10)
+        threshold = 3
+        with self.assertRaises(TypeError):
+            zero_cross_step_forward(signal, threshold)
+
+    def test_factors_type(self):
+        """Test the function with a list of Integer factors."""
+        signal = np.random.rand(10, 2)
+        thresholds = [5, 1]
+        with self.assertRaises(TypeError):
+            zero_cross_step_forward(signal, thresholds)
+
+    def test_factors_length(self):
+        """Test the function with a list of factors with dimension different from feature."""
+        signal = np.random.rand(10, 2)
+        thresholds = [5.0, 1.0, 3.0]
+        with self.assertRaises(ValueError):
+            zero_cross_step_forward(signal, thresholds)

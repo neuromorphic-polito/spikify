@@ -89,3 +89,18 @@ class TestStepForward(unittest.TestCase):
         encoded_signal_f2 = step_forward(signal_f2, threshold[1])
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
+
+    def test_features_list(self):
+        """Test the function with a integer thrshold."""
+        signal = np.array([0, 1, 2, 3, 2, 1, 0])
+        thresholds = 1
+        with self.assertRaises(TypeError):
+            step_forward(signal, thresholds)
+
+    def test_thrsholds_different_from_features(self):
+        """Test the function with a signal containing multiple features."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        threshold = [0.1, 0.3, 0.4]
+        with self.assertRaises(ValueError):
+            step_forward(signal, threshold)
