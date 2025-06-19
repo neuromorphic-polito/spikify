@@ -6,60 +6,10 @@
 
 import numpy as np
 from scipy.signal.windows import get_window
-from typing import Literal
-
-WindowType = Literal[
-    "barthann",
-    "brthan",
-    "bth",
-    "bartlett",
-    "bart",
-    "brt",
-    "blackman",
-    "black",
-    "blk",
-    "blackmanharris",
-    "blackharr",
-    "bkh",
-    "bohman",
-    "bman",
-    "bmn",
-    "boxcar",
-    "box",
-    "ones",
-    "rect",
-    "rectangular",
-    "cosine",
-    "halfcosine",
-    "exponential",
-    "poisson",
-    "flattop",
-    "flat",
-    "flt",
-    "hamming",
-    "hamm",
-    "ham",
-    "hann",
-    "han",
-    "lanczos",
-    "sinc",
-    "nuttall",
-    "nutl",
-    "nut",
-    "parzen",
-    "parz",
-    "par",
-    "taylor",
-    "taylorwin",
-    "triangle",
-    "triang",
-    "tri",
-    "tukey",
-    "tuk",
-]
+from .utils import WindowType
 
 
-def hough_spiker(signal: np.ndarray, window_lengths: int | list[int], window_type: WindowType = "boxcar") -> np.ndarray:
+def hough_spiker(signal: np.ndarray, window_length: int | list[int], window_type: WindowType = "boxcar") -> np.ndarray:
     """
     Perform spike detection using the Hough Spiker Algorithm (HSA).
 
@@ -92,7 +42,7 @@ def hough_spiker(signal: np.ndarray, window_lengths: int | list[int], window_typ
 
     :param signal: The input signal to be analyzed. This should be a numpy ndarray.
     :type signal: numpy.ndarray
-    :param window_length: The length of the boxcar filter window.
+    :param window_length: The length of the boxcar filter window. Can be a int or a list of ints.
     :type window_length: int | list[int]
     :return: A 1D numpy array representing the detected spikes.
     :rtype: numpy.ndarray
@@ -108,14 +58,16 @@ def hough_spiker(signal: np.ndarray, window_lengths: int | list[int], window_typ
 
     S, F = signal.shape
 
-    if window_lengths > signal.shape[0]:
-        raise ValueError("Filter window size must be less than the length of the signal.")
-
-    if isinstance(window_lengths, int):
-        window_lengths = [window_lengths] * F
+    if isinstance(window_length, int):
+        window_lengths = [window_length] * F
+    elif isinstance(window_length, list):
+        window_lengths = window_length
 
     if len(window_lengths) != F:
         raise ValueError("Window lengths must match the number of features in the signal.")
+
+    if np.any(np.array(window_lengths) > S):
+        raise ValueError("All filter window sizes must be less than the length of the signal.")
 
     # Initialize the spike array
     spikes = np.zeros_like(signal, dtype=np.int8)

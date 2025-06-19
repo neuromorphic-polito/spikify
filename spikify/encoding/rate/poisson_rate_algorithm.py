@@ -48,7 +48,7 @@ def poisson_rate(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.
     :type interval_length: int
     :param seed: Random seed for reproducibility. Default is 0.
     :type seed: int
-    :return: A 1D array or tensor of encoded spike data after Poisson rate encoding.
+    :return: A numpy array of encoded spike data after Poisson rate encoding.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty.
     :raises ValueError: If the interval is not a factor of the signal length.
@@ -67,6 +67,7 @@ def poisson_rate(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.
         )
     if signal.ndim == 1:
         signal = signal.reshape(-1, 1)
+
     S, F = signal.shape
 
     np.random.seed(seed)
@@ -90,16 +91,16 @@ def poisson_rate(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.
     bins = np.linspace(0, 1, interval_length + 1)
 
     # Generate Poisson spike trains
-    for j in range(F):
-        for i, rate in enumerate(signal[:, j]):
+    for feat in range(F):
+        for idx, rate in enumerate(signal[:, feat]):
             if rate > 0:
                 ISI = -np.log(1 - np.random.random(interval_length)) / (rate * interval_length)  # Inter-spike intervals
                 spike_times = np.searchsorted(bins, np.cumsum(ISI)) - 1  # Find spike times
                 spike_times = spike_times[spike_times < interval_length]  # Clip times within interval
-                spikes[i, spike_times, j] = 1
+                spikes[idx, spike_times, feat] = 1
 
-    # Flatten the 2D array into a 1D spike train
     spikes = spikes.reshape(S, F)
-    if spikes.shape[-1] == 1:
+
+    if F == 1:
         spikes = spikes.flatten()
     return spikes

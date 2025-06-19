@@ -41,9 +41,9 @@ def threshold_based_representation(signal: np.ndarray, factors: float | list[flo
     :param signal: The input signal to be encoded. This should be a numpy ndarray.
     :type signal: numpy.ndarray
     :param factor: The factor value (`γ`) that controls the noise-reduction threshold.
-                   Can be a float or a list/array of floats.
-    :type factor: float
-    :return: A 1D numpy array representing the encoded spike train.
+                   Can be a float or a list of floats.
+    :type factor: float | list[float]
+    :return: A numpy array representing the encoded spike train.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty.
     :raises TypeError: If the signal is not a numpy ndarray.
@@ -66,16 +66,15 @@ def threshold_based_representation(signal: np.ndarray, factors: float | list[flo
     spike = np.zeros_like(signal, dtype=np.int8)
     threshold = np.zeros(F, dtype=np.float64)
     variation = np.diff(signal[1:, :], prepend=signal[[0], :], axis=0)
-    print("variation:", variation.shape)
 
     threshold = np.mean(variation, axis=0) + factors * np.std(variation, axis=0)
     variation = np.insert(variation, 0, variation[1, :], axis=0)
-    print("variation:", variation.shape)
-    print("threshold:", threshold.shape)
+
     # Apply threshold conditions
     threshold = threshold.reshape(1, threshold.shape[0])
     spike[variation > threshold] = 1
     spike[variation < -threshold] = -1
+
     if F == 1:
         spike = spike.flatten()
     return spike

@@ -5,63 +5,13 @@
 """
 
 import numpy as np
-from typing import Literal
 from scipy.signal.windows import get_window
-
-WindowType = Literal[
-    "barthann",
-    "brthan",
-    "bth",
-    "bartlett",
-    "bart",
-    "brt",
-    "blackman",
-    "black",
-    "blk",
-    "blackmanharris",
-    "blackharr",
-    "bkh",
-    "bohman",
-    "bman",
-    "bmn",
-    "boxcar",
-    "box",
-    "ones",
-    "rect",
-    "rectangular",
-    "cosine",
-    "halfcosine",
-    "exponential",
-    "poisson",
-    "flattop",
-    "flat",
-    "flt",
-    "hamming",
-    "hamm",
-    "ham",
-    "hann",
-    "han",
-    "lanczos",
-    "sinc",
-    "nuttall",
-    "nutl",
-    "nut",
-    "parzen",
-    "parz",
-    "par",
-    "taylor",
-    "taylorwin",
-    "triangle",
-    "triang",
-    "tri",
-    "tukey",
-    "tuk",
-]
+from .utils import WindowType
 
 
 def modified_hough_spiker(
     signal: np.ndarray,
-    window_lengths: int | list[int],
+    window_length: int | list[int],
     threshold: float | list[float],
     window_type: WindowType = "boxcar",
 ) -> np.ndarray:
@@ -101,7 +51,7 @@ def modified_hough_spiker(
 
     :param signal: The input signal to be analyzed. This should be a numpy ndarray.
     :type signal: numpy.ndarray
-    :param window_length: The length of the boxcar filter window.
+    :param window_length: The length of the boxcar filter window. Can be a int or a list of ints.
     :type window_length: int | list[int]
     :param threshold: The threshold value for error accumulation. Can be a float or a list/array of floats.
     :type threshold: float or list of float
@@ -114,22 +64,27 @@ def modified_hough_spiker(
     # Check for invalid inputs
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
-    if isinstance(threshold, (float, int)):
-        threshold = [threshold]
 
     if signal.ndim == 1:
         signal = signal.reshape(-1, 1)
 
     S, F = signal.shape
 
-    if len(threshold) != signal.shape[1]:
-        raise ValueError("Threshold must match the number of features in the signal.")
+    if isinstance(threshold, float):
+        thresholds = [threshold] * F
+    elif isinstance(threshold, list):
+        thresholds = threshold
 
-    if isinstance(window_lengths, int):
-        window_lengths = [window_lengths] * F
+    if isinstance(window_length, int):
+        window_lengths = [window_length] * F
+    elif isinstance(window_length, list):
+        window_lengths = window_length
 
-    if max(window_lengths) > signal.shape[0]:
-        raise ValueError("Filter window size must be less than the length of the signal.")
+    if len(window_lengths) != F:
+        raise ValueError("Window lengths must match the number of features in the signal.")
+
+    if np.any(np.array(window_lengths) > S):
+        raise ValueError("All filter window sizes must be less than the length of the signal.")
 
     # Initialize the spikes array
     spikes = np.zeros_like(signal, dtype=np.int8)
@@ -153,7 +108,7 @@ def modified_hough_spiker(
             error = np.sum(np.maximum(filter_segment - signal_segment, 0))
 
             # If the cumulative error is within the threshold, a spike is detected
-            if error <= threshold[feature]:
+            if error <= thresholds[feature]:
                 signal_copy[t:end_index, feature] -= filter_segment
                 spikes[t, feature] = 1
 

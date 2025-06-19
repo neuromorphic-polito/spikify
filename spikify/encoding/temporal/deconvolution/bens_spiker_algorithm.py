@@ -6,62 +6,12 @@
 
 import numpy as np
 from scipy.signal.windows import get_window
-from typing import Literal
-
-WindowType = Literal[
-    "barthann",
-    "brthan",
-    "bth",
-    "bartlett",
-    "bart",
-    "brt",
-    "blackman",
-    "black",
-    "blk",
-    "blackmanharris",
-    "blackharr",
-    "bkh",
-    "bohman",
-    "bman",
-    "bmn",
-    "boxcar",
-    "box",
-    "ones",
-    "rect",
-    "rectangular",
-    "cosine",
-    "halfcosine",
-    "exponential",
-    "poisson",
-    "flattop",
-    "flat",
-    "flt",
-    "hamming",
-    "hamm",
-    "ham",
-    "hann",
-    "han",
-    "lanczos",
-    "sinc",
-    "nuttall",
-    "nutl",
-    "nut",
-    "parzen",
-    "parz",
-    "par",
-    "taylor",
-    "taylorwin",
-    "triangle",
-    "triang",
-    "tri",
-    "tukey",
-    "tuk",
-]
+from .utils import WindowType
 
 
 def bens_spiker(
     signal: np.ndarray,
-    window_lengths: int | list[int],
+    window_length: int | list[int],
     threshold: float | list[float],
     window_type: WindowType = "boxcar",
 ) -> np.ndarray:
@@ -99,11 +49,11 @@ def bens_spiker(
 
     :param signal: The input signal to be analyzed. This should be a numpy ndarray.
     :type signal: numpy.ndarray
-    :param window_length: The length of the boxcar filter window.
+    :param window_length: The length of the window type filter window. Can be a int or a list of ints.
     :type window_length: int | list[int]
-    :param threshold: Threshold value used to detect spikes. Can be a float or a list/array of floats.
+    :param threshold: Threshold value used to detect spikes. Can be a float or a list of floats.
     :type threshold: float | list[float]
-    :return: A 1D numpy array representing the detected spikes.
+    :return: A numpy array representing the detected spikes.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty or if the window length is greater than the signal length.
     :raises TypeError: If the signal is not a numpy ndarray.
@@ -118,8 +68,10 @@ def bens_spiker(
 
     S, F = signal.shape
 
-    if isinstance(window_lengths, int):
-        window_lengths = [window_lengths] * F
+    if isinstance(window_length, int):
+        window_lengths = [window_length] * F
+    elif isinstance(window_length, list):
+        window_lengths = window_length
 
     if len(window_lengths) != F:
         raise ValueError("Window lengths must match the number of features in the signal.")
@@ -128,9 +80,12 @@ def bens_spiker(
         raise ValueError("All filter window sizes must be less than the length of the signal.")
 
     if isinstance(threshold, float):
-        threshold = [threshold] * F
+        thresholds = [threshold] * F
 
-    if len(threshold) != F:
+    elif isinstance(threshold, list):
+        thresholds = threshold
+
+    if len(thresholds) != F:
         raise ValueError("Threshold must match the number of features in the signal.")
 
     # Initialize the spike array
@@ -143,17 +98,18 @@ def bens_spiker(
     signal_copy = np.copy(np.array(signal, dtype=np.float64))
 
     # Iterate over the signal to detect spikes
-    for feature in range(F):
-        for t in range(len(signal[:, feature]) - window_lengths[feature] + 1):
+    for feat in range(F):
+        for seq_idx in range(len(signal[:, feat]) - window_lengths[feat] + 1):
             # Calculate errors using the filter window
-            segment = signal_copy[t : t + window_lengths[feature], feature]
-            error1 = np.sum(np.abs(segment - filter_window[feature]), axis=0)
+            segment = signal_copy[seq_idx : seq_idx + window_lengths[feat], feat]
+            error1 = np.sum(np.abs(segment - filter_window[feat]), axis=0)
             error2 = np.sum(np.abs(segment), axis=0)
 
             # Update signal and spike array if a spike is detected
-            if error1 <= (error2 - threshold[feature]):
-                signal_copy[t : t + window_lengths[feature], feature] -= filter_window[feature]
-                spikes[t, feature] = 1
+            if error1 <= (error2 - thresholds[feat]):
+                signal_copy[seq_idx : seq_idx + window_lengths[feat], feat] -= filter_window[feat]
+                spikes[seq_idx, feat] = 1
+
     if F == 1:
         spikes = spikes.flatten()
 

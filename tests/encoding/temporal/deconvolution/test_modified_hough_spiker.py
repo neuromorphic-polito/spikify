@@ -12,7 +12,7 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array([0, 1.5, 2, 3, 4, 5, 6, 3, 2, 1, 0])
         window_length = 3
-        threshold = 2
+        threshold = 2.0
         expected_spikes = np.array([1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1])
         result = modified_hough_spiker(signal, window_length, threshold)
         np.testing.assert_array_equal(result, expected_spikes)
@@ -22,7 +22,7 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array([])
         window_length = 0
-        threshold = 1
+        threshold = 1.0
         with self.assertRaises(ValueError):
             modified_hough_spiker(signal, window_length, threshold)
 
@@ -32,7 +32,7 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array([0, 1, 2, 3, 4, 5])
         window_length = 7
-        threshold = 1
+        threshold = 1.0
         with self.assertRaises(ValueError):
             modified_hough_spiker(signal, window_length, threshold)
 
@@ -70,7 +70,7 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
         # Test case for filter window size of 3
         signal_3 = np.array([0, 1, 2, 3, 4, 5, 2, 1, 0])
         window_length_3 = 3
-        threshold = 1
+        threshold = 1.0
         expected_spikes_3 = np.array([1, 1, 1, 1, 1, 1, 0, 0, 1])
         result_3 = modified_hough_spiker(signal_3, window_length_3, threshold)
         np.testing.assert_array_equal(result_3, expected_spikes_3)
@@ -95,7 +95,7 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array([5, 5, 5, 0, 0])
         window_length = 3
-        threshold = 1
+        threshold = 1.0
         expected_spikes = np.array([1, 1, 0, 0, 1])
         result = modified_hough_spiker(signal, window_length, threshold)
         np.testing.assert_array_equal(result, expected_spikes)
@@ -105,7 +105,7 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
 
         signal = np.random.randn(10000)
         window_length = 10
-        threshold = 1
+        threshold = 1.0
         result = modified_hough_spiker(signal, window_length, threshold)
         self.assertEqual(len(result), len(signal))
 
@@ -114,7 +114,7 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array(["a", "b", "c"])
         window_length = 2
-        threshold = 1
+        threshold = 1.0
         with self.assertRaises(ValueError):
             modified_hough_spiker(signal, window_length, threshold)
 
@@ -124,7 +124,7 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
         np.random.seed(0)
         signal = np.array([0, 1, 2, 3, 4, 5, 6, 3, 2, 1, 0]) + np.random.randn(11)
         window_length = 3
-        threshold = 2
+        threshold = 2.0
         result = modified_hough_spiker(signal, window_length, threshold)
         self.assertTrue(np.any(result))
 
@@ -133,7 +133,7 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
         np.random.seed(42)
         signal = np.random.rand(10, 2)
         window_length = 3
-        threshold = [3, 5]
+        threshold = [3.0, 5.0]
         encoded_signal = modified_hough_spiker(signal, window_length, threshold)
         self.assertEqual(encoded_signal.shape, signal.shape)
         signal_f1 = signal[:, 0]
@@ -148,7 +148,7 @@ class TestModifiedHoughSpikerAlgorithm(unittest.TestCase):
         np.random.seed(42)
         signal = np.random.rand(10, 2)
         window_length = [3, 2]
-        threshold = [3, 5]
+        threshold = [3.0, 5.0]
         encoded_signal = modified_hough_spiker(signal, window_length, threshold)
         self.assertEqual(encoded_signal.shape, signal.shape)
         signal_f1 = signal[:, 0]
