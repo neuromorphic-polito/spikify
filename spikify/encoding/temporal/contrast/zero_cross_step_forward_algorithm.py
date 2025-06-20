@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def zero_cross_step_forward(signal: np.ndarray, threshold: int) -> np.ndarray:
+def zero_cross_step_forward(signal: np.ndarray, threshold: float | list[float]) -> np.ndarray:
     """
     Perform Zero-Crossing Step-Forward (ZCSF) encoding on the input signal.
 
@@ -41,9 +41,9 @@ def zero_cross_step_forward(signal: np.ndarray, threshold: int) -> np.ndarray:
 
     :param signal: The input signal to be encoded. This should be a numpy ndarray.
     :type signal: numpy.ndarray
-    :param threshold: The threshold value used to determine spike generation.
-    :type threshold: int
-    :return: A 1D numpy array representing the encoded spike train.
+    :param threshold: The threshold value used to determine spike generation. Can be a float or a list of floats.
+    :type threshold: float | list[float]
+    :return: A numpy array representing the encoded spike train.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty.
     :raises TypeError: If the signal is not a numpy ndarray.
@@ -53,12 +53,32 @@ def zero_cross_step_forward(signal: np.ndarray, threshold: int) -> np.ndarray:
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
+    if signal.ndim == 1:
+        signal = signal.reshape(-1, 1)
+
+    S, F = signal.shape
+
+    if isinstance(threshold, float):
+        thresholds = [threshold] * F
+    elif isinstance(threshold, list):
+        if not all(isinstance(w, float) for w in threshold):
+            raise TypeError("All elements in threshold list must be float.")
+        thresholds = threshold
+    else:
+        raise TypeError("Threshold must be a float or a list of floats.")
+
+    if len(thresholds) != F:
+        raise ValueError("Threshold must match the number of features in the signal.")
+
     spike = np.zeros_like(signal, dtype=np.int8)
 
     # Zero out negative values
     signal = np.maximum(signal, 0)
 
     # Apply threshold condition
-    spike[signal > threshold] = 1
+    spike[signal > thresholds] = 1
+
+    if F == 1:
+        spike = spike.flatten()
 
     return spike

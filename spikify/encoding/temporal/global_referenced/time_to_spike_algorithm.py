@@ -50,11 +50,15 @@ def time_to_first_spike(signal: np.ndarray, interval: int) -> np.ndarray:
 
     """
 
+    if signal.ndim == 1:
+        signal = signal.reshape(-1, 1)
+
+    S, F = signal.shape
     # Check for invalid inputs
-    if len(signal) == 0:
+    if signal.shape[0] == 0:
         raise ValueError("Signal cannot be empty.")
 
-    if len(signal) % interval != 0:
+    if signal.shape[0] % interval != 0:
         raise ValueError(
             f"The time_to_spike interval ({interval}) is not a multiple of the signal length ({len(signal)})."
         )
@@ -63,12 +67,13 @@ def time_to_first_spike(signal: np.ndarray, interval: int) -> np.ndarray:
     signal = np.clip(signal, 0, None)
 
     # Compute mean over the signal reshaped to interval-sized chunks
-    signal = np.mean(signal.reshape(-1, interval), axis=1)
+    signal = np.mean(signal.reshape(signal.shape[0] // interval, interval, signal.shape[1]), axis=1)
 
-    # Normalize the signal
-    signal_max = signal.max()
-    if signal_max > 0:
-        signal /= signal_max
+    signal_max = signal.max(axis=0)  # shape (F,)
+
+    for feature in range(F):
+        if signal_max[feature] > 0:
+            signal[:, feature] /= signal_max[feature]
 
     # Calculate intensity based on the signal
     with np.errstate(divide="ignore"):  # Avoid division warnings
@@ -79,8 +84,13 @@ def time_to_first_spike(signal: np.ndarray, interval: int) -> np.ndarray:
     levels = np.searchsorted(bins, intensity)
 
     # Create the spike matrix and set spikes
-    spike = np.zeros((signal.shape[0], interval), dtype=np.int8)
-    spike[np.arange(signal.shape[0]), np.clip(levels, 0, interval - 1)] = 1
+    spike = np.zeros((signal.shape[0], interval, signal.shape[1]), dtype=np.int8)
+    for feature in range(signal.shape[1]):
+        spike[np.arange(signal.shape[0]), np.clip(levels[:, feature], 0, interval - 1), feature] = 1
 
     # Reshape the spike array into 1D
-    return spike.reshape(-1)
+    if spike.shape[2] == 1:
+        spike = spike.reshape(-1)
+    else:
+        spike = spike.reshape(spike.shape[0] * spike.shape[1], spike.shape[2])
+    return spike

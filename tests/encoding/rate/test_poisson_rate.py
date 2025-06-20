@@ -69,6 +69,14 @@ class TestPoissonRateEncoding(unittest.TestCase):
         with self.assertRaises(ValueError):
             poisson_rate(signal, interval)
 
+    def test_shape_with_multiple_features(self):
+        """Test the function with a signal containing multiple features."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        interval = 2
+        encoded_signal = poisson_rate(signal, interval)
+        self.assertEqual(encoded_signal.shape, signal.shape)
+
 
 if __name__ == "__main__":
     unittest.main()
