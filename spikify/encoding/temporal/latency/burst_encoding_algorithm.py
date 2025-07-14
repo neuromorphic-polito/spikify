@@ -68,16 +68,18 @@ def burst_encoding(signal: np.ndarray, n_max: int, t_min: int, t_max: int, lengt
     if is_1d:
         signal = signal[:, None]
 
-    if signal.shape[0] == 0:
+    S, F = signal.shape
+
+    if S == 0:
         raise ValueError("Signal cannot be empty.")
 
-    if signal.shape[0] % length != 0:
+    if S % length != 0:
         raise ValueError(
             f"The burst_encoding length ({length}) is not a multiple of the signal length ({len(signal)})."
         )
 
     signal = np.clip(signal, 0, None)
-    signal = np.mean(signal.reshape(-1, length, signal.shape[1]), axis=1)
+    signal = np.mean(signal.reshape(-1, length, F), axis=1)
 
     signal_max = signal.max(axis=0)
     signal_max[signal_max == 0] = 1
