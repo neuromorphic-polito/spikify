@@ -30,6 +30,7 @@ if (_path := Path(__file__).parent.joinpath("DOCS_THEME")).is_file():
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
     "sphinx.ext.doctest",
     "sphinx.ext.todo",
@@ -98,6 +99,8 @@ autodoc_default_options = {
 }
 
 autosummary_generate = True
+autosummary_generate_overwrite = True
+autosummary_imported_members = True
 
 html_show_sourcelink = True
 
