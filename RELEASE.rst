@@ -11,19 +11,14 @@ We follow semantic versioning, which means our version numbers have three parts:
 Release Steps
 -------------
 
-1. **Install the `bump-my-version` package:**
+
+1. **Create a new branch for the release from dev branch:**
 
    .. code-block:: bash
 
-      pip install --upgrade bump-my-version
+      git checkout -b x.y.z
 
-2. **Create a new branch for the release from dev branch:**
-
-   .. code-block:: bash
-
-      git checkout -b release/x.y.z
-
-3. **Update the version number using the `bump-my-version` command:**
+2. **Update the version number using the `bump-my-version` command:**
 
    .. code-block:: bash
 
@@ -41,19 +36,19 @@ Release Steps
 
       bump-my-version bump major
 
-4. **Commit the changes with the following message and push the changes to the release branch:**
+3. **Commit the changes with the following message and push the changes to the release branch:**
 
    .. code-block:: bash
 
       git commit -m "Bump version: {current_version} → {new_version}"
 
-      git push origin release/x.y.z
+      git push origin x.y.z
 
-5. **Create a pull request from the release branch to the dev branch.**
+4. **Create a pull request from the release branch to the dev branch.**
 
-6. **Once the pull request is approved and merged, create a new pull request from the dev branch to the master branch.**
+5. **Once the pull request is approved and merged, create a new pull request from the dev branch to the master branch.**
 
-7. **Once the pull request is approved and merged, create the tag on the main branch to invoke the package publishing workflow:**
+6. **Once the pull request is approved and merged, create the tag on the main branch to invoke the package publishing workflow:**
 
    .. code-block:: bash
 
@@ -61,7 +56,7 @@ Release Steps
 
       git push origin tag <tag_name>
 
-8. **Once the tag is pushed, the package publishing workflow will be triggered and the package will be published to PyPI.**
+7. **Once the tag is pushed, the package publishing workflow will be triggered and the package will be published to PyPI.**
 
-9. **Once the package is published, create a new release on GitHub with the tag name and the release notes (generate them automatically).**
+8. **Once the package is published, create a new release on GitHub with the tag name and the release notes (generate them automatically).**
 
