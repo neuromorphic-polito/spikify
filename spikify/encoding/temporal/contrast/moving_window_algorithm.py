@@ -44,7 +44,7 @@ def moving_window(signal: np.ndarray, window_length: int) -> np.ndarray:
     :type signal: numpy.ndarray
     :param window_length: The size of the sliding window for calculating the base mean.
     :type window_length: int
-    :return: A 1D numpy array representing the encoded spike train.
+    :return: A numpy array representing the encoded spike train.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty.
     :raises ValueError: If the window length is greater than the length of the signal.
@@ -56,18 +56,28 @@ def moving_window(signal: np.ndarray, window_length: int) -> np.ndarray:
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
-    variation = np.diff(signal[1:], prepend=signal[0])
-    threshold = np.mean(np.abs(variation))
+    if signal.ndim == 1:
+        signal = signal.reshape(-1, 1)
 
+    S, F = signal.shape
+
+    variation = np.diff(signal[1:, :], prepend=signal[[0], :], axis=0)
+    threshold = np.mean(np.abs(variation), axis=0)
     spikes = np.zeros_like(signal, dtype=np.int8)
 
     # Compute the moving window mean and apply thresholds
-    for t in range(len(signal)):
-        base = np.mean(signal[:window_length]) if t < window_length else np.mean(signal[t - window_length : t])
+    for feat in range(F):
+        for seq_idx in range(len(signal[:, feat])):
+            base = (
+                np.mean(signal[:window_length, feat])
+                if seq_idx < window_length
+                else np.mean(signal[seq_idx - window_length : seq_idx, feat])
+            )
+            if signal[seq_idx, feat] > base + threshold[feat]:
+                spikes[seq_idx, feat] = 1
+            elif signal[seq_idx, feat] < base - threshold[feat]:
+                spikes[seq_idx, feat] = -1
 
-        if signal[t] > base + threshold:
-            spikes[t] = 1
-        elif signal[t] < base - threshold:
-            spikes[t] = -1
-
+    if F == 1:
+        spikes = spikes.flatten()
     return spikes

@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def poisson_rate(signal: np.ndarray, interval_length: int) -> np.ndarray:
+def poisson_rate(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.ndarray:
     """
     Perform Poisson rate encoding on the input signal.
 
@@ -46,7 +46,9 @@ def poisson_rate(signal: np.ndarray, interval_length: int) -> np.ndarray:
     :type signal: numpy.ndarray
     :param interval_length: The size of the interval for encoding the spike train.
     :type interval_length: int
-    :return: A 1D array or tensor of encoded spike data after Poisson rate encoding.
+    :param seed: Random seed for reproducibility. Default is 0.
+    :type seed: int
+    :return: A numpy array of encoded spike data after Poisson rate encoding.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty.
     :raises ValueError: If the interval is not a factor of the signal length.
@@ -63,36 +65,42 @@ def poisson_rate(signal: np.ndarray, interval_length: int) -> np.ndarray:
             "To resolve this, consider trimming or padding the signal to ensure its length is a multiple of the "
             "interval."
         )
+    if signal.ndim == 1:
+        signal = signal.reshape(-1, 1)
 
-    np.random.seed(0)
+    S, F = signal.shape
+
+    np.random.seed(seed)
 
     # Ensure non-negative signal values
     signal = np.clip(signal, 0, None)
 
     # Compute mean over the signal reshaped to interval-sized chunks
-    signal = np.mean(signal.reshape(-1, interval_length), axis=1)
+    signal = np.mean(signal.reshape(S // interval_length, interval_length, F), axis=1)
 
     # Normalize the signal
-    signal_max = signal.max()
-    if signal_max > 0:
-        signal /= signal_max
+    signal_max = np.max(signal, axis=0, keepdims=True)
+    if np.any(signal_max > 0):
+        safe_max = np.where(signal_max > 0, signal_max, 1)
+        signal /= safe_max
 
     # Initialize the spike array
-    spikes = np.zeros((signal.shape[0], interval_length), dtype=np.int8)
+    spikes = np.zeros((S // interval_length, interval_length, F), dtype=np.int8)
 
     # Create bins for Poisson rate encoding
     bins = np.linspace(0, 1, interval_length + 1)
 
     # Generate Poisson spike trains
-    for i, rate in enumerate(signal):
-        if rate > 0:
-            ISI = [
-                -np.log(1 - np.random.random()) / (rate * interval_length) for _ in range(interval_length)
-            ]  # Inter-spike intervals
-            spike_times = np.searchsorted(bins, np.cumsum(ISI)) - 1  # Find spike times
-            spike_times = spike_times[spike_times < interval_length]  # Clip times within interval
-            spikes[i, spike_times] = 1
+    for feat in range(F):
+        for idx, rate in enumerate(signal[:, feat]):
+            if rate > 0:
+                ISI = -np.log(1 - np.random.random(interval_length)) / (rate * interval_length)  # Inter-spike intervals
+                spike_times = np.searchsorted(bins, np.cumsum(ISI)) - 1  # Find spike times
+                spike_times = spike_times[spike_times < interval_length]  # Clip times within interval
+                spikes[idx, spike_times, feat] = 1
 
-    # Flatten the 2D array into a 1D spike train
-    spikes = spikes.flatten()
+    spikes = spikes.reshape(S, F)
+
+    if F == 1:
+        spikes = spikes.flatten()
     return spikes

@@ -59,3 +59,38 @@ class TestThresholdBasedRepresentation(unittest.TestCase):
         expected_spikes_low = np.array([1, 1, 1, 1, -1, -1, -1])
         result_low = threshold_based_representation(signal, factor_low)
         np.testing.assert_array_equal(result_low, expected_spikes_low)
+
+    def test_with_multiple_features(self):
+        """Test the function with a signal containing multiple features."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        threshold = [0.5, 0.3]
+        encoded_signal = threshold_based_representation(signal, threshold)
+        self.assertEqual(encoded_signal.shape, signal.shape)
+        signal_f1 = signal[:, 0]
+        signal_f2 = signal[:, 1]
+        encoded_signal_f1 = threshold_based_representation(signal_f1, threshold[0])
+        encoded_signal_f2 = threshold_based_representation(signal_f2, threshold[1])
+        np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
+        np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
+
+    def test_factor_type(self):
+        """Test the function with an Integer factor."""
+        signal = np.random.rand(10)
+        factor = 3
+        with self.assertRaises(TypeError):
+            threshold_based_representation(signal, factor)
+
+    def test_factors_type(self):
+        """Test the function with a list of Integer factors."""
+        signal = np.random.rand(10, 2)
+        factors = [5, 1]
+        with self.assertRaises(TypeError):
+            threshold_based_representation(signal, factors)
+
+    def test_factors_length(self):
+        """Test the function with a list of factors with dimension different from feature."""
+        signal = np.random.rand(10, 2)
+        factors = [5.0, 1.0, 3.0]
+        with self.assertRaises(ValueError):
+            threshold_based_representation(signal, factors)

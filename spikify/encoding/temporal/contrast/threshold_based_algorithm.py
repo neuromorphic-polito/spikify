@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def threshold_based_representation(signal: np.ndarray, factor: float) -> np.ndarray:
+def threshold_based_representation(signal: np.ndarray, factor: float | list[float]) -> np.ndarray:
     """
     Perform Threshold-Based Representation (TBR) encoding on the input signal.
 
@@ -41,8 +41,9 @@ def threshold_based_representation(signal: np.ndarray, factor: float) -> np.ndar
     :param signal: The input signal to be encoded. This should be a numpy ndarray.
     :type signal: numpy.ndarray
     :param factor: The factor value (`γ`) that controls the noise-reduction threshold.
-    :type factor: float
-    :return: A 1D numpy array representing the encoded spike train.
+                   Can be a float or a list of floats.
+    :type factor: float | list[float]
+    :return: A numpy array representing the encoded spike train.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty.
     :raises TypeError: If the signal is not a numpy ndarray.
@@ -51,15 +52,34 @@ def threshold_based_representation(signal: np.ndarray, factor: float) -> np.ndar
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
-    spike = np.zeros_like(signal, dtype=np.int8)
+    if signal.ndim == 1:
+        signal = signal.reshape(-1, 1)
 
-    # Compute the variation and threshold
-    variation = np.diff(signal[1:], prepend=signal[0])
-    threshold = np.mean(variation) + factor * np.std(variation)
-    variation = np.insert(variation, 0, variation[1])
+    S, F = signal.shape
+
+    if isinstance(factor, float):
+        factors = [factor] * F
+    elif isinstance(factor, list):
+        if not all(isinstance(w, float) for w in factor):
+            raise TypeError("All elements in factor list must be float.")
+        factors = factor
+    else:
+        raise TypeError("factor must be a float or a list of floats.")
+    if len(factors) != F:
+        raise ValueError("Factor must match the number of features in the signal.")
+
+    spike = np.zeros_like(signal, dtype=np.int8)
+    factor = np.zeros(F, dtype=np.float64)
+    variation = np.diff(signal[1:, :], prepend=signal[[0], :], axis=0)
+
+    factor = np.mean(variation, axis=0) + factors * np.std(variation, axis=0)
+    variation = np.insert(variation, 0, variation[1, :], axis=0)
 
     # Apply threshold conditions
-    spike[variation > threshold] = 1
-    spike[variation < -threshold] = -1
+    factor = factor.reshape(1, factor.shape[0])
+    spike[variation > factor] = 1
+    spike[variation < -factor] = -1
 
+    if F == 1:
+        spike = spike.flatten()
     return spike

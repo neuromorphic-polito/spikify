@@ -170,3 +170,4 @@ cython_debug/
 .DS_Store
 
 *.code-workspace
+example.py

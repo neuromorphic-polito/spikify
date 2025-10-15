@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def step_forward(signal: np.ndarray, threshold: float) -> np.ndarray:
+def step_forward(signal: np.ndarray, threshold: float | list[float]) -> np.ndarray:
     """
     Perform Step-Forward encoding on the input signal.
 
@@ -40,9 +40,9 @@ def step_forward(signal: np.ndarray, threshold: float) -> np.ndarray:
 
     :param signal: The input signal to be encoded. This should be a numpy ndarray.
     :type signal: numpy.ndarray
-    :param threshold: The threshold value for spike detection.
-    :type threshold: float
-    :return: A 1D numpy array representing the encoded spike train.
+    :param threshold: The threshold value(s) for spike detection. Can be a float or a list of floats.
+    :type threshold: float | list[float]
+    :return: A numpy array representing the encoded spike train.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty.
     :raises TypeError: If the signal is not a numpy ndarray.
@@ -51,16 +51,36 @@ def step_forward(signal: np.ndarray, threshold: float) -> np.ndarray:
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
+    if signal.ndim == 1:
+        signal = signal.reshape(-1, 1)
+
+    S, F = signal.shape
+
+    if isinstance(threshold, float):
+        thresholds = [threshold] * F
+    elif isinstance(threshold, list):
+        if not all(isinstance(w, float) for w in threshold):
+            raise TypeError("All elements in threshold list must be float.")
+        thresholds = threshold
+    else:
+        raise TypeError("Threshold must be a float or a list of floats.")
+
+    if len(thresholds) != F:
+        raise ValueError("Threshold must match the number of features in the signal.")
+
     spike = np.zeros_like(signal, dtype=np.int8)
 
     # Base value initialized at the start of the signal
-    base = signal[0]
-    for t, value in enumerate(signal):
-        if value > base + threshold:
-            spike[t] = 1
-            base += threshold
-        elif value < base - threshold:
-            spike[t] = -1
-            base -= threshold
+    for feat in range(F):
+        base = signal[0, feat]
+        for value_idx, value in enumerate(signal[:, feat]):
+            if value > base + thresholds[feat]:
+                spike[value_idx, feat] = 1
+                base += thresholds[feat]
+            elif value < base - thresholds[feat]:
+                spike[value_idx, feat] = -1
+                base -= thresholds[feat]
 
+    if F == 1:
+        spike = spike.flatten()
     return spike

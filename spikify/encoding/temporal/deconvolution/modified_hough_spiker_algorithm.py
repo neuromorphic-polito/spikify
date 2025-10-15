@@ -5,10 +5,16 @@
 """
 
 import numpy as np
-from scipy.signal.windows import boxcar
+from scipy.signal.windows import get_window
+from .utils import WindowType
 
 
-def modified_hough_spiker(signal: np.ndarray, window_length: int, threshold: float) -> np.ndarray:
+def modified_hough_spiker(
+    signal: np.ndarray,
+    window_length: int | list[int],
+    threshold: float | list[float],
+    window_type: WindowType = "boxcar",
+) -> np.ndarray:
     """
     Detect spikes in a signal using the Modified Hough Spiker Algorithm.
 
@@ -45,10 +51,10 @@ def modified_hough_spiker(signal: np.ndarray, window_length: int, threshold: flo
 
     :param signal: The input signal to be analyzed. This should be a numpy ndarray.
     :type signal: numpy.ndarray
-    :param window_length: The length of the boxcar filter window.
-    :type window_length: int
-    :param threshold: The threshold value for error accumulation.
-    :type threshold: float
+    :param window_length: The length of the boxcar filter window. Can be a int or a list of ints.
+    :type window_length: int | list[int]
+    :param threshold: The threshold value for error accumulation. Can be a float or a list/array of floats.
+    :type threshold: float or list of float
     :return: A 1D numpy array representing the detected spikes.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty or if the window length is greater than the signal length.
@@ -59,33 +65,62 @@ def modified_hough_spiker(signal: np.ndarray, window_length: int, threshold: flo
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
-    if window_length > len(signal):
-        raise ValueError("Filter window size must be less than the length of the signal.")
+    if signal.ndim == 1:
+        signal = signal.reshape(-1, 1)
+
+    S, F = signal.shape
+
+    if isinstance(threshold, float):
+        thresholds = [threshold] * F
+    elif isinstance(threshold, list):
+        if not all(isinstance(w, float) for w in threshold):
+            raise TypeError("All elements in threshold list must be float.")
+        thresholds = threshold
+    else:
+        raise TypeError("Threshold must be a float or a list of floats.")
+
+    if len(thresholds) != F:
+        raise ValueError("Thresholds must match the number of features in the signal.")
+
+    if isinstance(window_length, int):
+        window_lengths = [window_length] * F
+    elif isinstance(window_length, list):
+        window_lengths = window_length
+    else:
+        raise TypeError("Window length must be an int or a list of ints.")
+
+    if len(window_lengths) != F:
+        raise ValueError("Window lengths must match the number of features in the signal.")
+
+    if np.any(np.array(window_lengths) > S):
+        raise ValueError("All filter window sizes must be less than the length of the signal.")
 
     # Initialize the spikes array
     spikes = np.zeros_like(signal, dtype=np.int8)
 
     # Create the boxcar filter window
-    filter_window = boxcar(window_length)
-
+    filter_window = [get_window(window_type, w) for w in window_lengths]
     # Copy the signal for modification
     signal_copy = np.copy(np.array(signal, dtype=np.float64))
 
-    # Iterate over the signal to detect spikes
-    for t in range(len(signal)):
-        # Determine the end index for the current window
-        end_index = min(t + window_length, len(signal))
+    for feature in range(F):
+        # Iterate over the signal to detect spikes
+        for t in range(len(signal[:, feature])):
+            # Determine the end index for the current window
+            end_index = min(t + window_lengths[feature], S)
 
-        # Extract the relevant segment of the signal and the corresponding filter window
-        signal_segment = signal_copy[t:end_index]
-        filter_segment = filter_window[: end_index - t]
+            # Extract the relevant segment of the signal and the corresponding filter window
+            signal_segment = signal_copy[t:end_index, feature]
+            filter_segment = filter_window[feature][: end_index - t]
 
-        # Calculate the error for this segment
-        error = np.sum(np.maximum(filter_segment - signal_segment, 0))
+            # Calculate the error for this segment
+            error = np.sum(np.maximum(filter_segment - signal_segment, 0))
 
-        # If the cumulative error is within the threshold, a spike is detected
-        if error <= threshold:
-            signal_copy[t:end_index] -= filter_segment
-            spikes[t] = 1
+            # If the cumulative error is within the threshold, a spike is detected
+            if error <= thresholds[feature]:
+                signal_copy[t:end_index, feature] -= filter_segment
+                spikes[t, feature] = 1
 
+    if F == 1:
+        spikes = spikes.flatten()
     return spikes

@@ -91,3 +91,20 @@ class TestBurstEncoding(unittest.TestCase):
         result = burst_encoding(signal, n_max, t_min, t_max, length)
         self.assertEqual(len(result), len(signal))
         self.assertTrue(np.all(result <= 1))
+
+    def test_with_multiple_features(self):
+        """Test the function with a signal containing multiple features."""
+        np.random.seed(42)
+        signal = np.random.rand(100, 2)
+        n_max = 5
+        t_min = 1
+        t_max = 10
+        length = 100
+        encoded_signal = burst_encoding(signal, n_max, t_min, t_max, length)
+        self.assertEqual(encoded_signal.shape, signal.shape)
+        signal_f1 = signal[:, 0]
+        signal_f2 = signal[:, 1]
+        encoded_signal_f1 = burst_encoding(signal_f1, n_max, t_min, t_max, length)
+        encoded_signal_f2 = burst_encoding(signal_f2, n_max, t_min, t_max, length)
+        np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
+        np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
