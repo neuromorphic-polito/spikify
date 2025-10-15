@@ -10,7 +10,7 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 
 0.2.0
 -----
-:Released: 2025-06-15
+:Released: 2025-10-15
 :Full Changelog: `0.1.1...0.2.0 <https://github.com/neuromorphic-polito/spikify/compare/0.1.1...0.2.0>`__
 
 Improvements
