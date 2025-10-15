@@ -35,7 +35,6 @@ exclude = ["docs", "tests", "examples"]
 python = "^3.10"
 numpy = ">=2.1.0"
 scipy = ">=1.14.1"
-torch = ">=2.5.0"
 
 [tool.poetry.group.dev]
 optional = true
