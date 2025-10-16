@@ -171,6 +171,4 @@ class FilterBank(ABC):
         :rtype: numpy.ndarray
 
         """
-        if self.channel_frequencies[0] is np.ndarray or isinstance(self.channel_frequencies[0], (list, tuple)):
-            return np.array([np.mean(freqs) for freqs in self.channel_frequencies])
-        return np.array(self.channel_frequencies)
+        return np.array([np.mean(freqs) for freqs in self.channel_frequencies])
