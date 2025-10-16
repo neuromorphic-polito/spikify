@@ -39,6 +39,15 @@ class TestFilterBank(unittest.TestCase):
         self.assertEqual(filterbank.n_channels, self.channels)
         self.assertEqual(filterbank.filter_type, "gammatone")
 
+    def test_sos_filterbank_initialization(self):
+        """Test initialization of SOS filter bank."""
+        filterbank = FilterBank(
+            fs=self.fs, channels=self.channels, f_min=self.f_min, f_max=self.f_max, filter_type="sos", order=2
+        )
+        self.assertEqual(filterbank.fs, self.fs)
+        self.assertEqual(filterbank.n_channels, self.channels)
+        self.assertEqual(filterbank.filter_type, "sos")
+
     def test_butterworth_decomposition(self):
         """Test decomposition of a signal using Butterworth filter bank."""
         filterbank = FilterBank(
@@ -56,6 +65,14 @@ class TestFilterBank(unittest.TestCase):
         """Test decomposition of a signal using Gammatone filter bank."""
         filterbank = FilterBank(
             fs=self.fs, channels=self.channels, f_min=self.f_min, f_max=self.f_max, filter_type="gammatone", order=1
+        )
+        freq_components = filterbank.decompose(self.signal)
+        self.assertEqual(freq_components.shape, (self.signal_length, self.channels, 1))
+
+    def test_sos_decomposition(self):
+        """Test decomposition of a signal using SOS filter bank."""
+        filterbank = FilterBank(
+            fs=self.fs, channels=self.channels, f_min=self.f_min, f_max=self.f_max, filter_type="sos", order=2
         )
         freq_components = filterbank.decompose(self.signal)
         self.assertEqual(freq_components.shape, (self.signal_length, self.channels, 1))
