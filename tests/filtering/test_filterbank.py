@@ -88,3 +88,31 @@ class TestFilterBank(unittest.TestCase):
                 filter_type="invalid_type",
                 order=self.order,
             )
+
+    def test_signal_multiple_shape_decomposition(self):
+        """Test that decomposing a too short signal raises a ValueError."""
+        filterbank = FilterBank(
+            fs=self.fs,
+            channels=self.channels,
+            f_min=self.f_min,
+            f_max=self.f_max,
+            filter_type="butterworth",
+            order=self.order,
+        )
+        signal = np.random.randn(10, 5, 3)  # Invalid shape
+        with self.assertRaises(ValueError):
+            filterbank.decompose(signal)
+
+    def test_center_frequencies(self):
+        """Test that center frequencies are computed correctly."""
+        filterbank = FilterBank(
+            fs=self.fs,
+            channels=self.channels,
+            f_min=self.f_min,
+            f_max=self.f_max,
+            filter_type="butterworth",
+            order=self.order,
+        )
+        expected_octave = (self.channels - 0.5) * np.log10(2) / np.log10(self.f_max / self.f_min)
+        expected_freq_centers = np.array([self.f_min * (2 ** (ch / expected_octave)) for ch in range(self.channels)])
+        np.testing.assert_array_almost_equal(filterbank.freq_centers, expected_freq_centers)
