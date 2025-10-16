@@ -5,6 +5,54 @@ from abc import ABC
 
 
 class FilterBank(ABC):
+    """
+    A filter bank for decomposing signals into frequency components.FilterBank for Frequency Decomposition.
+
+    This class decomposes input signals into frequency components using a bank of filters.
+    Supported filter types are Butterworth, Gammatone, and second-order section (SOS) filters.
+    The filter bank automatically computes center frequencies and frequency bands for each channel.
+
+    **Code Example:**
+
+    .. code-block:: python
+
+        import numpy as np
+        from spikify.filtering import FilterBank
+        fs = 1000
+        signal = np.random.randn(1000)
+        filterbank = FilterBank(fs=fs, channels=4, f_min=100, f_max=800, order=2)
+        freq_components = filterbank.decompose(signal)
+
+    .. doctest::
+        :hide:
+
+        >>> import numpy as np
+        >>> from spikify.filtering.filterbank import FilterBank
+        >>> fs = 1000
+        >>> signal = np.random.randn(1000)
+        >>> filterbank = FilterBank(fs=fs, channels=4, f_min=100, f_max=800, order=2)
+        >>> freq_components = filterbank.decompose(signal)
+        >>> freq_components.shape
+        (1000, 4, 1)
+
+    :param fs: Sampling frequency of the input signal.
+    :type fs: float
+    :param channels: Number of filter channels.
+    :type channels: int
+    :param f_min: Minimum frequency for the filter bank.
+    :type f_min: float
+    :param f_max: Maximum frequency for the filter bank.
+    :type f_max: float
+    :param order: Order of the filters.
+    :type order: int
+    :param filter_type: Type of filter ('butterworth', 'gammatone', 'sos').
+    :type filter_type: str
+    :param kwargs: Additional filter parameters.
+    :type kwargs: dict
+    :raises ValueError: If filter_type is not supported.
+
+    """
+
     def __init__(
         self,
         fs: float,
@@ -15,60 +63,7 @@ class FilterBank(ABC):
         filter_type: Literal["butterworth", "gammatone", "sos"] = "butterworth",
         **kwargs
     ):
-        """
-        FilterBank for Frequency Decomposition.
-
-        This class decomposes input signals into frequency components using a bank of filters.
-        Supported filter types are Butterworth, Gammatone, and second-order section (SOS) filters.
-        The filter bank automatically computes center frequencies and frequency bands for each channel.
-
-        **Code Example:**
-
-        .. code-block:: python
-
-            import numpy as np
-            from spikify.filtering import FilterBank
-            fs = 1000
-            signal = np.random.randn(1000)
-            filterbank = FilterBank(fs=fs, channels=4, f_min=100, f_max=800, order=2)
-            freq_components = filterbank.decompose(signal)
-
-        .. doctest::
-            :hide:
-
-            >>> import numpy as np
-            >>> from spikify.filtering.filterbank import FilterBank
-            >>> fs = 1000
-            >>> signal = np.random.randn(1000)
-            >>> filterbank = FilterBank(fs=fs, channels=4, f_min=100, f_max=800, order=2)
-            >>> freq_components = filterbank.decompose(signal)
-            >>> freq_components.shape
-            (1000, 4, 1)
-
-        :param fs: Sampling frequency of the input signal.
-        :type fs: float
-        :param channels: Number of filter channels.
-        :type channels: int
-        :param f_min: Minimum frequency for the filter bank.
-        :type f_min: float
-        :param f_max: Maximum frequency for the filter bank.
-        :type f_max: float
-        :param order: Order of the filters.
-        :type order: int
-        :param filter_type: Type of filter ('butterworth', 'gammatone', 'sos').
-        :type filter_type: str
-        :param kwargs: Additional filter parameters.
-        :type kwargs: dict
-        :raises ValueError: If filter_type is not supported.
-        :raises ValueError: If required parameters for the selected filter type are missing.
-
-        :method decompose: Decompose input signal into frequency components.
-        :property center_frequencies: Center frequencies for each channel.
-
-        :return: FilterBank instance for frequency decomposition.
-        :rtype: FilterBank
-
-        """
+        """Constructor method."""
         super().__init__()
         self.fs = fs
         self.filter_type = filter_type.lower()
@@ -84,12 +79,6 @@ class FilterBank(ABC):
         # Validate inputs
         if self.filter_type not in ["butterworth", "gammatone", "sos"]:
             raise ValueError("filter_type must be 'butterworth', 'gammatone', or 'sos'")
-
-        if self.filter_type == "butterworth" and self.freq_poles is None:
-            raise ValueError("freq_poles required for butterworth filters")
-
-        if self.filter_type == "gammatone" and self.freq_centers is None:
-            raise ValueError("freq_centers required for gammatone filters")
 
         # Build filter coefficients
         self._build_filters(**kwargs)
