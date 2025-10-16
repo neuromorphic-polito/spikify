@@ -11,8 +11,6 @@ Filtering Techniques
 In **spikify**, the filtering approach includes:
 
 - **Frequency Decomposition**: The filtering techniques break down time-varying signals into multiple frequency components.
-- **Advanced Filters**: Techniques such as Gammatone and Butterworth filters are used to split the signal into different channels, each corresponding to a specific frequency range....existing code...
-- **Frequency Decomposition**: The filtering techniques break down time-varying signals into multiple frequency components.
 - **Advanced Filters**: Techniques such as Gammatone and Butterworth filters are used to split the signal into different channels, each corresponding to a specific frequency range.
 
 Filter Types Used
