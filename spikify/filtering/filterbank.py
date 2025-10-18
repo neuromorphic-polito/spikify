@@ -6,9 +6,9 @@ from abc import ABC
 
 class FilterBank(ABC):
     """
-    A filter bank for decomposing signals into frequency components.FilterBank for Frequency Decomposition.
+    A filter bank for decomposing signals into frequency components.
 
-    This class decomposes input signals into frequency components using a bank of filters.
+    This class decomposes input signals into frequency components using filter banks.
     Supported filter types are Butterworth, Gammatone, and second-order section (SOS) filters.
     The filter bank automatically computes center frequencies and frequency bands for each channel.
 
