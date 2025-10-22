@@ -103,6 +103,20 @@ class TestFilterBank(unittest.TestCase):
         with self.assertRaises(ValueError):
             filterbank.decompose(signal)
 
+    def test_signal_with_multiple_features(self):
+        """Test decomposition of a multi-feature signal."""
+        filterbank = FilterBank(
+            fs=self.fs,
+            channels=self.channels,
+            f_min=self.f_min,
+            f_max=self.f_max,
+            filter_type="butterworth",
+            order=self.order,
+        )
+        multi_feature_signal = np.random.randn(self.signal_length, 3)  # 3 features
+        freq_components = filterbank.decompose(multi_feature_signal)
+        self.assertEqual(freq_components.shape, (self.signal_length, self.channels, 3))
+
     def test_center_frequencies(self):
         """Test that center frequencies are computed correctly."""
         filterbank = FilterBank(

@@ -54,19 +54,19 @@ For more detailed examples and usage, please refer to the [documentation](https:
 
 This package implements several spike encoding families techniques, including:
 
-| Encoding Family         | Algorithm                | Best For                        | Description                          |
-|------------------------|--------------------------|----------------------------------|--------------------------------------|
-| **Rate Encoding**      | Poisson Rate             | General signals, noisy data      | Encodes intensity as firing rate     |
-| **Temporal Encoding**  | Moving Window            | Smooth signals, trend detection  | Spikes on local changes              |
-|                        | Step Forward             | Step-like changes                | Spikes on signal steps               |
-|                        | Threshold-Based          | Sparse events                    | Spikes when crossing thresholds      |
-|                        | Zero-Cross Step Forward  | Oscillatory signals              | Spikes on zero-crossings             |
-| **Deconvolution-Based**| Ben Spiker               | Complex, overlapping events      | Deconvolves spikes from signal       |
-|                        | Hough Spiker             | Structured, periodic signals     | Uses Hough transform for spikes      |
-|                        | Modified Hough Spiker    | Noisy, periodic signals          | Robust Hough-based encoding          |
-| **Global Referenced**  | Phase Encoding           | Cyclic/periodic signals          | Encodes phase information            |
-|                        | Time-to-Spike            | Precise timing needed            | Spikes at specific time delays       |
-| **Latency Encoding**   | Burst Encoding           | Burst-like events                | Encodes bursts of spikes             |
+| Encoding Family         | Algorithm                | Description                         |
+|------------------------|--------------------------|--------------------------------------|
+| **Rate Encoding**      | Poisson Rate             | Encodes intensity as firing rate     |
+| **Temporal Encoding**  | Moving Window            | Spikes on local changes              |
+|                        | Step Forward             | Spikes on signal steps               |
+|                        | Threshold-Based          | Spikes when crossing thresholds      |
+|                        | Zero-Cross Step Forward  | Spikes on zero-crossings             |
+| **Deconvolution-Based**| Ben Spiker               | Deconvolves spikes from signal       |
+|                        | Hough Spiker             | Uses Hough transform for spikes      |
+|                        | Modified Hough Spiker    | Robust Hough-based encoding          |
+| **Global Referenced**  | Phase Encoding           | Encodes phase information            |
+|                        | Time-to-Spike            | Spikes at specific time delays       |
+| **Latency Encoding**   | Burst Encoding           | Encodes bursts of spikes             |
 
 **Tip:**  
 - Use **Poisson Rate** for general-purpose encoding.  

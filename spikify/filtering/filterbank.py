@@ -70,11 +70,11 @@ class FilterBank(ABC):
         self.order = order
         self.n_channels = channels
         octave = (self.n_channels - 0.5) * np.log10(2) / np.log10(f_max / f_min)
-        self.freq_centers = np.array([f_min * (2 ** (ch / octave)) for ch in range(self.n_channels)])
+        self.freq_centers = [f_min * (2 ** (ch / octave)) for ch in range(self.n_channels)]
         self.freq_poles = np.array(
             [(freq * (2 ** (-1 / (2 * octave))), (freq * (2 ** (1 / (2 * octave))))) for freq in self.freq_centers]
         )
-        self.freq_poles[-1, 1] = self.fs / self.order * 0.99999
+        self.freq_poles[-1, 1] = self.fs / 2 * 0.99999
 
         # Validate inputs
         if self.filter_type not in ["butterworth", "gammatone", "sos"]:
@@ -99,9 +99,7 @@ class FilterBank(ABC):
 
         if self.filter_type == "butterworth":
             for low_freq, high_freq in self.freq_poles:
-                nyquist = self.fs / 2
-                Wn = [low_freq / nyquist, high_freq / nyquist]
-                num, den = butter(N=self.order, Wn=Wn, btype="band", fs=self.fs)
+                num, den = butter(N=self.order, Wn=[low_freq, high_freq], btype="band", fs=self.fs)
                 self.filters.append((num, den))
                 self.channel_frequencies.append((low_freq, high_freq))
 
@@ -112,11 +110,8 @@ class FilterBank(ABC):
                 self.channel_frequencies.append(freq)
 
         elif self.filter_type == "sos":
-            # Second-order sections for better numerical stability
             for low_freq, high_freq in self.freq_poles:
-                nyquist = self.fs / 2
-                Wn = [low_freq / nyquist, high_freq / nyquist]
-                sos = butter(N=self.order, Wn=Wn, btype="band", output="sos", fs=self.fs)
+                sos = butter(N=self.order, Wn=[low_freq, high_freq], btype="band", output="sos", fs=self.fs)
                 self.filters.append(sos)
                 self.channel_frequencies.append((low_freq, high_freq))
 
@@ -127,7 +122,8 @@ class FilterBank(ABC):
         This method applies each filter in the bank to the input signal and returns the filtered outputs for all
         channels.
 
-        :param signal: Input signal to be decomposed. Should be a 1D or 2D numpy array.
+        :param signal: Input signal to be decomposed. Should be a 1D or 2D numpy array. If 2D, shape should be
+            (timestamps, features).
         :type signal: numpy.ndarray
         :return: Array of filtered signals with shape (timestamps, channels, features).
         :rtype: numpy.ndarray
