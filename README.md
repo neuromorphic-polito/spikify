@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/_static/white_logo.svg" alt="Spikify Overview" />
+  <img src="https://github.com/neuromorphic-polito/spikify/blob/main/docs/_static/white_logo.svg" alt="Spikify Overview" />
 </p>
 
 Spikify is a Python package designed to transform raw signals into spike trains that can be fed into Spiking Neural Networks (SNNs). This package implements a variety of spike encoding techniques based on recent research to facilitate the integration of time-varying signals into neuromorphic computing frameworks.
