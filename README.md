@@ -1,4 +1,6 @@
-# Spikify
+<p align="center">
+  <img src="https://github.com/neuromorphic-polito/spikify/blob/main/docs/_static/white_logo.svg" alt="Spikify Overview" />
+</p>
 
 Spikify is a Python package designed to transform raw signals into spike trains that can be fed into Spiking Neural Networks (SNNs). This package implements a variety of spike encoding techniques based on recent research to facilitate the integration of time-varying signals into neuromorphic computing frameworks.
 
@@ -11,7 +13,10 @@ This package provides a suite of spike encoding techniques that convert time-var
 ## Features
 
 * Multiple Spike Encoding Techniques: Includes both rate-based and temporal encoding schemes
-* Signal Preprocessing: Tools for preprocessing signals, including Gammatone and Butterworth filters
+* **Signal Preprocessing:** Tools for filtering and preparing signals, including:
+  * **Gammatone Filter:** Mimics human auditory filtering, useful for audio and speech signals.
+  * **Butterworth Filter:** Smooths and removes noise from signals, ideal for general sensor data.
+  * Easily chain filters before encoding to improve spike train quality.
 
 ## Installation
 
@@ -27,20 +32,21 @@ Here is a simple example to get started:
 
 ```python
 import numpy as np
+from spikify.filtering import FilterBank
+from spikify.encoding.rate import poisson_rate
 
 # Generate a sinusoidal signal
 time = np.linspace(0, 2 * np.pi, 100)  # Time from 0 to 2*pi
 amplitude = np.sin(time)  # Sinusoidal signal
 
-# Encode the raw signal into a spike train using Poisson Rate Coding
-from spikify.encoding.rate import poisson_rate
+filter = FilterBank(fs=50, channels=5, f_min=0.5, f_max=5, order=4, filter_type='butterworth')
 
-# Set parameters for encoding
-np.random.seed(0)  # For reproducibility
-interval_length = 2  # Length of the encoding interval
+filtered_signal = filter.decompose(signal) # (timesteps, channels, features)
 
-# Encode the sinusoidal signal
-encoded_signal = poisson_rate(amplitude, interval_length)
+filtered_signal = np.reshape(filtered_signal, (-1, filtered_signal.shape[1] * filtered_signal.shape[2]))
+
+# Encode the filtered signal
+encoded_signal = poisson_rate(filtered_signal, interval_length=2)
 ```
 
 For more detailed examples and usage, please refer to the [documentation](https://spikify.readthedocs.io/en/latest/).
@@ -49,44 +55,35 @@ For more detailed examples and usage, please refer to the [documentation](https:
 
 This package implements several spike encoding families techniques, including:
 
-### Rate Encoding
+| Encoding Family         | Algorithm                | Description                         |
+|------------------------|--------------------------|--------------------------------------|
+| **Rate Encoding**      | Poisson Rate             | Encodes intensity as firing rate     |
+| **Temporal Encoding**  | Moving Window            | Spikes on local changes              |
+|                        | Step Forward             | Spikes on signal steps               |
+|                        | Threshold-Based          | Spikes when crossing thresholds      |
+|                        | Zero-Cross Step Forward  | Spikes on zero-crossings             |
+| **Deconvolution-Based**| Ben Spiker               | Deconvolves spikes from signal       |
+|                        | Hough Spiker             | Uses Hough transform for spikes      |
+|                        | Modified Hough Spiker    | Robust Hough-based encoding          |
+| **Global Referenced**  | Phase Encoding           | Encodes phase information            |
+|                        | Time-to-Spike            | Spikes at specific time delays       |
+| **Latency Encoding**   | Burst Encoding           | Encodes bursts of spikes             |
 
-Rate encoding represents information by the firing rate of neurons. The higher the stimulus intensity, the higher the firing rate.
+**Tip:**  
+- Use **Poisson Rate** for general-purpose encoding.  
+- Use **Temporal** or **Deconvolution** methods for signals where timing or event structure is important.
 
-Algorithms:
-* Poisson Rate
+## Filters
 
-### Temporal Encoding
+Spikify provides preprocessing filters that can be applied to signals before encoding to improve spike train quality and remove noise. These filters help condition the raw signal data for better encoding performance.
 
-Temporal encoding conveys information through the precise timing of spikes. This family contains subcategories for contrast and deconvolution techniques:
+### Available Filters
 
-#### Contrast-Based Temporal Encoding
+| Filter Type        | Description                                        |
+|-------------------|----------------------------------------------------|
+| **Gammatone**     | Mimics human auditory filtering                   |
+| **Butterworth**   | Low-pass filter for noise reduction and smoothing |
 
-Algorithms:
-* Moving Window
-* Step Forward
-* Threshold-Based
-* Zero-Cross Step Forward
-
-#### Deconvolution-Based Temporal Encoding
-
-Algorithms:
-* Ben Spiker
-* Hough Spiker
-* Modified Hough Spiker
-
-#### Global Referenced Encoding
-
-Algorithms:
-* Phase Encoding
-* Time-to-Spike
-
-#### Latency Encoding
-
-Algorithms:
-* Burst Encoding
-
-Each technique has its advantages and can be selected based on the type of input data and the desired SNN architecture.
 
 ## Encoded Datasets
 

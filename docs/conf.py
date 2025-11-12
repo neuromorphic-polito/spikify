@@ -18,7 +18,7 @@ project = "spikify"
 now = datetime.datetime.now()
 author = "Benedetto Leto, Gianvito Urgese, Vittorio Fra, Riccardo Pignari"
 copyright = f"{now.year}, {author}."
-version = "0.2.0"
+version = "0.3.0"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -30,6 +30,7 @@ if (_path := Path(__file__).parent.joinpath("DOCS_THEME")).is_file():
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
     "sphinx.ext.doctest",
     "sphinx.ext.todo",

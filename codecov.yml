@@ -49,3 +49,9 @@ component_management:
         - "spikify/encoding/rate/**"
         - "tests/encoding/rate/**"
 
+    - component_id: filtering
+      name: Filtering
+      paths:
+        - "spikify/filtering/**"
+        - "tests/filtering/**"
+
