@@ -19,7 +19,7 @@ First, let's generate a sinusoidal signal using NumPy. This will serve as the in
 
 Filtering the Signal (Optional)
 --------------------------------
-Before encoding, you may want to filter the signal to focus on specific frequencies. Here's an example of using the `Filterbank` class to apply bandpass filtering.
+Before encoding, you may want to filter the signal to focus on specific frequencies. Here's an example of using the `FilterBank` class to apply bandpass filtering.
 
 
 .. code-block:: python
