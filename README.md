@@ -32,20 +32,21 @@ Here is a simple example to get started:
 
 ```python
 import numpy as np
+from spikify.filtering import FilterBank
+from spikify.encoding.rate import poisson_rate
 
 # Generate a sinusoidal signal
 time = np.linspace(0, 2 * np.pi, 100)  # Time from 0 to 2*pi
 amplitude = np.sin(time)  # Sinusoidal signal
 
-# Encode the raw signal into a spike train using Poisson Rate Coding
-from spikify.encoding.rate import poisson_rate
+filter = FilterBank(fs=50, channels=5, f_min=0.5, f_max=5, order=4, filter_type='butterworth')
 
-# Set parameters for encoding
-np.random.seed(0)  # For reproducibility
-interval_length = 2  # Length of the encoding interval
+filtered_signal = filter.decompose(signal) # (timesteps, channels, features)
 
-# Encode the sinusoidal signal
-encoded_signal = poisson_rate(amplitude, interval_length)
+filtered_signal = np.reshape(filtered_signal, (-1, filtered_signal.shape[1] * filtered_signal.shape[2]))
+
+# Encode the filtered signal
+encoded_signal = poisson_rate(filtered_signal, interval_length=2)
 ```
 
 For more detailed examples and usage, please refer to the [documentation](https://spikify.readthedocs.io/en/latest/).
@@ -71,6 +72,18 @@ This package implements several spike encoding families techniques, including:
 **Tip:**  
 - Use **Poisson Rate** for general-purpose encoding.  
 - Use **Temporal** or **Deconvolution** methods for signals where timing or event structure is important.
+
+## Filters
+
+Spikify provides preprocessing filters that can be applied to signals before encoding to improve spike train quality and remove noise. These filters help condition the raw signal data for better encoding performance.
+
+### Available Filters
+
+| Filter Type        | Description                                        |
+|-------------------|----------------------------------------------------|
+| **Gammatone**     | Mimics human auditory filtering                   |
+| **Butterworth**   | Low-pass filter for noise reduction and smoothing |
+
 
 ## Encoded Datasets
 
