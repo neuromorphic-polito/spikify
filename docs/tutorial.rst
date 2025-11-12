@@ -34,7 +34,7 @@ Before encoding, you may want to filter the signal to focus on specific frequenc
 
 
 Encoding the Signal and the Filtered Signal with Poisson Rate
--------------------------------------
+---------------------------------------------------------------
 Now, let's encode the sinusoidal signal into spikes using the `poisson_rate` method. This method converts the signal into spike intervals based on the specified encoding interval length.
 
 .. code-block:: python
