@@ -30,6 +30,7 @@ if (_path := Path(__file__).parent.joinpath("DOCS_THEME")).is_file():
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
     "sphinx.ext.doctest",
     "sphinx.ext.todo",

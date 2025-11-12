@@ -87,7 +87,7 @@ Run Tests
 Build Documentation
 ----------------------------
 
-1. For documentation, follow the `Sphinx docstrings <https://thomas-cokelaer.info/tutorials/sphinx/docstring_python.html>`__  format.
+1. For documentation, follow the `Sphinx docstrings <https://sphinx-rtd-tutorial.readthedocs.io/en/latest/docstrings.html>`__  format.
     .. code-block:: bash
 
         # To build the documentation

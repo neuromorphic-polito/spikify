@@ -1,4 +1,6 @@
-# Spikify
+<p align="center">
+  <img src="https://github.com/neuromorphic-polito/spikify/blob/main/docs/_static/white_logo.svg" alt="Spikify Overview" />
+</p>
 
 Spikify is a Python package designed to transform raw signals into spike trains that can be fed into Spiking Neural Networks (SNNs). This package implements a variety of spike encoding techniques based on recent research to facilitate the integration of time-varying signals into neuromorphic computing frameworks.
 
@@ -11,7 +13,10 @@ This package provides a suite of spike encoding techniques that convert time-var
 ## Features
 
 * Multiple Spike Encoding Techniques: Includes both rate-based and temporal encoding schemes
-* Signal Preprocessing: Tools for preprocessing signals, including Gammatone and Butterworth filters
+* **Signal Preprocessing:** Tools for filtering and preparing signals, including:
+  * **Gammatone Filter:** Mimics human auditory filtering, useful for audio and speech signals.
+  * **Butterworth Filter:** Smooths and removes noise from signals, ideal for general sensor data.
+  * Easily chain filters before encoding to improve spike train quality.
 
 ## Installation
 
@@ -49,44 +54,23 @@ For more detailed examples and usage, please refer to the [documentation](https:
 
 This package implements several spike encoding families techniques, including:
 
-### Rate Encoding
+| Encoding Family         | Algorithm                | Description                         |
+|------------------------|--------------------------|--------------------------------------|
+| **Rate Encoding**      | Poisson Rate             | Encodes intensity as firing rate     |
+| **Temporal Encoding**  | Moving Window            | Spikes on local changes              |
+|                        | Step Forward             | Spikes on signal steps               |
+|                        | Threshold-Based          | Spikes when crossing thresholds      |
+|                        | Zero-Cross Step Forward  | Spikes on zero-crossings             |
+| **Deconvolution-Based**| Ben Spiker               | Deconvolves spikes from signal       |
+|                        | Hough Spiker             | Uses Hough transform for spikes      |
+|                        | Modified Hough Spiker    | Robust Hough-based encoding          |
+| **Global Referenced**  | Phase Encoding           | Encodes phase information            |
+|                        | Time-to-Spike            | Spikes at specific time delays       |
+| **Latency Encoding**   | Burst Encoding           | Encodes bursts of spikes             |
 
-Rate encoding represents information by the firing rate of neurons. The higher the stimulus intensity, the higher the firing rate.
-
-Algorithms:
-* Poisson Rate
-
-### Temporal Encoding
-
-Temporal encoding conveys information through the precise timing of spikes. This family contains subcategories for contrast and deconvolution techniques:
-
-#### Contrast-Based Temporal Encoding
-
-Algorithms:
-* Moving Window
-* Step Forward
-* Threshold-Based
-* Zero-Cross Step Forward
-
-#### Deconvolution-Based Temporal Encoding
-
-Algorithms:
-* Ben Spiker
-* Hough Spiker
-* Modified Hough Spiker
-
-#### Global Referenced Encoding
-
-Algorithms:
-* Phase Encoding
-* Time-to-Spike
-
-#### Latency Encoding
-
-Algorithms:
-* Burst Encoding
-
-Each technique has its advantages and can be selected based on the type of input data and the desired SNN architecture.
+**Tip:**  
+- Use **Poisson Rate** for general-purpose encoding.  
+- Use **Temporal** or **Deconvolution** methods for signals where timing or event structure is important.
 
 ## Encoded Datasets
 
