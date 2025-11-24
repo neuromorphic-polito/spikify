@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def spikes_to_events(encoded_signal, fs):
+def spikes_to_events(encoded_signal: np.ndarray, fs: float) -> np.ndarray:
 
     match encoded_signal.ndim:
         case 1:
@@ -12,7 +12,7 @@ def spikes_to_events(encoded_signal, fs):
     time_array = np.arange(encoded_signal.shape[1]) * int(1 / fs * 1_000_000)  # in microseconds
     # time_array = np.reshape(time_array, (1, -1))  # (1, time_indices)
 
-    spike_positions = np.where(encoded_signal)  # (sensor_ids, time_indices, channel_ids)
+    spike_positions = np.where(encoded_signal != 0)  # (sensor_ids, time_indices, channel_ids)
 
     event_times = time_array[spike_positions[1]]
     sensor_ids = spike_positions[0]
