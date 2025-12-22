@@ -70,7 +70,7 @@ def threshold_based_representation(signal: np.ndarray, factor: float | list[floa
 
     spike = np.zeros_like(signal, dtype=np.int8)
     variation = np.diff(signal, axis=0, append=signal[[0], :])
-    variation[-1 ,:] = variation[-2,:]
+    variation[-1, :] = variation[-2, :]
 
     threshold = np.mean(variation, axis=0) + factors * np.std(variation, axis=0)
 
