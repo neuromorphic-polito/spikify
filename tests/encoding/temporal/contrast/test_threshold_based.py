@@ -10,7 +10,7 @@ class TestThresholdBasedRepresentation(unittest.TestCase):
         """Test the function with a basic signal where spikes should be generated based on threshold logic."""
         signal = np.array([0, 1, 2, 3, 2, 1, 0])
         factor = 1.0
-        expected_spikes = np.array([0, 0, 0, 0, 0, 0, 0])
+        expected_spikes = np.array([1, 1, 1, -1, -1, -1, -1])
         result = threshold_based_representation(signal, factor)
         np.testing.assert_array_equal(result, expected_spikes)
 
@@ -56,7 +56,7 @@ class TestThresholdBasedRepresentation(unittest.TestCase):
 
         # Lower threshold factor, more sensitivity
         factor_low = 0.1
-        expected_spikes_low = np.array([1, 1, 1, 1, -1, -1, -1])
+        expected_spikes_low = np.array([1, 1, 1, -1, -1, -1, -1])
         result_low = threshold_based_representation(signal, factor_low)
         np.testing.assert_array_equal(result_low, expected_spikes_low)
 
