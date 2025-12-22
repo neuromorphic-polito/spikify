@@ -69,12 +69,11 @@ def threshold_based_representation(signal: np.ndarray, factor: float | list[floa
         raise ValueError("Factor must match the number of features in the signal.")
 
     spike = np.zeros_like(signal, dtype=np.int8)
-    variation = np.diff(signal[1:, :], prepend=signal[[0], :], axis=0)
+    variation = np.diff(signal, axis=0, append=signal[[0], :])
+    variation[-1 ,:] = variation[-2,:]
 
     threshold = np.mean(variation, axis=0) + factors * np.std(variation, axis=0)
-    variation = np.insert(variation, 0, variation[1, :], axis=0)
 
-    # Apply threshold conditions
     threshold = threshold.reshape(1, threshold.shape[0])
     spike[variation > threshold] = 1
     spike[variation < -threshold] = -1
