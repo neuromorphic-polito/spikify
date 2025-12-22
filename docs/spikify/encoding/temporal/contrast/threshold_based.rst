@@ -21,6 +21,7 @@ The TBR encoding method processes a signal composed of multiple channels, evalua
    - **Variation**: The difference in signal value between consecutive time steps.
    - **Threshold**: A dynamic value based on the mean and standard deviation of the signal variations, adjusted by a tunable parameter :math:`\gamma`.
    - :math:`\gamma`: A parameter that controls the noise-reduction band. Depending on the noise level to be filtered out, different values for :math:`\gamma` can be selected:
+  
      - :math:`\gamma = 0`: All signal variations are kept.
      - :math:`0 < \gamma \leq 1`: Small variations are filtered out, preserving major signal changes.
      - :math:`\gamma > 1`: Significant noise reduction, allowing only major variations to generate spikes.
