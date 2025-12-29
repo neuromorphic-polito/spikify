@@ -39,7 +39,7 @@ def threshold_based_representation(
         >>> factor = 0.5
         >>> encoded_signal, threshold = threshold_based_representation(signal, factor)
         >>> encoded_signal
-        array([ 1,  0,  -1,  1,  0,  0], dtype=int8)
+        array([ 1,  0, -1,  1,  0,  0], dtype=int8)
 
     :param signal: The input signal to be encoded. This should be a numpy ndarray.
     :type signal: numpy.ndarray
@@ -83,12 +83,8 @@ def threshold_based_representation(
     diff = np.diff(signal, axis=0, append=signal[[0], :])  # append first value of signal to maintain shape
     diff[-1, :] = diff[-2, :]  # force last to equal second-last
 
-    print(diff.shape)
-
     # Compute threshold per feature (over all T variations, including the duplicated last)
     threshold = np.mean(diff, axis=0) + factors * np.std(diff, axis=0)
-
-    print(threshold.shape)
 
     # Generate spikes: compare on the full diff array (length S)
     threshold = threshold.reshape(1, threshold.shape[0])
