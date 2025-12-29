@@ -8,7 +8,9 @@ import numpy as np
 from typing import Tuple
 
 
-def threshold_based_representation(signal: np.ndarray, factor: float | list[float]) -> Tuple[np.ndarray, np.ndarray]:
+def threshold_based_representation(
+    signal: np.ndarray, factor: float | int | list[float | int]
+) -> Tuple[np.ndarray, np.ndarray]:
     """
     Perform Threshold-Based Representation (TBR) encoding on the input signal.
 
@@ -42,8 +44,8 @@ def threshold_based_representation(signal: np.ndarray, factor: float | list[floa
     :param signal: The input signal to be encoded. This should be a numpy ndarray.
     :type signal: numpy.ndarray
     :param factor: The factor value (`factor`) that controls the noise-reduction threshold.
-                   Can be a float or a list of floats.
-    :type factor: float | list[float]
+                   Can be a float, an integer, or a list of floats or integers.
+    :type factor: float | int | list[float | int]
     :return: A numpy array representing the encoded spike train.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty.
