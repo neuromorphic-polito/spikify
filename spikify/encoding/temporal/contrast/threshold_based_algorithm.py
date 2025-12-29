@@ -47,9 +47,9 @@ def threshold_based_representation(
                    Can be a float, an integer, or a list of floats or integers.
     :type factor: float | int | list[float | int]
     :return: A tuple containing the encoded spike train and the computed threshold for each feature.
-    :rtype: Tuple[numpy.ndarray, numpy.ndarray]
+    :rtype: tuple[numpy.ndarray, numpy.ndarray]
     :raises ValueError: If the input signal is empty.
-    :raises TypeError: If the signal is not a numpy ndarray.
+    :raises TypeError: If the factor parameter is of an unsupported type.
 
     """
 
