@@ -28,7 +28,7 @@ def threshold_based_representation(
         from spikify.encoding.temporal.contrast import threshold_based_representation
         signal = np.array([0.1, 0.3, 0.4, 0.2, 0.5, 0.6])
         factor = 0.5
-        encoded_signal = threshold_based_representation(signal, factor)
+        encoded_signal, threshold = threshold_based_representation(signal, factor)
 
     .. doctest::
         :hide:
@@ -37,7 +37,7 @@ def threshold_based_representation(
         >>> from spikify.encoding.temporal.contrast import threshold_based_representation
         >>> signal = np.array([0.1, 0.3, 0.4, 0.2, 0.5, 0.6])
         >>> factor = 0.5
-        >>> encoded_signal = threshold_based_representation(signal, factor)
+        >>> encoded_signal, threshold = threshold_based_representation(signal, factor)
         >>> encoded_signal
         array([ 1,  0,  -1,  1,  0,  0], dtype=int8)
 
@@ -47,7 +47,7 @@ def threshold_based_representation(
                    Can be a float, an integer, or a list of floats or integers.
     :type factor: float | int | list[float | int]
     :return: A tuple containing the encoded spike train and the computed threshold for each feature.
-    :rtype: tuple[numpy.ndarray, numpy.ndarray]
+    :rtype: typing.Tuple[numpy.ndarray, numpy.ndarray]
     :raises ValueError: If the input signal is empty.
     :raises TypeError: If the factor parameter is of an unsupported type.
 
