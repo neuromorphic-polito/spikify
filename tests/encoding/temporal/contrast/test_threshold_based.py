@@ -94,3 +94,11 @@ class TestThresholdBasedRepresentation(unittest.TestCase):
         factors = [5.0, 1.0, 3.0]
         with self.assertRaises(ValueError):
             threshold_based_representation(signal, factors)
+
+    def test_return_type(self):
+        """Test that the function returns a tuple of numpy ndarrays."""
+        signal = np.random.rand(10)
+        factor = 1.0
+        encoded_signal, thresholds = threshold_based_representation(signal, factor)
+        self.assertIsInstance(encoded_signal, np.ndarray)
+        self.assertIsInstance(thresholds, np.ndarray)
