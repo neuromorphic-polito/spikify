@@ -46,8 +46,8 @@ def threshold_based_representation(
     :param factor: The factor value (`factor`) that controls the noise-reduction threshold.
                    Can be a float, an integer, or a list of floats or integers.
     :type factor: float | int | list[float | int]
-    :return: A numpy array representing the encoded spike train.
-    :rtype: numpy.ndarray
+    :return: A tuple containing the encoded spike train and the computed threshold for each feature.
+    :rtype: Tuple[numpy.ndarray, numpy.ndarray]
     :raises ValueError: If the input signal is empty.
     :raises TypeError: If the signal is not a numpy ndarray.
 
