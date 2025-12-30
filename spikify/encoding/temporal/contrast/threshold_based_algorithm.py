@@ -64,7 +64,6 @@ def threshold_based_representation(
     T, F = signal.shape
 
     # Handle factor
-    # Handle threshold: accept scalar int/float, list of ints/floats, or 1D ndarray
     if np.isscalar(factor):
         factors = np.full(F, float(factor))
     else:
