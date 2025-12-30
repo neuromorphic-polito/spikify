@@ -5,12 +5,11 @@
 """
 
 import numpy as np
-from typing import Tuple
 
 
 def threshold_based_representation(
     signal: np.ndarray, factor: float | int | list[float | int] | np.ndarray
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Perform Threshold-Based Representation (TBR) encoding on the input signal.
 
@@ -47,7 +46,7 @@ def threshold_based_representation(
                    Can be a float, an integer, or a list of floats or integers.
     :type factor: float | int | list[float | int] | numpy.ndarray
     :return: A tuple containing the encoded spike train and the computed threshold for each feature.
-    :rtype: typing.Tuple[numpy.ndarray, numpy.ndarray]
+    :rtype: tuple[numpy.ndarray, numpy.ndarray]
     :raises ValueError: If the input signal is empty or if the factor length does not match the number of features.
     :raises TypeError: If the factor parameter is of invalid dimension.
 
