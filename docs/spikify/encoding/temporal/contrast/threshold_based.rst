@@ -3,47 +3,83 @@
 Threshold-Based Representation (TBR) Encoding
 =============================================
 
-The Threshold-Based Representation (TBR) algorithm is a method for encoding signals by generating spikes based on absolute signal variations relative to a fixed threshold. This technique is particularly useful for reducing noise and emphasizing significant changes in the signal.
+Threshold-Based Representation (TBR) is one of the simplest and most foundational methods in temporal contrast encoding for spiking neural networks. TBR generates spikes by tracking significant temporal changes in the signal. A positive or negative spike is emitted when the variation between consecutive signal values exceeds a dynamically computed threshold, with polarity determined by the sign of the change.
 
-**Algorithm Overview**:
+The threshold is adaptive to the signal's characteristics: it is computed over the entire sequence by taking the first-order differences, then setting the threshold as the mean of these variations plus a tunable factor multiplied by their standard deviation. This makes the encoding largely independent of absolute signal amplitude while effectively suppressing noise. The single hyperparameter factor controls sensitivity lower values preserve more variations, while higher values emit spikes only for substantial events.
 
-The TBR encoding method processes a signal composed of multiple channels, evaluating variations across each channel between consecutive time steps. A specific threshold is defined to determine when a spike should be generated. The main steps are:
+Decoding is straightforward: the original signal can be reconstructed by cumulatively summing the spikes (each scaled by the encoding threshold with appropriate sign), starting from the initial signal value.
 
-1. **Compute Variations**: For a signal with multiple channels, calculate the variation (`Variation`) along each channel between consecutive time steps.
-2. **Define Threshold**: For each channel, compute a threshold using the formula:
+**Algorithm Overview**
+
+The TBR encoding method processes a signal (possibly with multiple channels), evaluating variations across each channel between consecutive time steps. The main steps are:
+
+1. **Compute Variations**: Calculate the difference between consecutive time steps for each channel.
+2. **Define Threshold**: For each channel, compute the threshold using the formula:
 
    .. math::
 
-      \text{Threshold} = \text{mean}(\text{Variation}) + \gamma \cdot \text{std}(\text{Variation}) \quad (4)
+      \text{threshold} = \text{mean}(\text{diff}) + \text{factor} \cdot \text{std}(\text{diff})
 
-   where:
+   where factor controls the noise-reduction band:
 
-   - **Variation**: The difference in signal value between consecutive time steps.
-   - **Threshold**: A dynamic value based on the mean and standard deviation of the signal variations, adjusted by a tunable parameter :math:`\gamma`.
-   - :math:`\gamma`: A parameter that controls the noise-reduction band. Depending on the noise level to be filtered out, different values for :math:`\gamma` can be selected:
-     - :math:`\gamma = 0`: All signal variations are kept.
-     - :math:`0 < \gamma \leq 1`: Small variations are filtered out, preserving major signal changes.
-     - :math:`\gamma > 1`: Significant noise reduction, allowing only major variations to generate spikes.
+   - factor = 0: All signal variations are kept.
+   - 0 < factor ≤ 1: Small variations are filtered out, preserving major signal changes.
+   - factor > 1: Significant noise reduction; only major variations generate spikes.
 
-3. **Determine Spikes**: For each time step, if the absolute value of `Variation` exceeds the `Threshold`, a spike is generated with polarity determined by the sign of both `Variation` and `Threshold`.
+3. **Determine Spikes**: Emit +1 if diff > threshold, -1 if diff < -threshold, else 0.
+4. **Construct the Spike Train**: Build the output spike train with values +1, -1, or 0.
 
-4. **Construct the Spike Train**: Generate a spike train by assigning spike values (+1 or -1) based on the conditions outlined above.
+**Detailed Pseudocode**
 
-**Implementation Steps**:
+.. code-block:: none
+   :linenos:
 
-To implement the Threshold-Based Representation in Python:
+   TBR Encoding Algorithm
+   input: s signal, f factor
+   startpoint = s(0)
+   diff = zeros(length(s))
+   for t = 0:length(s)-1
+       diff(t) = s(t+1) - s(t)
+   end for
+   diff(end) = diff(end-1)
+   threshold = mean(diff) + f*std(diff)
+   out = zeros(length(s))
+   for t = 0:length(s)
+       if diff(t) > threshold
+           out(t) = 1
+       elseif diff(t) < -threshold
+           out(t) = -1
+       end if
+   end for
+   output: out, threshold
 
-1. Compute the variation of the signal using `numpy`'s `diff` function.
-2. Calculate the `Threshold` using the mean and standard deviation of the variations, adjusted by the parameter :math:`\gamma`.
-3. Apply conditions to determine where spikes occur based on the computed threshold.
-4. Generate the output spike train array.
+**Implementation Notes**
 
-**Advantages**:
+- The variation array ``diff`` is padded to match the signal length by duplicating the second-last value as the last entry.
+- The threshold is computed over the full ``diff`` array (including the duplicated entry).
+- Comparisons are performed at every time step using this full-length variation array.
 
-The TBR algorithm is effective for emphasizing significant changes in a signal while filtering out minor variations, making it ideal for applications requiring robust noise reduction.
+**Advantages**
+
+- Simple and computationally efficient, originally designed for fast online/streaming processing.
+- Effectively reduces small perturbations and white noise by thresholding minor variations.
+- No artifacts (false spikes) at the start or end of the spike train or reconstructed signal.
+- Amplitude-independent encoding; threshold adapts to signal characteristics.
+- Straightforward and exact decoding via cumulative summation starting from the initial value.
+
+**Disadvantages**
+
+- Small, gradual changes are ignored; only large enough variations generate spikes.
+- Poor representation of sudden step-wise changes due to uniform reconstruction step size equal to the threshold.
+- Introduces scaling errors, especially prominent in trended signals.
+- Trade-off in factor selection: low factor captures small events but includes noise; high factor misses small events but filters noise.
+- Global threshold (computed over the entire sample) can be suboptimal for long signals with varying amplitude dynamics across different segments.
+- Sensitive to strong white noise, which can mask gradual changes and introduce strong low-frequency (1/frq or "pink") artifacts during reconstruction, leading to drift in longer signals.
+- Parameter optimization is challenging—multiple local minima and plateaus in error landscapes due to events of differing amplitudes, making automatic tuning unreliable without domain knowledge.
 
 For a practical implementation in Python, see the :ref:`Threshold Based Representation Function <threshold_based_representation_function>`.
 
-**References**:
+**References**
 
 - Delbruck, T., Lichtsteiner, P. (2007). "Artificial Retina: Applications of Image Processing with Spiking Neural Networks." *IEEE Transactions on Neural Networks*.
+- B. Petro, N. Kasabov and R. M. Kiss, "Selection and Optimization of Temporal Spike Encoding Methods for Spiking Neural Networks," in IEEE Transactions on Neural Networks and Learning Systems, vol. 31, no. 2, pp. 358-370, Feb. 2020, doi: 10.1109/TNNLS.2019.2906158.
