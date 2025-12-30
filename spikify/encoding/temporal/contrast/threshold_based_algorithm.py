@@ -48,8 +48,8 @@ def threshold_based_representation(
     :type factor: float | int | list[float | int] | numpy.ndarray
     :return: A tuple containing the encoded spike train and the computed threshold for each feature.
     :rtype: typing.Tuple[numpy.ndarray, numpy.ndarray]
-    :raises ValueError: If the input signal is empty.
-    :raises TypeError: If the factor parameter is of an unsupported type.
+    :raises ValueError: If the input signal is empty or if the factor length does not match the number of features.
+    :raises TypeError: If the factor parameter is of invalid dimension.
 
     """
 
