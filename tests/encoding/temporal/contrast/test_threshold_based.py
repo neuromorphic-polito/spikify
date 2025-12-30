@@ -88,3 +88,10 @@ class TestThresholdBasedRepresentation(unittest.TestCase):
         encoded_signal, thresholds = threshold_based_representation(signal, factor)
         self.assertIsInstance(encoded_signal, np.ndarray)
         self.assertIsInstance(thresholds, np.ndarray)
+
+    def test_factor_dimension(self):
+        """Test that the function raises TypeError when factor is of invalid dimension."""
+        signal = np.random.rand(10, 2)
+        factor = np.array([[1.0, 2.0], [3.0, 4.0]])
+        with self.assertRaises(TypeError):
+            threshold_based_representation(signal, factor)
