@@ -1,40 +1,68 @@
 .. _step_forward_algorithm_desc:
 
-Step Forward Encoding
+Step Forward (SF) Encoding
 =====================
 
-The Step-Forward (SF) encoding algorithm is a refinement of the Moving Window approach and is designed to improve the robustness and accuracy of spike generation in response to signal changes. Proposed by Kasabov et al. (2016), this method iteratively updates the baseline value (`Base`) and uses a threshold to determine spike events.
+The Step Forward (SF) encoding utilizes an interval around a moving baseline with a set threshold. The initial baseline equals the initial signal value. If the next signal value is above or below baseline ± threshold, a positive or negative spike is registered, respectively, and the baseline is moved to the upper or lower limit of the threshold interval. The threshold is signal amplitude dependent and constitutes the only parameter of this encoding method. The decoding process reconstructs the moving baseline in a manner similar to TBR.
 
-**Algorithm Overview**:
+**Algorithm Overview**
 
-The Step-Forward algorithm computes an updated baseline (`Base`) for each signal value, which adjusts dynamically based on signal changes. A `Threshold` value determines when a spike should be generated. The formulas used in this algorithm are:
+SF starts with an initial baseline equal to the first signal value and uses a fixed threshold to decide when to emit spikes. For each subsequent time step, the current signal value is compared to the current baseline ± threshold:
 
-.. math::
+- If the signal exceeds **base + threshold**, a positive spike (+1) is generated and the baseline is updated to **base + threshold**.
+- If the signal falls below **base - threshold**, a negative spike (-1) is generated and the baseline is updated to **base - threshold**.
+- Otherwise, no spike is emitted and the baseline remains unchanged.
 
-   \text{Threshold} = \frac{\text{mean}(\text{Jump})}{\gamma} \quad (7)
+This "step-forward" mechanism ensures that the baseline follows the signal in discrete jumps of size equal to the threshold, providing a staircase-like approximation of the original signal.
 
-.. math::
+**Detailed Pseudocode**
 
-   \text{Base} = \text{Signal}[1] \quad (8)
+.. code-block:: none
+   :linenos:
 
-where:
-
-- **Threshold**: A dynamic value calculated from the mean of the "jump" (maximum-to-minimum differences in the signal) divided by a tunable parameter :math:`\gamma`.
-- **Base**: The initial value of the signal used to track changes dynamically.
+   SF Encoding Algorithm
+   input: s signal, threshold
+   base = s(0)
+   out = zeros(length(s))
+   for t = 1 to length(s)
+       if s(t) > base + threshold
+           out(t) = 1
+           base = base + threshold
+       elseif s(t) < base - threshold
+           out(t) = -1
+           base = base - threshold
+       end if
+   end for
+   output: out, base
 
 **Implementation Steps**:
 
 To implement this algorithm, follow these steps:
 
-1. **Initialize the Base Value** (:math:`\text{Base}`): Set the `Base` to the first value of the input signal.
-2. **Iterate Over Signal**: For each signal value at time :math:`t`, compare the current signal value to the dynamically updated `Base` plus or minus the `Threshold`.
-   - If the signal exceeds `Base + Threshold`, generate a positive spike (+1) and update `Base` to `Base + Threshold`.
-   - If the signal falls below `Base - Threshold`, generate a negative spike (-1) and update `Base` to `Base - Threshold`.
-3. **Generate the Spike Train**: Construct the spike train by recording the time points where spikes occur based on the step-forward logic.
+1. **Initialize the Base Value** (:math:`\text{base}`): Set the `base` to the first value of the input signal.
+2. **Iterate Over Signal**: For each signal value at time :math:`t`, compare the current signal value to the dynamically updated `base` plus or minus the `threshold`.
+   - If the signal exceeds `base + threshold`, generate a positive spike (+1) and update `base` to `base + threshold`.
+   - If the signal falls below `base - threshold`, generate a negative spike (-1) and update `base` to `base - threshold`.
 
 **Advantages**:
 
-The Step-Forward algorithm is highly adaptable to changes in signal magnitude and direction, making it particularly effective in environments with fluctuating data. It offers better noise resistance and finer control over spike generation compared to simpler threshold-based methods (Kasabov et al., 2016).
+- Reconstructs most types of continuous signals exceptionally well in both time and frequency domains, including step-wise, smooth, and trended signals.
+- Allows multiple steps to account for a single large change, enabling good representation of both small and large amplitude events (depending on threshold choice).
+- Preserves the original frequency spectrum without introducing artifact frequency components.
+- Introduces only minimal quantization-related noise; does not generate 1/frq ("pink") noise artifacts as seen in TBR.
+- The moving baseline prevents drift in the reconstructed signal, even for longer sequences.
+- No overshoot occurs, as baseline adjustments are exactly equal to the threshold.
+- Exhibits wide, high-fit optimization plateaus across multiple metrics, allowing significant reduction in spike density (lower average firing rate – AFR) without major loss of accuracy.
+- Lower AFR enhances data compression, reduces risk of saturation in spiking neural networks (SNN), and can improve noise suppression (though it may magnify quantization noise at low frequencies).
+- Robust and straightforward parameter optimization with consistent performance across diverse signal types.
+
+**Disadvantages**
+
+- Reconstruction is inherently stepwise (piecewise constant), which may introduce quantization-like errors, particularly noticeable for very small or gradual changes.
+- Small variations below the threshold are completely ignored.
+- Like TBR, it encodes only signal changes, so offset errors may occur unless the initial value is correctly matched.
+- Noise in the input signal is only minimally reduced by the threshold (mostly passed through rather than filtered).
+- The threshold choice remains critical: too large → loss of detail; too small → excessive spikes and higher noise.
 
 For a practical implementation in Python, refer to the :ref:`Step Forward Function <step_forward_function>`.
 
@@ -42,3 +70,4 @@ For a practical implementation in Python, refer to the :ref:`Step Forward Functi
 
 - Kasabov, N., et al. (2016). "Neural Coding Strategies in Spiking Neural Networks." *Neural Processing Letters*.
 - Delbruck, T., Lichtsteiner, P. (2007). "Artificial Retina: Applications of Image Processing with Spiking Neural Networks." *IEEE Transactions on Neural Networks*.
+- B. Petro, N. Kasabov and R. M. Kiss, "Selection and Optimization of Temporal Spike Encoding Methods for Spiking Neural Networks," in IEEE Transactions on Neural Networks and Learning Systems, vol. 31, no. 2, pp. 358-370, Feb. 2020, doi: 10.1109/TNNLS.2019.2906158.
