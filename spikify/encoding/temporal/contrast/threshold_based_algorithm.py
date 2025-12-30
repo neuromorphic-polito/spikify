@@ -9,7 +9,7 @@ from typing import Tuple
 
 
 def threshold_based_representation(
-    signal: np.ndarray, factor: float | int | list[float | int]
+    signal: np.ndarray, factor: float | int | list[float | int] | np.ndarray
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
     Perform Threshold-Based Representation (TBR) encoding on the input signal.
@@ -45,7 +45,7 @@ def threshold_based_representation(
     :type signal: numpy.ndarray
     :param factor: The factor value (`factor`) that controls the noise-reduction threshold.
                    Can be a float, an integer, or a list of floats or integers.
-    :type factor: float | int | list[float | int]
+    :type factor: float | int | list[float | int] | numpy.ndarray
     :return: A tuple containing the encoded spike train and the computed threshold for each feature.
     :rtype: typing.Tuple[numpy.ndarray, numpy.ndarray]
     :raises ValueError: If the input signal is empty.
@@ -64,17 +64,15 @@ def threshold_based_representation(
     T, F = signal.shape
 
     # Handle factor
-    if isinstance(factor, (int, float)):
+    # Handle threshold: accept scalar int/float, list of ints/floats, or 1D ndarray
+    if np.isscalar(factor):
         factors = np.full(F, float(factor))
-    elif isinstance(factor, list):
-        if len(factor) != F:
-            raise ValueError("Factor list length must match the number of features in the signal.")
-        if not all(isinstance(f, (int, float)) for f in factor):
-            raise TypeError("All elements in factor list must be numeric.")
-        factors = np.array(factor, dtype=float)
     else:
-        raise TypeError("factor must be a float or a list of floats.")
-
+        factors = np.asarray(factor, dtype=float)
+        if factors.ndim != 1:
+            raise TypeError("Factor must be a scalar or a 1D sequence of numbers.")
+        if factors.size != F:
+            raise ValueError("Factor must match the number of features in the signal.")
     spike = np.zeros_like(signal, dtype=np.int8)
 
     # Compute variation exactly as in the original code
