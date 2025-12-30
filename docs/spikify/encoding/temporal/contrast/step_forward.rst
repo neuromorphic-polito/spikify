@@ -40,7 +40,9 @@ This "step-forward" mechanism ensures that the baseline follows the signal in di
 To implement this algorithm, follow these steps:
 
 1. **Initialize the Base Value** (:math:`\text{base}`): Set the `base` to the first value of the input signal.
-2. **Iterate Over Signal**: For each signal value at time :math:`t`, compare the current signal value to the dynamically updated `base` plus or minus the `threshold`.
+2. **Iterate Over Signal**: 
+
+   - For each signal value at time :math:`t`, compare the current signal value to the dynamically updated `base` plus or minus the `threshold`.
    - If the signal exceeds `base + threshold`, generate a positive spike (+1) and update `base` to `base + threshold`.
    - If the signal falls below `base - threshold`, generate a negative spike (-1) and update `base` to `base - threshold`.
 
