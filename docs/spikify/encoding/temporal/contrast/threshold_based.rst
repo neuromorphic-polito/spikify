@@ -3,7 +3,7 @@
 Threshold-Based Representation (TBR) Encoding
 =============================================
 
-Threshold-Based Representation (TBR) is one of the simplest and most foundational methods in temporal contrast encoding for spiking neural networks. Inspired by event-based neuromorphic vision sensors such as the asynchronous temporal contrast silicon retina, TBR generates spikes by tracking significant temporal changes in the signal. A positive or negative spike is emitted when the variation between consecutive signal values exceeds a dynamically computed threshold, with polarity determined by the sign of the change.
+Threshold-Based Representation (TBR) is one of the simplest and most foundational methods in temporal contrast encoding for spiking neural networks. TBR generates spikes by tracking significant temporal changes in the signal. A positive or negative spike is emitted when the variation between consecutive signal values exceeds a dynamically computed threshold, with polarity determined by the sign of the change.
 
 The threshold is adaptive to the signal's characteristics: it is computed over the entire sequence by taking the first-order differences, then setting the threshold as the mean of these variations plus a tunable factor multiplied by their standard deviation. This makes the encoding largely independent of absolute signal amplitude while effectively suppressing noise. The single hyperparameter factor controls sensitivity lower values preserve more variations, while higher values emit spikes only for substantial events.
 
