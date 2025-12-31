@@ -5,7 +5,7 @@ Zero-Crossing Step-Forward (ZCSF) Encoding
 
 The Zero-Crossing Step-Forward (ZCSF) encoding is a minimalist temporal contrast encoding technique that focuses exclusively on significant positive excursions of the signal. It applies half-wave rectification (setting all negative values to zero) followed by simple threshold-based spike generation, producing only positive spikes (+1) when the rectified signal exceeds a predefined threshold.
 
-This approach draws conceptual inspiration from the rich body of work on **zero-crossing-based signal analysis**, as pioneered and systematically developed by Benjamin Kedem in his influential 1986 paper "Spectral Analysis and Discrimination by Zero-Crossings" (Proceedings of the IEEE, Vol. 74, No. 11). Kedem demonstrated that zero-crossing counts — and their generalizations through linear filtering (higher-order crossings) — offer a surprisingly powerful, simple, and drastically data-reducing alternative to conventional spectral analysis, while remaining equivalent in many respects.
+This approach draws conceptual inspiration from the rich body of work on **zero-crossing-based signal analysis**.
 
 **Algorithm Overview**:
 
