@@ -53,12 +53,6 @@ The TBR encoding method processes a signal (possibly with multiple channels), ev
    end for
    output: out, threshold
 
-**Implementation Notes**
-
-- The variation array ``diff`` is padded to match the signal length by duplicating the second-last value as the last entry.
-- The threshold is computed over the full ``diff`` array (including the duplicated entry).
-- Comparisons are performed at every time step using this full-length variation array.
-
 **Advantages**
 
 - Simple and computationally efficient, originally designed for fast online/streaming processing.
