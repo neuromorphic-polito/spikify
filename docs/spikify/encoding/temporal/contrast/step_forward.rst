@@ -1,7 +1,7 @@
 .. _step_forward_algorithm_desc:
 
 Step Forward (SF) Encoding
-=====================
+================================
 
 The Step Forward (SF) encoding utilizes an interval around a moving baseline with a set threshold. The initial baseline equals the initial signal value. If the next signal value is above or below baseline ± threshold, a positive or negative spike is registered, respectively, and the baseline is moved to the upper or lower limit of the threshold interval. The threshold is signal amplitude dependent and constitutes the only parameter of this encoding method. The decoding process reconstructs the moving baseline in a manner similar to TBR.
 
@@ -33,18 +33,7 @@ This "step-forward" mechanism ensures that the baseline follows the signal in di
            base = base - threshold
        end if
    end for
-   output: out, base
-
-**Implementation Steps**:
-
-To implement this algorithm, follow these steps:
-
-1. **Initialize the Base Value** (:math:`\text{base}`): Set the `base` to the first value of the input signal.
-2. **Iterate Over Signal**: 
-
-   - For each signal value at time :math:`t`, compare the current signal value to the dynamically updated `base` plus or minus the `threshold`.
-   - If the signal exceeds `base + threshold`, generate a positive spike (+1) and update `base` to `base + threshold`.
-   - If the signal falls below `base - threshold`, generate a negative spike (-1) and update `base` to `base - threshold`.
+   output: out
 
 **Advantages**:
 

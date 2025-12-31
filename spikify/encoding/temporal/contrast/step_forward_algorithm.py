@@ -40,7 +40,7 @@ def step_forward(signal: np.ndarray, threshold: float | int | list[float | int] 
 
     :param signal: The input signal to be encoded. This should be a numpy ndarray.
     :type signal: numpy.ndarray
-    :param threshold: The threshold value(s) for spike detection. Can be a float or a list of floats.
+    :param threshold: Threshold(s) for spike generation; scalar or 1D sequence matching features.
     :type threshold: float | int | list[float | int] | numpy.ndarray
     :return: A numpy array representing the encoded spike train.
     :rtype: numpy.ndarray

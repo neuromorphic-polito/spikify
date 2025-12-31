@@ -93,7 +93,7 @@ class TestStepForward(unittest.TestCase):
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
 
-    def test_thrsholds_different_from_features(self):
+    def test_threshold_dims_different_from_features(self):
         """Test the function with a signal containing multiple features."""
         np.random.seed(42)
         signal = np.random.rand(10, 2)

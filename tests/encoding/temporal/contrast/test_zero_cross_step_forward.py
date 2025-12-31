@@ -55,7 +55,7 @@ class TestZeroCrossStepForward(unittest.TestCase):
 
     def test_large_signal(self):
         """Test the function's performance and correctness on a large signal."""
-        signal = np.random.randint(-10, 20, size=1000)  # Random signal with values between -10 and 20
+        signal = np.random.randint(-10, 20, size=1000)
         threshold = 10.0
         result = zero_cross_step_forward(signal, threshold)
         self.assertEqual(len(result), len(signal))
@@ -82,23 +82,17 @@ class TestZeroCrossStepForward(unittest.TestCase):
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
 
-    def test_factor_type(self):
-        """Test the function with an Integer factor."""
-        signal = np.random.rand(10)
-        threshold = 3
-        with self.assertRaises(TypeError):
+    def test_threshold_dims_different_from_features(self):
+        """Test the function with a signal containing multiple features."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        threshold = [0.1, 0.3, 0.4]
+        with self.assertRaises(ValueError):
             zero_cross_step_forward(signal, threshold)
 
-    def test_factors_type(self):
-        """Test the function with a list of Integer factors."""
+    def test_threshold_dimension(self):
+        """Test that the function raises TypeError when threshold is of invalid dimension."""
         signal = np.random.rand(10, 2)
-        thresholds = [5, 1]
+        threshold = np.array([[0.1, 0.2], [0.3, 0.4]])
         with self.assertRaises(TypeError):
-            zero_cross_step_forward(signal, thresholds)
-
-    def test_factors_length(self):
-        """Test the function with a list of factors with dimension different from feature."""
-        signal = np.random.rand(10, 2)
-        thresholds = [5.0, 1.0, 3.0]
-        with self.assertRaises(ValueError):
-            zero_cross_step_forward(signal, thresholds)
+            zero_cross_step_forward(signal, threshold)

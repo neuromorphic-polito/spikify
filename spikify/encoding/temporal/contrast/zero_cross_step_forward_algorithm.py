@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def zero_cross_step_forward(signal: np.ndarray, threshold: float | list[float]) -> np.ndarray:
+def zero_cross_step_forward(signal: np.ndarray, threshold: float | int | list[float | int] | np.ndarray) -> np.ndarray:
     """
     Perform Zero-Crossing Step-Forward (ZCSF) encoding on the input signal.
 
@@ -41,34 +41,34 @@ def zero_cross_step_forward(signal: np.ndarray, threshold: float | list[float]) 
 
     :param signal: The input signal to be encoded. This should be a numpy ndarray.
     :type signal: numpy.ndarray
-    :param threshold: The threshold value used to determine spike generation. Can be a float or a list of floats.
-    :type threshold: float | list[float]
+    :param threshold: Threshold(s) for spike generation; scalar or 1D sequence matching features.
+    :type threshold: float | int | list[float | int] | numpy.ndarray
     :return: A numpy array representing the encoded spike train.
     :rtype: numpy.ndarray
-    :raises ValueError: If the input signal is empty.
-    :raises TypeError: If the signal is not a numpy ndarray.
+    :raises ValueError: If the input signal is empty or if the threshold dimensions do not match the signal features.
+    :raises TypeError: If the threshold parameter is of invalid dimension.
 
     """
 
+    # Check for empty signal
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
+    # Ensure 2D processing (T, F)
     if signal.ndim == 1:
         signal = signal.reshape(-1, 1)
 
     S, F = signal.shape
 
-    if isinstance(threshold, float):
-        thresholds = [threshold] * F
-    elif isinstance(threshold, list):
-        if not all(isinstance(w, float) for w in threshold):
-            raise TypeError("All elements in threshold list must be float.")
-        thresholds = threshold
+    # Handle threshold
+    if np.isscalar(threshold):
+        thresholds = np.full(F, float(threshold))
     else:
-        raise TypeError("Threshold must be a float or a list of floats.")
-
-    if len(thresholds) != F:
-        raise ValueError("Threshold must match the number of features in the signal.")
+        thresholds = np.asarray(threshold, dtype=float)
+        if thresholds.ndim != 1:
+            raise TypeError("Threshold must be a scalar or a 1D sequence of numbers.")
+        if thresholds.size != F:
+            raise ValueError("Threshold must match the number of features in the signal.")
 
     spike = np.zeros_like(signal, dtype=np.int8)
 
@@ -78,6 +78,7 @@ def zero_cross_step_forward(signal: np.ndarray, threshold: float | list[float]) 
     # Apply threshold condition
     spike[signal > thresholds] = 1
 
+    # Flatten if input was 1D
     if F == 1:
         spike = spike.flatten()
 

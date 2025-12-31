@@ -1,11 +1,13 @@
 .. _zero_cross_step_forward_algorithm_desc:
 
 Zero-Crossing Step-Forward (ZCSF) Encoding
-==========================================
+==============================================
 
-The Zero-Crossing Step-Forward (ZCSF) algorithm is a variant of the Step-Forward (SF) encoding technique that utilizes zero-crossings of the signal. Unlike the standard SF method, which involves a baseline (Base) value, ZCSF relies on a half-wave rectification behavior and emits spikes only for positive signal values exceeding a specified threshold.
+The Zero-Crossing Step-Forward (ZCSF) encoding is a minimalist temporal contrast encoding technique that focuses exclusively on significant positive excursions of the signal. It applies half-wave rectification (setting all negative values to zero) followed by simple threshold-based spike generation, producing only positive spikes (+1) when the rectified signal exceeds a predefined threshold.
 
-**Algorithm Overview**:
+This approach draws conceptual inspiration from the rich body of work on **zero-crossing-based signal analysis**.
+
+**Algorithm Overview**
 
 The ZCSF algorithm encodes signals by generating spikes based on the condition of zero-crossing with respect to a predefined threshold. The key steps in the ZCSF encoding are:
 
@@ -13,23 +15,46 @@ The ZCSF algorithm encodes signals by generating spikes based on the condition o
 
    .. math::
 
-      \text{Rectified Signal} = \max(0, \text{Signal})
+      \text{rectified signal} = \max(0, \text{signal})
 
-2. **Threshold Definition**: Use a predefined threshold value (`Threshold`) to determine when a spike should be emitted. The threshold is typically set based on the specific characteristics of the input signal or application requirements.
+2. **Threshold Definition**: Use a predefined threshold value (`threshold`) to determine when a spike should be emitted. The threshold is typically set based on the specific characteristics of the input signal or application requirements.
 
 3. **Spike Generation**: Emit a spike (value of 1) when the rectified signal exceeds the threshold. Unlike other encoding schemes, ZCSF does not consider negative spikes, and only positive spikes are generated when the signal value is higher than the threshold.
 
-**Implementation Steps**:
+**Detailed Pseudocode**
 
-To implement the Zero-Crossing Step-Forward encoding in Python:
+.. code-block:: none
+   :linenos:
 
-1. **Rectify the Signal**: Use `numpy`'s `maximum` function to zero out all negative signal values.
-2. **Apply Threshold Condition**: Generate spikes by checking if the rectified signal exceeds the given threshold.
-3. **Construct the Spike Train**: Create an output array that holds the spike values, where spikes occur based on the defined conditions.
+   ZCSF Encoding Algorithm
+   input: s signal, threshold
+   out = zeros(length(s))
+   for t = 0 to length(s)
+       if s(t) < 0
+           s(t) = 0
+       end if
+   end for
+   for t = 0 to length(s)
+       if s(t) > threshold
+           out(t) = 1
+       end if
+   end for
+   output: out
 
-**Advantages**:
+**Advantages**
 
-The ZCSF encoding method is particularly useful for applications where only significant positive changes in the signal are of interest. By ignoring negative values and focusing on zero-crossings with respect to a threshold, ZCSF can efficiently represent signals in scenarios like event-based processing or certain types of sensory data interpretation.
+- Extreme computational simplicity and speed — ideal for fast online processing and resource-constrained systems.
+- Drastic data reduction: transforms dense continuous signals into highly sparse spike trains, capturing only salient positive events.
+- Complete suppression of negative fluctuations and noise — excellent for applications where only upward changes or events are relevant.
+- No initialization artifacts, no drift, and no boundary effects (unlike moving-window or baseline-tracking methods).
+- Provides a fast, economical way to detect and represent dominant positive features or events in signals.
+
+**Disadvantages**
+
+- Total loss of all negative signal information — unsuitable for oscillatory, bipolar, or symmetric signals.
+- Performance heavily depends on appropriate threshold selection; poor choice can either miss small events or include excessive noise.
+- Lacks the adaptivity of baseline-updating methods (SF, MW) for signals with large amplitude variations.
+- Theoretical results on zero-crossing counts (e.g., spectral equivalence) assume certain stationarity and Gaussian-like properties, though practical performance is often robust.
 
 For a practical implementation in Python, see the :ref:`Zero Cross Step Forward Function <zero_cross_step_forward_function>`.
 

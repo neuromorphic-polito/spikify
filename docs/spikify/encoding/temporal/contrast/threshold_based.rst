@@ -53,12 +53,6 @@ The TBR encoding method processes a signal (possibly with multiple channels), ev
    end for
    output: out, threshold
 
-**Implementation Notes**
-
-- The variation array ``diff`` is padded to match the signal length by duplicating the second-last value as the last entry.
-- The threshold is computed over the full ``diff`` array (including the duplicated entry).
-- Comparisons are performed at every time step using this full-length variation array.
-
 **Advantages**
 
 - Simple and computationally efficient, originally designed for fast online/streaming processing.
@@ -79,7 +73,7 @@ The TBR encoding method processes a signal (possibly with multiple channels), ev
 
 For a practical implementation in Python, see the :ref:`Threshold Based Representation Function <threshold_based_representation_function>`.
 
-**References**
+**References**:
 
 - Delbruck, T., Lichtsteiner, P. (2007). "Artificial Retina: Applications of Image Processing with Spiking Neural Networks." *IEEE Transactions on Neural Networks*.
 - B. Petro, N. Kasabov and R. M. Kiss, "Selection and Optimization of Temporal Spike Encoding Methods for Spiking Neural Networks," in IEEE Transactions on Neural Networks and Learning Systems, vol. 31, no. 2, pp. 358-370, Feb. 2020, doi: 10.1109/TNNLS.2019.2906158.
