@@ -7,7 +7,7 @@ The Zero-Crossing Step-Forward (ZCSF) encoding is a minimalist temporal contrast
 
 This approach draws conceptual inspiration from the rich body of work on **zero-crossing-based signal analysis**.
 
-**Algorithm Overview**:
+**Algorithm Overview**
 
 The ZCSF algorithm encodes signals by generating spikes based on the condition of zero-crossing with respect to a predefined threshold. The key steps in the ZCSF encoding are:
 
@@ -21,7 +21,7 @@ The ZCSF algorithm encodes signals by generating spikes based on the condition o
 
 3. **Spike Generation**: Emit a spike (value of 1) when the rectified signal exceeds the threshold. Unlike other encoding schemes, ZCSF does not consider negative spikes, and only positive spikes are generated when the signal value is higher than the threshold.
 
-**Detailed Pseudocode**:
+**Detailed Pseudocode**
 
 .. code-block:: none
    :linenos:
