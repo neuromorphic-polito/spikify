@@ -21,6 +21,7 @@ def bens_spiker(
     threshold: float | int | list[float, int] | np.ndarray,
     window_type: WindowType = "boxcar",
     scale_coeffs: bool = False,
+    **kwargs,
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Perform spike detection using Bens Spiker Algorithm.
@@ -58,6 +59,10 @@ def bens_spiker(
     :type signal: numpy.ndarray
     :param window_length: Integer scalar (broadcast to all features) or 1‑D sequence/ndarray for filter window.
     :type window_length: int | list[int] | numpy.ndarray
+    :param window_type: Type of window to use for the FIR filter. Default is 'boxcar'.
+    :type window_type: str
+    :param scale_coeffs: Whether to scale the filter coefficients to match twice the maximum amplitude of the signal.
+    :type scale_coeffs: bool
     :param threshold: Threshold(s) for spike generation; scalar or 1D sequence matching features.
     :type threshold: float | int | list[float | int] | numpy.ndarray
     :return: A tuple containing a numpy array representing the detected spikes and the shift used for normalization.
