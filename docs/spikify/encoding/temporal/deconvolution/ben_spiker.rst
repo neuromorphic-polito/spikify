@@ -1,55 +1,75 @@
 .. _bens_spiker_algorithm_desc:
 
-Ben's Spiker Encoding
-============================
+Ben's Spiker Algorithm (BSA) Encoding
+=========================================
 
-Bens Spiker Algorithm is a method used to detect spikes within a signal by comparing two cumulative error metrics. These metrics are calculated over a segment of the signal, which is filtered using a boxcar (or rectangular) window of a specified length. The algorithm relies on the comparison of these errors to determine whether a spike is present at a given timestep.
+An analog signal can be constructed from a spike train by convolution with an FIR filter. BSA (Ben's Spiker Algorithm) is an algorithm for producing the spike train from which the original signal can be reconstructed well. BSA works only for positive-valued signals. First, an FIR filter is created. Then, two error terms are calculated at each time point: one that results from subtracting the filter coefficients from the subsequent signal values, and one that results from not changing the signal. If the subtraction error is smaller than the unchanged signal error term subtracted by a factor (threshold < 1), a positive spike is generated and the filter coefficients are subtracted from the signal. Decoding is straightforward since it was kept in mind during the encoding: a convolution of the spike train with the filter coefficients gives the reconstructed signal.
 
-**Algorithm Overview**:
+BSA encoding results in a unipolar (only positive) spike train. The original BSA encoding requires input with [0, 1] limits. However, BSA can be applied to any positive-valued signal if the filter coefficients are scaled up such that they appropriately match the signal boundaries. Therefore, a simple signal shift above zero is sufficient.
 
-Bens Spiker Algorithm works as follows:
+**Algorithm Overview**
 
-1. **Cumulative Error Calculation**:
-   
-   For each segment of the signal (of length equal to the boxcar window), two cumulative errors are calculated:
+BSA iteratively detects spikes by comparing two cumulative error metrics over a sliding segment of length equal to the FIR filter:
 
-   .. math::
-      \text{error1} = \sum_{j=1}^{n} \left| \text{Signal}[i+j-1] - \text{filter}[j] \right|
+- **error1**: sum of absolute differences between the current signal segment and the filter coefficients
+- **error2**: sum of absolute values of the current signal segment
 
+A spike is generated if:
 
-   .. math::
-      \text{error2} = \sum_{j=1}^{n} \left| \text{Signal}[i+j-1] \right|
+.. math::
 
+   \text{error1} \leq \text{error2} - \text{threshold}
 
-Here, `error1` is the sum of absolute differences between the signal segment and the boxcar filter window, while `error2` is the sum of absolute values of the signal segment itself.
+When a spike is detected, the filter is subtracted from the corresponding segment of the signal, effectively removing the detected spike pattern for subsequent iterations.
 
-2. **Spike Detection Condition**:
+**Detailed Pseudocode**
 
-   After calculating `error1` and `error2`, a condition is checked to determine whether a spike should be emitted:
+.. code-block:: none
+   :linenos:
 
-   .. math::
+   BSA Encoding Algorithm
+   input: s signal, fir, threshold
+   L = length(s)
+   F = length(fir)
+   out = zeros(L)
+   shift = min(s)
+   s = s - shift
+   for t = 0:(L-F+1)
+       err1 = 0
+       err2 = 0
+       for k = 0:F
+           err1 = err1 + abs(s(t+k) - fir(k))
+           err2 = err2 + abs(s(t + k))
+       end for
+       if err1 <= (err2 * threshold)
+           out(t) = 1
+           for k = 1:F
+               s(t+k) = s(t+k) - fir(k)
+           end for
+       end if
+   end for
+   output: out, shift
 
-      \text{error1} \leq \text{error2} \cdot \text{Threshold}
+**Advantages**
 
-   If the above condition holds true, it indicates that the difference between the signal and the filter is small enough that the signal is close to the filter shape, thereby detecting a spike at that position.
+- Designed with reconstruction in mind: the original signal can be well recovered via simple FIR convolution.
+- Robust representation of continuously changing, smooth, and trended signals.
+- Simultaneously performs filtering during encoding.
+- Allows flexible scaling of filter coefficients to improve dynamic range and reduce saturation.
+- Good SNR for signals within the designed filter bandwidth.
 
-3. **Signal Adjustment**:
+**Disadvantages**
 
-   Upon detection of a spike, the corresponding segment of the signal is adjusted by subtracting the filter window from it, allowing the algorithm to process subsequent spikes in the signal.
-
-**Implementation Steps**:
-
-1. **Create the Boxcar Filter Window**: A boxcar window of specified length is used to smooth the signal.
-2. **Iterate Through the Signal**: Calculate the cumulative errors `error1` and `error2` for each segment of the signal.
-3. **Detect and Record Spikes**: Check the spike detection condition and update the signal and spike array accordingly.
-
-**Advantages**:
-
-Ben's Spiker Algorithm is robust for detecting spikes in signals where the spike characteristics closely match the shape of the filter window. This makes it particularly suitable for signals with regular or repetitive spike-like features.
-
-For a practical implementation in Python, see the :ref:`Ben Spiker Function <bens_spiker_function>`.
+- Only suitable for positive-valued signals (requires shifting/preprocessing for general inputs).
+- Poor performance on constant plateaus and step-like changes: requires constant firing to maintain nonzero values, which can fail or saturate, especially at higher levels.
+- Significant errors at signal start (catch-up from 0) and end (convolution tail equal to filter length) — can cause substantial information loss in short signals.
+- Introduces offset and scaling errors in reconstruction depending on optimization.
+- Can generate low-frequency artifact components, especially with large filter sizes.
+- Non-smooth optimization landscape with multiple local peaks — parameter search (cutoff, filter size, threshold) is nontrivial.
+- Higher plateaus are particularly problematic if filter coefficients are not scaled up appropriately (e.g., sum of coefficients ≈ 2 × signal max recommended).
 
 **References**:
 
 - Schrauwen, B., Van Campenhout, J. (2003). "BSA: An Efficient Algorithm for Time-Critical Signal Processing." *Neurocomputing*.
 - Petro, P., et al. (2020). "Revisiting the BSA for Modern Applications." *Signal Processing Letters*.
+- B. Petro, N. Kasabov and R. M. Kiss, "Selection and Optimization of Temporal Spike Encoding Methods for Spiking Neural Networks," in IEEE Transactions on Neural Networks and Learning Systems, vol. 31, no. 2, pp. 358-370, Feb. 2020, doi: 10.1109/TNNLS.2019.2906158.
