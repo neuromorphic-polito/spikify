@@ -15,13 +15,18 @@ from .utils import WindowType
 #       and in the range the filter coefficient scaling should be skipped.
 
 
+# BSA allows only one FIR filter to be used for all signal features.
+# To apply feature-specific window lengths or other filter parameters,
+# the signal must be processed individually per feature
 def bens_spiker(
     signal: np.ndarray,
-    window_length: int | list[int] | np.ndarray,
+    window_length: int,
+    cutoff: float | np.ndarray,
     threshold: float | int | list[float, int] | np.ndarray,
-    window_type: WindowType = "boxcar",
-    scale_coeffs: bool = False,
-    **kwargs,
+    window_type: WindowType = "hann",
+    pass_zero: bool | str = True,
+    scale: bool = True,
+    fs: float | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Perform spike detection using Bens Spiker Algorithm.
@@ -31,6 +36,14 @@ def bens_spiker(
     the filtered signal and the raw signal is below a certain threshold.
 
     Refer to the :ref:`bens_spiker_algorithm_desc` for a detailed explanation of the Ben's Spiker algorithm.
+
+    .. note::
+
+        Although ``bens_spiker`` supports multi-feature signals, the same filter configuration is applied
+        across all features.
+
+        For applications requiring heterogeneous filter configurations across features, it is
+        recommended to apply this algorithm feature by feature.
 
     **Code Example:**
 
@@ -57,8 +70,8 @@ def bens_spiker(
 
     :param signal: The input signal to be analyzed. This should be a numpy ndarray.
     :type signal: numpy.ndarray
-    :param window_length: Integer scalar (broadcast to all features) or 1‑D sequence/ndarray for filter window.
-    :type window_length: int | list[int] | numpy.ndarray
+    :param window_length: Window size for the FIR filter.
+    :type window_length: int
     :param window_type: Type of window to use for the FIR filter. Default is 'boxcar'.
     :type window_type: str
     :param scale_coeffs: Whether to scale the filter coefficients to match twice the maximum amplitude of the signal.
@@ -83,17 +96,8 @@ def bens_spiker(
     T, F = signal.shape
 
     # Handle window_length
-    if np.isscalar(window_length):
-        window_lengths = np.full(F, int(window_length), dtype=int)
-    else:
-        window_lengths = np.asarray(window_length)
-        if window_lengths.ndim != 1:
-            raise TypeError("window_length must be a scalar or a 1D sequence of integers.")
-        if window_lengths.size != F:
-            raise ValueError("window_lengths must match the number of features in the signal.")
-
-    if np.any(window_lengths > T):
-        raise ValueError("All filter window sizes must be less than the number of time steps in the signal.")
+    if window_length > T:
+        raise ValueError("window_length must be less than the number of time steps in the signal.")
 
     # Handle threshold
     if np.isscalar(threshold):
@@ -107,34 +111,41 @@ def bens_spiker(
 
     spikes = np.zeros_like(signal, dtype=np.int8)
 
-    # Generate filter values according to their window length for each feature
-    filter = [firwin(numtaps=w, cutoff=0.2, window=window_type, fs=44100, scale=True) for w in window_lengths]
+    # Generate filter coefficient values according to their window length for each feature
+    fir = firwin(window_length, cutoff, window=window_type, pass_zero=pass_zero, scale=scale, fs=fs)
+
+    # Stack the same filter for all features in case we need to modify coeffiecient due to signal
+    # amplitude for certain features
+    fir_bank = np.stack([fir] * F, axis=0).T
 
     signal_copy = np.copy(signal)
 
-    # Normalize signal
+    # Normalize signal if signal has negative values
     shift = signal_copy.min(axis=0)
+    shift[shift > 0] = 0  # only shift if negative values are present
     signal_copy -= shift
 
-    max_amp = 2 * signal_copy.max(axis=0)
+    # Compute max amplitude per feature to be used for scaling if max amplitude is grater than 1
+    max_amp = signal_copy.max(axis=0)
 
-    # Scale filter coefficients if required
-    if scale_coeffs:
-        for f in range(F):
-            s = filter[f].sum()
-            filter[f] *= max_amp[f] / s
+    # Find features that require scaling
+    features_to_scale = np.where(max_amp > 1)[0]
+
+    for f in features_to_scale:
+        s = fir_bank[:, f].sum()
+        fir_bank[:, f] *= 2 * max_amp[f] / s
 
     for f in range(F):
-        for t in range(0, T - window_lengths[f] + 1):
-            seg = signal_copy[t : t + window_lengths[f], f]  # segment of the signal
-            error1 = np.abs(seg - filter[f]).sum()  # error between segment and filter
+        for t in range(0, T - window_length + 1):
+            seg = signal_copy[t : t + window_length, f]  # segment of the signal
+            error1 = np.abs(seg - fir_bank[:, f]).sum()  # error between segment and filter
             error2 = np.abs(seg).sum()  # error between segment and zero signal
             if error1 <= (error2 - thresholds[f]):  # spike condition
                 spikes[t, f] = 1
-                signal_copy[t : t + window_lengths[f], f] -= filter[f]  # update signal by removing filter effect
+                signal_copy[t : t + window_length, f] -= fir_bank[:, f]  # update signal by removing filter effect
 
     # Flatten if input was 1D
     if F == 1:
         spikes = spikes.flatten()
 
-    return spikes, shift, max_amp
+    return spikes, shift, fir_bank
