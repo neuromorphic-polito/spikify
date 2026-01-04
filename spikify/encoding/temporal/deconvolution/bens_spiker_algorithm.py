@@ -8,42 +8,42 @@ import numpy as np
 from scipy.signal import firwin
 from .utils import WindowType
 
-# TODO: Add new parameters to the function to allow for more customization of the FIR filter
-#       (e.g., cutoff frequency, fs, etc.). Additionaly add a a new parameter to scale the filter
-#       to twice the max amplitude of the signal (as done in Petro et al.). This has to be done when
-#       the signal in input is non-negative and not in the range [0, 1]. If the signal is already positive
-#       and in the range the filter coefficient scaling should be skipped.
 
-
-# BSA allows only one FIR filter to be used for all signal features.
-# To apply feature-specific window lengths or other filter parameters,
-# the signal must be processed individually per feature
 def bens_spiker(
     signal: np.ndarray,
     window_length: int,
     cutoff: float | np.ndarray,
     threshold: float | int | list[float, int] | np.ndarray,
+    width: int | None = None,
     window_type: WindowType = "hann",
     pass_zero: bool | str = True,
     scale: bool = True,
     fs: float | None = None,
-) -> tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
-    Perform spike detection using Bens Spiker Algorithm.
+    Perform Ben's Spiker (BSA) encoding on the input signal.
 
-    This function detects spikes in an input signal based on the comparison of cumulative errors calculated over a
-    segment of the signal, which is filtered using a boxcar window. A spike is detected if the cumulative error between
-    the filtered signal and the raw signal is below a certain threshold.
+    BSA is an efficient algorithm for converting an analog (positive-valued) signal into a unipolar spike train
+    from which the original signal can be well reconstructed via convolution with the same FIR filter used during
+    encoding. The method iteratively detects spike locations by comparing two cumulative error metrics over a
+    sliding segment of length equal to the FIR filter:
+
+    - error1: sum of absolute differences between the current signal segment and the filter coefficients
+    - error2: sum of absolute values of the current signal segment
+
+    A positive spike (+1) is emitted at time t if error1 ≤ error2 - threshold. When a spike is detected, the filter
+    is subtracted from the corresponding signal segment, removing the detected pattern for subsequent iterations.
 
     Refer to the :ref:`bens_spiker_algorithm_desc` for a detailed explanation of the Ben's Spiker algorithm.
 
     .. note::
-
-        Although ``bens_spiker`` supports multi-feature signals, the same filter configuration is applied
-        across all features.
-
-        For applications requiring heterogeneous filter configurations across features, it is
-        recommended to apply this algorithm feature by feature.
+        - BSA requires non-negative input signals. The function automatically shifts the signal by its minimum value
+          (per feature) if negative values are present.
+        - The FIR filter is designed using `scipy.signal.firwin` with the specified cutoff, window type, etc.
+        - When the maximum amplitute of the signal is greater than 1, filter coefficients are automatically scaled up
+          (sum ≈ 2 × max amplitude) for improved dynamic range and reduced saturation (recommended practice).
+        - For multi-feature signals, the same filter shape is applied across all features, but scaling is performed
+          independently per feature based on its amplitude.
 
     **Code Example:**
 
@@ -51,37 +51,54 @@ def bens_spiker(
 
         import numpy as np
         from spikify.encoding.temporal.deconvolution import bens_spiker
-        signal = np.array([0.1, 0.2, 2.0, 1.0, 0.5, 0.3, 0.1])
+        signal = np.array([0.1, 0.2, 0.8, 0.95, 0.5, 0.3, 0.1])
         window_length = 3
-        threshold = 0.5
-        spikes = bens_spiker(signal, window_length, threshold)
+        threshold = 0.1
+        cutoff = 0.1
+        encoded_signal, shift, fir_coeffs = bens_spiker(signal, window_length, cutoff, threshold)
 
     .. doctest::
         :hide:
 
         >>> import numpy as np
         >>> from spikify.encoding.temporal.deconvolution import bens_spiker
-        >>> signal = np.array([0.1, 0.2, 2.0, 1.0, 0.5, 0.3, 0.1])
+        >>> signal = np.array([0.1, 0.2, 0.8, 0.95, 0.5, 0.3, 0.1])
         >>> window_length = 3
-        >>> threshold = 0.5
-        >>> spikes = bens_spiker(signal, window_length, threshold)
-        >>> spikes
-        array([0, 1, 0, 0, 0, 0, 0], dtype=int8)
+        >>> threshold = 0.1
+        >>> cutoff = 0.1
+        >>> encoded_signal, shift, fir_coeffs = bens_spiker(signal, window_length, cutoff, threshold)
+        >>> encoded_signal
+        array([0, 1, 1, 0, 0, 0, 0], dtype=int8)
 
-    :param signal: The input signal to be analyzed. This should be a numpy ndarray.
+    :param signal: Input signal to encode (1D or 2D: time × features).
     :type signal: numpy.ndarray
-    :param window_length: Window size for the FIR filter.
+    :param window_length: Length of the FIR filter (number of coefficients).
     :type window_length: int
-    :param window_type: Type of window to use for the FIR filter. Default is 'boxcar'.
-    :type window_type: str
-    :param scale_coeffs: Whether to scale the filter coefficients to match twice the maximum amplitude of the signal.
-    :type scale_coeffs: bool
-    :param threshold: Threshold(s) for spike generation; scalar or 1D sequence matching features.
+    :param cutoff: Cutoff frequency(ies) for the FIR filter design (normalized 0 to 1, where 1 = Nyquist).
+                   Scalar or an array of cutoff frequencies (that is, band edges).
+    :type cutoff: float | numpy.ndarray
+    :param threshold: Threshold factor for spike detection.
+                      Scalar or per-feature sequence.
     :type threshold: float | int | list[float | int] | numpy.ndarray
-    :return: A tuple containing a numpy array representing the detected spikes and the shift used for normalization.
-    :rtype: tuple[numpy.ndarray, numpy.ndarray]
-    :raises ValueError: If the input signal is empty or if any window length exceeds the signal length.
-    :raises TypeError: If window_length or threshold are not of the expected types.
+    :param width: Transition width for FIR filter design (optional, used with certain window types).
+    :type width: int | None
+    :param window_type: Window function for FIR filter design (e.g., 'hann', 'hamming', 'blackman', 'boxcar').
+    :type window_type: str
+    :param pass_zero: Whether the filter should be low-pass (True) or high-pass (False/'highpass').
+    :type pass_zero: bool | str
+    :param scale: Set to True to scale the coefficients so that the frequency response is exactly unity at a
+                  certain frequency.
+    :type scale: bool
+    :param fs: Sampling frequency (used for physical frequency units in cutoff; optional).
+    :type fs: float | None
+    :return: Tuple containing:
+             - spikes: Spike train (same shape as input, dtype=int8, values 0 or 1)
+             - shift: Per-feature shift values subtracted to make signal non-negative (1D array)
+             - fir_bank: Final filter coefficients used (after scaling), shape (window_length, n_features)
+    :rtype: tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
+    :raises ValueError: If the input signal is empty or if the threshold dimensions do not match the signal
+                        features or if the window_lenght is greater than the signal lenght.
+    :raises TypeError: If the threshold parameter is of invalid dimension.
 
     """
 
@@ -130,6 +147,7 @@ def bens_spiker(
 
     # Find features that require scaling
     features_to_scale = np.where(max_amp > 1)[0]
+    print(features_to_scale)
 
     for f in features_to_scale:
         s = fir_bank[:, f].sum()
