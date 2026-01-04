@@ -147,7 +147,6 @@ def bens_spiker(
 
     # Find features that require scaling
     features_to_scale = np.where(max_amp > 1)[0]
-    print(features_to_scale)
 
     for f in features_to_scale:
         s = fir_bank[:, f].sum()
