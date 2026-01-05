@@ -91,10 +91,10 @@ def bens_spiker(
     :type scale: bool
     :param fs: Sampling frequency (used for physical frequency units in cutoff; optional).
     :type fs: float | None
-    :return: Tuple containing:
-             - spikes: Spike train (same shape as input, dtype=int8, values 0 or 1)
-             - shift: Per-feature shift values subtracted to make signal non-negative (1D array)
-             - fir_bank: Final filter coefficients used (after scaling), shape (window_length, n_features)
+    :return:
+        - spikes: Spike train (same shape as input, dtype=int8, values 0 or 1)
+        - shift: Per-feature shift values subtracted to make signal non-negative (1D array)
+        - fir_bank: Final filter coefficients used (after scaling), shape (window_length, n_features)
     :rtype: tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
     :raises ValueError: If the input signal is empty or if the threshold dimensions do not match the signal
                         features or if the window_lenght is greater than the signal lenght.
@@ -129,7 +129,7 @@ def bens_spiker(
     spikes = np.zeros_like(signal, dtype=np.int8)
 
     # Generate filter coefficient values according to their window length for each feature
-    fir = firwin(window_length, cutoff, window=window_type, pass_zero=pass_zero, scale=scale, fs=fs)
+    fir = firwin(window_length, cutoff, width=width, window=window_type, pass_zero=pass_zero, scale=scale, fs=fs)
 
     # Stack the same filter for all features in case we need to modify coeffiecient due to signal
     # amplitude for certain features
