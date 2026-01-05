@@ -28,7 +28,7 @@ When a spike is detected, the filter is subtracted from the corresponding segmen
    :linenos:
 
    BSA Encoding Algorithm
-   input: s signal, fir, threshold
+   input: s signal, fir filter, thr threshold
    L = length(s)
    F = length(fir)
    out = zeros(L)
@@ -41,7 +41,7 @@ When a spike is detected, the filter is subtracted from the corresponding segmen
            err1 = err1 + abs(s(t+k) - fir(k))
            err2 = err2 + abs(s(t + k))
        end for
-       if err1 <= (err2 * threshold)
+       if err1 <= (err2 - thr)
            out(t) = 1
            for k = 1:F
                s(t+k) = s(t+k) - fir(k)
