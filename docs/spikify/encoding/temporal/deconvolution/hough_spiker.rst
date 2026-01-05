@@ -3,35 +3,67 @@
 Hough Spiker Encoding
 ============================
 
-The Hough Spiker Algorithm is a technique used to detect spikes in a signal by performing a progressive subtraction operation. The algorithm first compares the value of the analog signal to the result of a convolution operation. If the signal value exceeds the convolution result, the signal undergoes a subtraction of the convolution value. This process is repeated iteratively for each signal channel.
+The Hough Spiker Algorithm (HSA) is a parameter-free technique for converting non-negative analog signals (normalized to [0, 1]) into unipolar spike trains that can be reconstructed via convolution with the same FIR filter used during encoding. At each time step, the algorithm compares the shifted FIR filter impulse response pointwise with the matching segment of the input signal. If fir filter is everywhere smaller or equal to segment signal, a positive spike is emitted, and fir filter is subtracted from the signal to remove the detected pattern. This process is repeated sequentially across the signal.
 
-**Algorithm Overview**:
+HSA assumes a FIR filter with non-negative coefficients (e.g., low-pass filters without negative taps), as negative values would cause the algorithm to fail. The input range is limited to [0, 1], so signals are typically shifted and normalized if necessary.
 
-Hough Spiker algorithm follows these steps:
+**Algorithm Overview**
 
-1. **Progressive Subtraction**:
+The core idea is to reverse the decoding convolution: iteratively detect and subtract filter patterns that "fit" under the signal curve.
 
-   For each signal segment, the algorithm compares the signal value at each time step with the result of a convolution operation (using a rectangular window in our analysis):
+1. **Pointwise Comparison**:
+   For each starting time τ, check if s(t) ≥ h(t - τ) for all t in the filter support.
 
-   .. math::
+2. **Spike Emission and Subtraction**:
+   If the condition holds, emit a spike at τ and subtract h(t - τ) from s(t) over the filter length.
 
-      \text{Signal}[i+j-1] = \text{Signal}[i+j-1] - \text{filter}[j]
+3. **Iteration**:
+   Advance τ (1 time step) and repeat until the end of s(t).
 
-   Here, `Signal[i+j-1]` represents the value of the signal at a specific time step, and `filter[j]` is the value from the convolution result at the corresponding index `j`.
+This results in a sparse unipolar spike train, but reconstruction is biased downward due to the strict "≥ filter" condition.
 
-2. **Spike Detection**:
+**Detailed Pseudocode**
 
-   A spike is detected if the signal value surpasses the convolution result. The signal is then updated by subtracting the filter window from it. This step is performed iteratively across the entire signal, ensuring that spikes are detected and adjusted accordingly.
+Algorithm HSA Encoding
+   input: s signal, fir filter
+   L = length(s)
+   F = length(h)
+   out = zeros(L)
+   for t = 0 to L-F+1
+       count = 0
+       for j = 0 to F
+           if t+j < L
+               if s(t+j) >= fir(j)
+                   count += 1
+               end if
+           end if
+       end for
+       if count == F
+           out(t) = 1
+           for j = 0 to F
+               if t+j < L
+                   s(t+j) -= fir(j)
+               end if
+           end for
+       end if
+   end for
+   output: out
 
-**Implementation Steps**:
+**Advantages**
 
-1. **Create the Boxcar Filter Window**: A boxcar window of the specified length is used for the convolution operation.
-2. **Iterate Through the Signal**: Compare the signal values with the filter window and update the signal if a spike is detected.
-3. **Record Detected Spikes**: A spike array is maintained, where a `1` indicates a detected spike, and `0` indicates no spike.
+- Extremely simple and parameter-free — no tuning required beyond filter design.
+- Computationally lightweight and suitable for real-time encoding.
+- Produces unipolar spike trains reconstructible via simple FIR convolution.
+- Effective for signals within the filter's bandwidth, with minimal external parameters.
+- No threshold optimization needed, unlike modified HSA or BSA.
 
-**Advantages**:
+**Disadvantages**
 
-The Hough Spiker Algorithm is efficient in detecting spikes in signals, particularly when the spikes closely match the convolution filter shape. It is especially useful for signals where spikes need to be detected and progressively subtracted to prevent overlap in detection.
+- Limited to non-negative FIR filters — cannot use steep filters with negative taps, restricting bandwidth and sharpness.
+- Reconstruction is biased: converted signal always stays below the original due to strict "≥ filter" condition.
+- Errors increase with higher signal values and persist over time (cumulative bias).
+- Requires non-negative, [0, 1]-normalized inputs — preprocessing (shift/normalize) may be needed, potentially introducing artifacts.
+- Less flexible than threshold-based variants (modified HSA) or error-minimizing methods (BSA) for diverse signals.
 
 For a practical implementation in Python, see the :ref:`Hough Spiker Function <hough_spiker_function>`.
 
