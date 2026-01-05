@@ -6,7 +6,7 @@
 
 import numpy as np
 from scipy.signal import firwin
-from utils import WindowType
+from .utils import WindowType
 
 
 def hough_spiker(
