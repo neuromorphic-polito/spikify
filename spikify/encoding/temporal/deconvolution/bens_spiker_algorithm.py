@@ -34,8 +34,6 @@ def bens_spiker(
     A positive spike (+1) is emitted at time t if error1 ≤ error2 - threshold. When a spike is detected, the filter
     is subtracted from the corresponding signal segment, removing the detected pattern for subsequent iterations.
 
-    Refer to the :ref:`bens_spiker_algorithm_desc` for a detailed explanation of the Ben's Spiker algorithm.
-
     .. note::
         - BSA requires non-negative input signals. The function automatically shifts the signal by its minimum value
           (per feature) if negative values are present.
@@ -44,6 +42,8 @@ def bens_spiker(
           (sum ≈ 2 × max amplitude) for improved dynamic range and reduced saturation (recommended practice).
         - For multi-feature signals, the same filter shape is applied across all features, but scaling is performed
           independently per feature based on its amplitude.
+
+    Refer to the :ref:`bens_spiker_algorithm_desc` for a detailed explanation of the Ben's Spiker algorithm.
 
     **Code Example:**
 
@@ -97,7 +97,7 @@ def bens_spiker(
         - fir_bank: Final filter coefficients used (after scaling), shape (window_length, n_features)
     :rtype: tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]
     :raises ValueError: If the input signal is empty or if the threshold dimensions do not match the signal
-                        features or if the window_lenght is greater than the signal lenght.
+                        features or if the window_length is greater than the signal lenght.
     :raises TypeError: If the threshold parameter is of invalid dimension.
 
     """
