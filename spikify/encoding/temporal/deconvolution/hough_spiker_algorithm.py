@@ -25,9 +25,9 @@ def hough_spiker(
     HSA is a simple, parameter-free technique for converting non-negative analog signals (scaled to [0, 1]) into
     unipolar spike trains that can be accurately reconstructed via convolution with the same FIR filter used during
     encoding. It iteratively scans the signal with a sliding window of length equal to the FIR filter and emits a
-    positive spike (+1) at time t if the entire signal segment [t : t + window_length] is greater than or equal to
-    the filter coefficients pointwise. Upon detection, the filter is subtracted from the segment, effectively removing
-    the detected pattern for subsequent scans.
+    positive spike (+1) if the entire signal segment is greater than or equal to the filter coefficients pointwise.
+    Upon detection, the filter is subtracted from the segment, effectively removing the detected pattern for
+    subsequent scans.
 
     .. note::
         - HSA requires non-negative inputs; automatic shifting and normalization to [0, 1] is applied per feature.
@@ -84,7 +84,7 @@ def hough_spiker(
         - norm: Per-feature normalization values used to scale signal to [0, 1] (1D array)
         - fir_bank: Final filter coefficients used, shape (window_length, n_features)
     :rtype: tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, numpy.ndarray]
-    :raises ValueError: If the input signal is empty or if the window_lenght is greater than the signal lenght.
+    :raises ValueError: If the input signal is empty or if the window_length is greater than the signal lenght.
 
     """
     # Check for empty signal
@@ -120,7 +120,6 @@ def hough_spiker(
     signal_copy /= norm
 
     for f in range(F):
-        # Iterate over the signal to detect spikes
         for t in range(0, T - window_length + 1):
             # Count how many values match or exceed the filter window values
             match_count = np.sum(signal_copy[t : t + window_length, f] >= fir)
