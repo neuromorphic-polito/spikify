@@ -1,43 +1,72 @@
 .. _modified_hough_spiker_algorithm_desc:
 
-Modified Hough Spiker Encoding
+Modified Hough Spiker (MHSA) Encoding
 ================================
 
-The Modified Hough Spiker Algorithm (Modified HSA) builds upon the original Hough Spiker Algorithm by introducing a threshold mechanism to handle the detection process. While it maintains the core idea of subtractive, deconvolution-based spike detection, the modified version incorporates a threshold value to accumulate and evaluate errors.
+The Modified Hough Spiker Algorithm (MHSA) is a threshold-based improvement over the original Hough Spiker Algorithm (HSA).
 
-**Algorithm Overview**:
+The original HSA is very strict: it only emits a spike if the signal is greater than or equal to the FIR filter coefficients at **every single point** in the current window. Even a tiny dip below the filter at one position prevents spike detection.
 
-Modified HSA introduces a conditional check on the error accumulation during the spike detection process. This adjustment ensures that only significant deviations from the convolution function are considered as spikes, improving detection accuracy.
+MHSA relaxes this rule by allowing a small amount of accumulated error where the signal falls below the filter. It calculates the total shortfall (sum of the positive differences where the filter exceeds the signal) across the window. If this total error stays below a predefined threshold, a spike is still emitted, and the filter is subtracted from the signal segment as usual.
 
-1. **Error Accumulation**:
+This modification makes the algorithm more flexible and robust to noise, variations, or imperfect matches between signal and filter shape.
 
-   During the processing of each signal segment, the algorithm accumulates the error between the signal value and the convolution result:
+Like HSA, MHSA requires:
 
-   .. math::
+- Non-negative FIR filter coefficients (negative values cause failure)
+- Input signal normalized to [0, 1] (automatic shifting and normalization are typically applied)
 
-      \text{error} = \text{error} + (\text{filter}[j] - \text{Signal}[i + j - 1])
+**Algorithm Overview**
 
-   Here, `filter[j]` is the value from the convolution result at index `j`, and `Signal[i + j - 1]` is the corresponding signal value.
+1. **Error Accumulation**  
+   For each possible starting time in the signal, compute the accumulated error as the sum of (filter - signal) only where filter > signal (positive differences only).
 
-2. **Threshold Comparison**:
+2. **Threshold Check**  
+   If the total accumulated error ≤ threshold, emit a positive spike at that time and subtract the filter pattern from the signal segment.
 
-   The key modification in this algorithm is the conditional check on the accumulated error. The subtraction operation from the original HSA is only performed if the accumulated error stays within a specified threshold:
+3. **Iteration**  
+   Continue with the updated signal until the end of the sequence.
 
-   .. math::
+**Detailed Pseudocode**
 
-      \text{error} \leq \text{Threshold}
+.. code-block:: none
+   :linenos:
 
-   If this condition is met, the signal is updated by subtracting the convolution value, and a spike is detected.
+   MHSA Encoding Algorithm
+   input: s signal, fir filter, thr threshold
+   L = length(s)
+   F = length(h)
+   out = zeros(L)
+   for t = 0 to L-F
+       error = 0
+       for j = 0 to F
+           if t+j <= L
+               error += max(0, fir(j) - s(t+j))
+           end if
+       end for
+       if error <= thr
+           out(t) = 1
+           for j = 0 to F
+               if t+j <= L
+                   s(t+j) -= fir(j)
+               end if
+           end for
+       end if
+   end for
+   output: out
 
-**Implementation Steps**:
+**Advantages**
 
-1. **Compute Error**: Calculate the error by comparing the convolution filter values to the corresponding signal values.
-2. **Threshold Check**: Compare the accumulated error to the predefined threshold to determine if a spike should be detected.
-3. **Progressive Subtraction**: If the threshold condition is met, subtract the filter values from the signal, similar to the original HSA, but with enhanced control over detection.
+- Significantly better reconstruction quality than original HSA.
+- Much more flexible — detects spikes even with small noise or shape variations.
+- Smooth threshold optimization landscape — less sensitive to exact threshold value.
 
-**Advantages**:
+**Disadvantages**
 
-The Modified HSA allows for more flexible spike detection by considering cumulative errors. This approach is beneficial in scenarios where spikes are not distinctly above the convolution function but still significant enough to be detected.
+- Reconstruction biased high (tends to exceed original signal) due to relaxed error tolerance.
+- Errors larger at higher signal amplitudes and accumulate over time.
+- Still restricted to non-negative FIR filters — limits filter design options.
+- Input preprocessing (shift/normalize to [0, 1]) may introduce artifacts for arbitrary signals.
 
 For a practical implementation in Python, see the :ref:`Modified Hough Spiker Function <modified_hough_spiker_function>`.
 
