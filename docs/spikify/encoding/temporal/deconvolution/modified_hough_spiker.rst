@@ -70,7 +70,7 @@ Like HSA, MHSA requires:
 
 For a practical implementation in Python, see the :ref:`Modified Hough Spiker Function <modified_hough_spiker_function>`.
 
-**References**:
+**References**
 
 - Schrauwen, B., Van Campenhout, J. (2003). "HSA: A Progressive Subtraction Technique for Spike Detection." *Neurocomputing*.
 - Petro, P., et al. (2021). "Modified HSA with Thresholding for Enhanced Spike Detection." *Signal Processing Letters*.

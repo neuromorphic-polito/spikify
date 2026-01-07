@@ -3,7 +3,7 @@
 Ben's Spiker Algorithm (BSA) Encoding
 =========================================
 
-An analog signal can be constructed from a spike train by convolution with an FIR filter. BSA (Ben's Spiker Algorithm) is an algorithm for producing the spike train from which the original signal can be reconstructed well. BSA works only for positive-valued signals. First, an FIR filter is created. Then, two error terms are calculated at each time point: one that results from subtracting the filter coefficients from the subsequent signal values, and one that results from not changing the signal. If the subtraction error is smaller than the unchanged signal error term subtracted by a factor (threshold < 1), a positive spike is generated and the filter coefficients are subtracted from the signal. Decoding is straightforward since it was kept in mind during the encoding: a convolution of the spike train with the filter coefficients gives the reconstructed signal.
+An analog signal can be constructed from a spike train by convolution with an FIR filter. BSA (Ben's Spiker Algorithm) is an algorithm for producing the spike train from which the original signal can be reconstructed well. BSA works only for positive-valued signals. First, an FIR filter is created. Then, two error terms are calculated at each time point: one that results from subtracting the filter coefficients from the subsequent signal values, and one that results from not changing the signal. If the subtraction error is smaller than the unchanged signal error term subtracted by a factor, a positive spike is generated and the filter coefficients are subtracted from the signal. Decoding is straightforward since it was kept in mind during the encoding: a convolution of the spike train with the filter coefficients gives the reconstructed signal.
 
 BSA encoding results in a unipolar (only positive) spike train. The original BSA encoding requires input with [0, 1] limits. However, BSA can be applied to any positive-valued signal if the filter coefficients are scaled up such that they appropriately match the signal boundaries. Therefore, a simple signal shift above zero is sufficient.
 
@@ -39,7 +39,7 @@ When a spike is detected, the filter is subtracted from the corresponding segmen
        err2 = 0
        for k = 0:F
            err1 = err1 + abs(s(t+k) - fir(k))
-           err2 = err2 + abs(s(t + k))
+           err2 = err2 + abs(s(t+k))
        end for
        if err1 <= (err2 - thr)
            out(t) = 1
@@ -68,8 +68,8 @@ When a spike is detected, the filter is subtracted from the corresponding segmen
 - Non-smooth optimization landscape with multiple local peaks — parameter search (cutoff, filter size, threshold) is nontrivial.
 - Higher plateaus are particularly problematic if filter coefficients are not scaled up appropriately (e.g., sum of coefficients ≈ 2 × signal max recommended).
 
-**References**:
+**References**
 
 - Schrauwen, B., Van Campenhout, J. (2003). "BSA: An Efficient Algorithm for Time-Critical Signal Processing." *Neurocomputing*.
 - Petro, P., et al. (2020). "Revisiting the BSA for Modern Applications." *Signal Processing Letters*.
-- B. Petro, N. Kasabov and R. M. Kiss, "Selection and Optimization of Temporal Spike Encoding Methods for Spiking Neural Networks," in IEEE Transactions on Neural Networks and Learning Systems, vol. 31, no. 2, pp. 358-370, Feb. 2020, doi: 10.1109/TNNLS.2019.2906158.
+- B. Petro, N. Kasabov and R. M. Kiss, "Selection and Optimization of Temporal Spike Encoding Methods for Spiking Neural Networks," in IEEE Transactions on Neural Networks and Learning Systems.

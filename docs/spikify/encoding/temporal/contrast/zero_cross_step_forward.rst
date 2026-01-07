@@ -19,7 +19,7 @@ The ZCSF algorithm encodes signals by generating spikes based on the condition o
 
 2. **Threshold Definition**: Use a predefined threshold value (`threshold`) to determine when a spike should be emitted. The threshold is typically set based on the specific characteristics of the input signal or application requirements.
 
-3. **Spike Generation**: Emit a spike (value of 1) when the rectified signal exceeds the threshold. Unlike other encoding schemes, ZCSF does not consider negative spikes, and only positive spikes are generated when the signal value is higher than the threshold.
+3. **Spike Generation**: Emit a spike (+1) when the rectified signal exceeds the threshold. Unlike other encoding schemes, ZCSF does not consider negative spikes, and only positive spikes are generated when the signal value is higher than the threshold.
 
 **Detailed Pseudocode**
 
@@ -58,7 +58,7 @@ The ZCSF algorithm encodes signals by generating spikes based on the condition o
 
 For a practical implementation in Python, see the :ref:`Zero Cross Step Forward Function <zero_cross_step_forward_function>`.
 
-**References**:
+**References**
 
 - Wiren, A., Stubbs, A. (1956). "Zero-Crossing Techniques for Signal Processing." *Journal of Applied Signal Processing*.
 - Kedem, B. (1986). "Spectral Analysis of Point Processes." *IEEE Transactions on Acoustics, Speech, and Signal Processing*.

@@ -3,11 +3,11 @@
 Encoding
 ========
 
-The encoding techniques  are essential for transforming continuous data into discrete spikes, enabling effective processing in spiking neural networks. With the increasing availability of neuromorphic, event-based sensors, such as silicon retina cameras, the need for efficient spike encoding has become more crucial.
+The encoding techniques are essential for transforming continuous data into discrete spikes, enabling effective processing in spiking neural networks. With the increasing availability of neuromorphic, event-based sensors, such as silicon retina cameras, the need for efficient spike encoding has become more crucial.
 
 Two primary approaches exist for spike generation:
 
-1. **Model-Based Encoding**: This approach relies on specific neuron models to produce spikes in response to continuous signals, aligning with the Representation Principle of the Neural Engineering Framework (NEF).
+1. **Model-Based Encoding**: This approach relies on specific neuron models (e.g., leaky integrate-and-fire (LIF) neurons) to produce spikes in response to continuous signals, aligning with the Representation Principle of the Neural Engineering Framework (NEF).
 
 2. **Algorithm-Based Encoding**: This approach, which is the focus of the **spikify** library, transforms continuous signals into discrete spikes using a variety of algorithms. This method ensures the full exploitation of neuro-inspired strategies, even in the absence of dedicated neuromorphic hardware.
 

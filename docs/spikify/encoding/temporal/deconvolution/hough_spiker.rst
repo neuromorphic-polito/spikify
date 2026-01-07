@@ -12,13 +12,10 @@ HSA assumes a FIR filter with non-negative coefficients (e.g., low-pass filters 
 The core idea is to reverse the decoding convolution: iteratively detect and subtract filter patterns that "fit" under the signal curve.
 
 1. **Pointwise Comparison**:
-   For each starting time τ, check if s(t) ≥ h(t - τ) for all t in the filter support.
+   For each possible starting time, check whether the signal values in the window are greater than or equal to the corresponding filter coefficients at every single position.
 
 2. **Spike Emission and Subtraction**:
-   If the condition holds, emit a spike at τ and subtract h(t - τ) from s(t) over the filter length.
-
-3. **Iteration**:
-   Advance τ (1 time step) and repeat until the end of s(t).
+   If the condition holds (i.e., signal ≥ filter everywhere in the window), emit a positive spike (+1) at time t and subtract the filter coefficients from the signal segment.
 
 This results in a sparse unipolar spike train, but reconstruction is biased downward due to the strict "≥ filter" condition.
 
@@ -71,7 +68,7 @@ This results in a sparse unipolar spike train, but reconstruction is biased down
 
 For a practical implementation in Python, see the :ref:`Hough Spiker Function <hough_spiker_function>`.
 
-**References**:
+**References**
 
 - Schrauwen, B., Van Campenhout, J. (2003). "HSA: A Progressive Subtraction Technique for Spike Detection." *Neurocomputing*.
 - Petro, P., et al. (2020). "Revisiting the HSA for Modern Applications." *Signal Processing Letters*.
