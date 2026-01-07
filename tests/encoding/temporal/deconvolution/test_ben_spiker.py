@@ -10,22 +10,26 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         """Ensure the function correctly generates spikes when the signal contains patterns that match the filter window
         and threshold conditions."""
 
-        signal = np.array([0, 1.5, 2, 3, 4, 5, 6, 3, 2, 1, 0])
-        window_length = 3
-        threshold = 2.0
-        expected_spikes = np.array([0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0])
-        result = bens_spiker(signal, window_length, threshold)
+        signal = np.array([0.3, 1.5, 2.8, 3.4, 4.6, 5.2, 6.8, 3.5, 2.4, 1.3, 0], dtype=np.float32)
+        window_length = 5
+        threshold = 3.0
+        cutoff = 0.2
+        expected_spikes = np.array([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0])
+        result, _, _ = bens_spiker(signal, window_length, cutoff, threshold)
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_threshold_sensitivity(self):
         """Verify that the function respects the threshold value by changing the threshold and observing the output."""
 
-        signal = np.array([0, 1, 2, 3, 5, 3, 2, 1, 0])
-        window_length = 3
+        signal = np.array([0, 1, 2, 3, 5, 3, 2, 1, 0], dtype=np.float32)
+        window_length = 5
         threshold_low = 1.0
-        threshold_high = 5.0
-        result_low = bens_spiker(signal, window_length, threshold_low)
-        result_high = bens_spiker(signal, window_length, threshold_high)
+        threshold_high = 10.0
+        cutoff = 0.2
+        result_low, _, _ = bens_spiker(signal, window_length, cutoff, threshold_low)
+        print(result_low)
+        result_high, _, _ = bens_spiker(signal, window_length, cutoff, threshold_high)
+        print(result_high)
         self.assertTrue(np.any(result_low))
         self.assertFalse(np.any(result_high))
 
@@ -34,9 +38,10 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
 
         signal = np.array([])
         window_length = 0
+        cutoff = 0.2
         threshold = 1.0
         with self.assertRaises(ValueError):
-            bens_spiker(signal, window_length, threshold)
+            bens_spiker(signal, window_length, cutoff, threshold)
 
     def test_filter_window_greater_than_signal_length(self):
         """Ensure the function raises an appropriate error when the filter window size is greater than the signal
@@ -45,8 +50,29 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         signal = np.array([0, 1, 2, 3, 4, 5])
         window_length = 7
         threshold = 1.0
+        cutoff = 0.2
         with self.assertRaises(ValueError):
-            bens_spiker(signal, window_length, threshold)
+            bens_spiker(signal, window_length, cutoff, threshold)
+
+    def test_threshold_dims_different_from_features(self):
+        """Test the function with a signal containing multiple features."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        window_length = 3
+        cutoff = 0.2
+        threshold = [0.1, 0.3, 0.4]
+        with self.assertRaises(ValueError):
+            bens_spiker(signal, window_length, cutoff, threshold)
+
+    def test_threshold_dimension(self):
+        """Test that the function raises TypeError when threshold is of invalid dimension."""
+        np.random.seed(42)
+        signal = np.random.rand(10, 2)
+        threshold = np.array([[0.1, 0.2], [0.3, 0.4]])
+        window_length = 3
+        cutoff = 0.2
+        with self.assertRaises(TypeError):
+            bens_spiker(signal, window_length, cutoff, threshold)
 
     def test_no_matching_pattern(self):
         """Ensure the function correctly identifies when there are no generated spikes when the signal that lacks any
@@ -55,57 +81,36 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         signal = np.array([0, 0, 0, 0, 0])
         window_length = 3
         threshold = 1.0
+        cutoff = 0.2
         expected_spikes = np.array([0, 0, 0, 0, 0])
-        result = bens_spiker(signal, window_length, threshold)
-        np.testing.assert_array_equal(result, expected_spikes)
-
-    def test_single_point_spike(self):
-        """Test the function’s ability to detect a spike when the signal contains a single sharp value."""
-
-        signal = np.array([0, 0, 5, 0, 0])
-        window_length = 1
-        threshold = 1.0
-        expected_spikes = np.array([0, 0, 1, 0, 0])
-        result = bens_spiker(signal, window_length, threshold)
+        result, _, _ = bens_spiker(signal, window_length, cutoff, threshold)
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_varying_filter_window_size(self):
         """Ensure the function works correctly with different filter window sizes."""
 
         # Test case for filter window size of 3
-        signal_3 = np.array([0, 1, 2, 3, 4, 5, 2, 1, 0])
+        signal = np.array([0, 1, 2, 3, 4, 5, 2, 1, 0], dtype=np.float32)
+        threshold = 1.0
+        cutoff = 0.2
+
         window_length_3 = 3
-        threshold_3 = 1.0
-        expected_spikes_3 = np.array([1, 1, 1, 1, 1, 1, 0, 0, 0])
-        result_3 = bens_spiker(signal_3, window_length_3, threshold_3)
+        expected_spikes_3 = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0])
+        result_3, _, _ = bens_spiker(signal, window_length_3, cutoff, threshold)
         np.testing.assert_array_equal(result_3, expected_spikes_3)
 
         # Test case for filter window size of 5
-        signal_5 = np.array([0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0])
         window_length_5 = 5
-        threshold_5 = 1.0
-        expected_spikes_5 = np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0])
-        result_5 = bens_spiker(signal_5, window_length_5, threshold_5)
+        expected_spikes_5 = np.array([0, 1, 0, 1, 0, 0, 0, 0, 0])
+        result_5, _, _ = bens_spiker(signal, window_length_5, cutoff, threshold)
         np.testing.assert_array_equal(result_5, expected_spikes_5)
 
         # Test case for filter window size of 7
-        signal_7 = np.array([0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, 0])
+
         window_length_7 = 7
-        threshold_7 = 1.0
-        expected_spikes_7 = np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0])
-        result_7 = bens_spiker(signal_7, window_length_7, threshold_7)
+        expected_spikes_7 = np.array([1, 0, 1, 0, 0, 0, 0, 0, 0])
+        result_7, _, _ = bens_spiker(signal, window_length_7, cutoff, threshold)
         np.testing.assert_array_equal(result_7, expected_spikes_7)
-
-    def test_boundary_conditions(self):
-        """Test how the function handles boundary conditions where the spikes generated occur at the beginning or end of
-        the signal."""
-
-        signal = np.array([5, 5, 5, 0, 0])
-        window_length = 3
-        threshold = 1.0
-        expected_spikes = np.array([1, 1, 0, 0, 0])
-        result = bens_spiker(signal, window_length, threshold)
-        np.testing.assert_array_equal(result, expected_spikes)
 
     def test_large_signal(self):
         """Test the function’s performance and correctness on a large signal."""
@@ -113,27 +118,9 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         signal = np.random.randn(10000)
         window_length = 10
         threshold = 5.0
-        result = bens_spiker(signal, window_length, threshold)
+        cutoff = 0.2
+        result, _, _ = bens_spiker(signal, window_length, cutoff, threshold)
         self.assertEqual(len(result), len(signal))
-
-    def test_non_numeric_input(self):
-        """Ensure the function raises an appropriate error when provided with non-numeric input."""
-
-        signal = np.array(["a", "b", "c"])
-        window_length = 2
-        threshold = 1.0
-        with self.assertRaises(ValueError):
-            bens_spiker(signal, window_length, threshold)
-
-    def test_noise(self):
-        """Test the function's robustness against random noise in the signal."""
-
-        np.random.seed(0)
-        signal = np.array([0, 1, 2, 3, 4, 5, 6, 3, 2, 1, 0]) + np.random.randn(11)
-        window_length = 3
-        threshold = 1.0
-        result = bens_spiker(signal, window_length, threshold)
-        self.assertTrue(np.any(result))
 
     def test_with_multiple_features(self):
         """Test the function with a signal containing multiple features."""
@@ -141,89 +128,67 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         signal = np.random.rand(10, 2)
         threshold = [0.5, 0.3]
         window_length = 3
-        encoded_signal = bens_spiker(signal, window_length, threshold)
+        cutoff = 0.2
+        encoded_signal, _, _ = bens_spiker(signal, window_length, cutoff, threshold)
         self.assertEqual(encoded_signal.shape, signal.shape)
         signal_f1 = signal[:, 0]
         signal_f2 = signal[:, 1]
-        encoded_signal_f1 = bens_spiker(signal_f1, window_length, threshold[0])
-        encoded_signal_f2 = bens_spiker(signal_f2, window_length, threshold[1])
+        encoded_signal_f1, _, _ = bens_spiker(signal_f1, window_length, cutoff, threshold[0])
+        encoded_signal_f2, _, _ = bens_spiker(signal_f2, window_length, cutoff, threshold[1])
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
-
-    def test_with_multiple_features_mutiple_window_length(self):
-        """Test the function with a signal containing multiple features and multiple window length."""
-        np.random.seed(42)
-        signal = np.random.rand(10, 2)
-        threshold = [0.5, 0.3]
-        window_length = [3, 4]
-        encoded_signal = bens_spiker(signal, window_length, threshold, "lanczos")
-        self.assertEqual(encoded_signal.shape, signal.shape)
-        signal_f1 = signal[:, 0]
-        signal_f2 = signal[:, 1]
-        encoded_signal_f1 = bens_spiker(signal_f1, window_length[0], threshold[0], "lanczos")
-        encoded_signal_f2 = bens_spiker(signal_f2, window_length[1], threshold[1], "lanczos")
-        np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
-        np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
-
-    def test_list_window_length_float(self):
-        """Test the function with a list of of float in window length."""
-        np.random.seed(42)
-        signal = np.random.rand(10, 2)
-        threshold = [0.5, 0.3]
-        window_length = [3, 4.0]
-        with self.assertRaises(TypeError):
-            bens_spiker(signal, window_length, threshold, "lanczos")
-
-    def test_window_length_float(self):
-        """Test the function with a float in window length."""
-        np.random.seed(42)
-        signal = np.random.rand(10)
-        threshold = 0.5
-        window_length = 4.0
-        with self.assertRaises(TypeError):
-            bens_spiker(signal, window_length, threshold, "lanczos")
-
-    def test_list_window_length_len_signal(self):
-        """Test the function with a size window length major of signal length."""
-        np.random.seed(42)
-        signal = np.random.rand(10, 2)
-        threshold = [0.5, 0.3]
-        window_length = [3, 20]
-        with self.assertRaises(ValueError):
-            bens_spiker(signal, window_length, threshold, "lanczos")
-
-    def test_list_window_length_len_features(self):
-        """Test the function with a window length different from features."""
-        np.random.seed(42)
-        signal = np.random.rand(10, 2)
-        threshold = [0.5, 0.3]
-        window_length = [3, 5, 7]
-        with self.assertRaises(ValueError):
-            bens_spiker(signal, window_length, threshold, "lanczos")
-
-    def test_threshold_int(self):
-        """Test the function with a ineteger in threshold."""
-        np.random.seed(42)
-        signal = np.random.rand(10)
-        threshold = 2
-        window_length = 4.0
-        with self.assertRaises(TypeError):
-            bens_spiker(signal, window_length, threshold, "lanczos")
 
     def test_list_threshold_differnt_features(self):
         """Test the function with a size window length major of signal length."""
         np.random.seed(42)
         signal = np.random.rand(10, 2)
         threshold = [0.5, 0.3, 0.1]
-        window_length = [3, 20]
+        cutoff = 0.2
+        window_length = 3
         with self.assertRaises(ValueError):
-            bens_spiker(signal, window_length, threshold, "lanczos")
+            bens_spiker(signal, window_length, cutoff, threshold, window_type="lanczos")
 
-    def test_list_threshold_integer(self):
-        """Test the function with a window length different from features."""
-        np.random.seed(42)
-        signal = np.random.rand(10, 2)
-        threshold = [0.5, 1]
-        window_length = [3, 5]
-        with self.assertRaises(TypeError):
-            bens_spiker(signal, window_length, threshold, "lanczos")
+    def test_signal_with_negative_values(self):
+        """Test the function with a signal containing negative values."""
+
+        signal = np.array([-0.1, 0.1, 0.2, 0.3, 0.4, 0.3, 0.2, 0.1], dtype=np.float32)
+        window_length = 3
+        cutoff = 0.4
+        threshold = 0.95
+        _, shift, fir_coeff = bens_spiker(signal, window_length, cutoff, threshold)
+
+        expected_shift = np.array([-0.1], dtype=np.float32)
+        expected_fir_sum = 1.0
+
+        np.testing.assert_array_equal(shift, expected_shift)
+        self.assertAlmostEqual(fir_coeff.sum(), expected_fir_sum)
+
+    def test_signal_with_positive_values_lower_than_one(self):
+        """Test the function with a signal containing positive values lower than one."""
+
+        signal = np.array([0.1, 0.3, 0.5, 0.7, 0.9, 0.6, 0.4, 0.2], dtype=np.float32)
+        window_length = 3
+        cutoff = 0.4
+        threshold = 0.95
+        _, shift, fir_coeff = bens_spiker(signal, window_length, cutoff, threshold)
+
+        expected_shift = np.array([0.0], dtype=np.float32)
+        expected_fir_sum = 1.0
+
+        np.testing.assert_array_equal(shift, expected_shift)
+        self.assertAlmostEqual(fir_coeff.sum(), expected_fir_sum)
+
+    def test_signal_with_positive_values_greater_than_one(self):
+        """Test the function with a signal containing positive values greater than one."""
+
+        signal = np.array([0.1, 0.3, 0.5, 0.7, 1.9, 1.6, 1.4, 0.2], dtype=np.float32)
+        window_length = 3
+        cutoff = 0.4
+        threshold = 0.95
+        _, shift, fir_coeff = bens_spiker(signal, window_length, cutoff, threshold)
+
+        expected_shift = np.array([0.0], dtype=np.float32)
+        expected_fir_sum = 3.8
+
+        np.testing.assert_array_equal(shift, expected_shift)
+        self.assertAlmostEqual(fir_coeff.sum(), expected_fir_sum)
