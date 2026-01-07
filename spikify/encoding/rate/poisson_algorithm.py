@@ -1,20 +1,20 @@
 """
 .. raw:: html
 
-    <h2>Poisson Rate Algorithm</h2>
+    <h2>Poisson Algorithm</h2>
 """
 
 import numpy as np
 
 
-def poisson_rate(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.ndarray:
+def poisson(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.ndarray:
     """
-    Perform Poisson rate encoding on the input signal.
+    Perform Poisson encoding on the input signal.
 
     This function generates a spike train using a Poisson distribution,
     where the probability of emitting a spike in a given interval is determined by the normalized rate of the signal.
 
-    See the :ref:`poisson_rate_algorithm_desc` description for a detailed explanation of the Poisson rate encoding
+    See the :ref:`poisson_algorithm_desc` description for a detailed explanation of the Poisson encoding
     algorithm.
 
     **Code Example:**
@@ -22,23 +22,23 @@ def poisson_rate(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.
     .. code-block:: python
 
             import numpy as np
-            from spikify.encoding.rate import poisson_rate
+            from spikify.encoding.rate import poisson
             signal = np.array([0.2, 0.5, 0.8, 1.0])
             np.random.seed(0)
             interval_length = 2
-            encoded_signal = poisson_rate(signal, interval_length)
+            encoded_signal = poisson(signal, interval_length)
 
     .. doctest::
         :hide:
 
         >>> import numpy as np
-        >>> from spikify.encoding.rate import poisson_rate
+        >>> from spikify.encoding.rate import poisson
         >>> # Example with numpy array
         >>> signal = np.array([0.2, 0.5, 0.8, 1.0])
         >>> # Set seed for reproducibility (optional)
         >>> np.random.seed(0)
         >>> interval_length = 2
-        >>> encoded_signal = poisson_rate(signal, interval_length)
+        >>> encoded_signal = poisson(signal, interval_length)
         >>> encoded_signal
         array([0, 0, 1, 1], dtype=int8)
 
@@ -48,7 +48,7 @@ def poisson_rate(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.
     :type interval_length: int
     :param seed: Random seed for reproducibility. Default is 0.
     :type seed: int
-    :return: A numpy array of encoded spike data after Poisson rate encoding.
+    :return: A numpy array of encoded spike data after Poisson encoding.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty.
     :raises ValueError: If the interval is not a factor of the signal length.
@@ -87,7 +87,7 @@ def poisson_rate(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.
     # Initialize the spike array
     spikes = np.zeros((S // interval_length, interval_length, F), dtype=np.int8)
 
-    # Create bins for Poisson rate encoding
+    # Create bins for Poisson encoding
     bins = np.linspace(0, 1, interval_length + 1)
 
     # Generate Poisson spike trains

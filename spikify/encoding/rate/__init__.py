@@ -1,5 +1,5 @@
 """Rate package."""
 
-from .poisson_rate_algorithm import poisson_rate
+from .poisson_algorithm import poisson
 
-__all__ = ["poisson_rate"]
+__all__ = ["poisson"]

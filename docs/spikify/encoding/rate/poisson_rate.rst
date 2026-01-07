@@ -1,13 +1,13 @@
-.. _poisson_rate_algorithm_desc:
+.. _poisson_algorithm_desc:
 
-Poisson Rate Encoding
+Poisson Encoding
 ======================
 
-Poisson rate encoding is a neural encoding strategy used to convert continuous signals into discrete spike trains using a Poisson distribution. This method is effective in neural modeling, particularly in rate coding strategies where the spike rate corresponds to the intensity of the input signal.
+Poisson encoding is a neural encoding strategy used to convert continuous signals into discrete spike trains using a Poisson distribution. This method is effective in neural modeling, particularly in rate coding strategies where the spike rate corresponds to the intensity of the input signal.
 
 **Algorithm Overview**:
 
-The Poisson rate encoding uses a Poisson distribution to model the probability of emitting a certain number of spikes (:math:`n`) over a given time interval (:math:`\Delta t`). The probability of having :math:`n` spikes in an interval :math:`\Delta t` is described by the formula:
+The Poisson encoding uses a Poisson distribution to model the probability of emitting a certain number of spikes (:math:`n`) over a given time interval (:math:`\Delta t`). The probability of having :math:`n` spikes in an interval :math:`\Delta t` is described by the formula:
 
 .. math::
 
@@ -42,9 +42,9 @@ The implementation of this algorithm can be performed through the following step
 
 **Applications**:
 
-Poisson rate encoding is utilized in various neural network models that require a spike-based representation of continuous input data. This encoding method is particularly useful in simulating sensory neurons and other neural circuits where input signals need to be transformed into spike trains suitable for spiking neural networks (SNNs).
+Poisson encoding is utilized in various neural network models that require a spike-based representation of continuous input data. This encoding method is particularly useful in simulating sensory neurons and other neural circuits where input signals need to be transformed into spike trains suitable for spiking neural networks (SNNs).
 
-For details on how to implement this algorithm in Python, refer to the :ref:`Poisson Rate Function <poisson_rate_function>`.
+For details on how to implement this algorithm in Python, refer to the :ref:`Poisson Function <poisson_function>`.
 
 **References**:
 
