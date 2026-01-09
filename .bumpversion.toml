@@ -30,3 +30,8 @@ replace = "version = \"{new_version}\""
 filename = "spikify/version.py"
 search = "__version__ = \"{current_version}\""
 replace = "__version__ = \"{new_version}\""
+
+[[tool.bumpversion.files]]
+filename = "codemeta.json"
+search = "version: \"{current_version}\""
+replace = "version: \"{new_version}\""
