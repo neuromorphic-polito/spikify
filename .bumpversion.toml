@@ -35,3 +35,9 @@ replace = "__version__ = \"{new_version}\""
 filename = "codemeta.json"
 search = "\"version\": \"{current_version}\""
 replace = "\"version\": \"{new_version}\""
+
+[[tool.bumpversion.files]]
+filename = "codemeta.json"
+search = "\"downloadUrl\": \"https://github.com/neuromorphic-polito/spikify/releases/tag/{current_version}"
+replace = "\"downloadUrl\": \"https://github.com/neuromorphic-polito/spikify/releases/tag/{new_version}"
+
