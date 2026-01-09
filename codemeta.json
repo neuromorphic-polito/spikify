@@ -56,14 +56,14 @@
             "type": "Organization",
             "name": "Department of Control and Computer Engineering, Politecnico di Torino"
         },
-        "email": "benedetto.letoi@polito.it",
+        "email": "benedetto.leto@polito.it",
         "familyName": "Leto",
         "givenName": "Benedetto"
     },
     "dateCreated": "2025-04-11",
     "dateModified": "2025-04-11",
     "datePublished": "2025-04-11",
-    "description": "A fully Convert your data into spike-based signals for efficient and biologically-inspired spiking neural network applications, enabling faster and more energy-efficient computations.",
+    "description": "A Python package to convert your data into spike-based signals for efficient and biologically-inspired spiking neural network applications, enabling faster and more energy-efficient computations.",
     "funder": {
         "type": "Organization",
         "name": "NRRP-RI, M4C2, funded by the European Union - NextGenerationEU"
