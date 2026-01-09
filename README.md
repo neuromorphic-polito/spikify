@@ -1,6 +1,6 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/neuromorphic-polito/spikify/42e47995b238a3dafbfe30480277edde62a2736e/docs/_static/white_logo.svg" width=500>
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/neuromorphic-polito/spikify/42e47995b238a3dafbfe30480277edde62a2736e/docs/_static/dark_logo.svg" width=500>
+<picture align="center">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/neuromorphic-polito/spikify/42e47995b238a3dafbfe30480277edde62a2736e/docs/_static/dark_logo.svg" width=500>
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/neuromorphic-polito/spikify/42e47995b238a3dafbfe30480277edde62a2736e/docs/_static/white_logo.svg" width=500>
   <img alt="spikify" src="https://raw.githubusercontent.com/neuromorphic-polito/spikify/42e47995b238a3dafbfe30480277edde62a2736e/docs/_static/white_logo.svg">
 </picture>
 
