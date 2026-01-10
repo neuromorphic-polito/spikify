@@ -30,7 +30,7 @@ class TestPoissonRateEncoding(unittest.TestCase):
 
     def test_signal_normalization(self):
         """Ensure the function normalizes the signal correctly."""
-        signal = np.array([0, 1, 2, 3, 4])
+        signal = np.array([0, 1, 2, 3, 4], dtype=np.float32)
         interval = 5
         result = poisson(signal, interval)
         self.assertTrue(np.all(result <= 1))
