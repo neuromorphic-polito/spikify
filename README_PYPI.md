@@ -35,11 +35,11 @@ Here is a simple example to get started:
 ```python
 import numpy as np
 from spikify.filtering import FilterBank
-from spikify.encoding.rate import poisson_rate
+from spikify.encoding.rate import poisson
 
 # Generate a sinusoidal signal
-time = np.linspace(0, 2 * np.pi, 100)  # Time from 0 to 2*pi
-amplitude = np.sin(time)  # Sinusoidal signal
+time = np.linspace(0, 4 * np.pi, 200)
+signal = np.sin(2 * time) + 0.5 * np.sin(4 * time)
 
 filter = FilterBank(fs=50, channels=5, f_min=0.5, f_max=5, order=4, filter_type='butterworth')
 
@@ -48,7 +48,7 @@ filtered_signal = filter.decompose(signal) # (timesteps, channels, features)
 filtered_signal = np.reshape(filtered_signal, (-1, filtered_signal.shape[1] * filtered_signal.shape[2]))
 
 # Encode the filtered signal
-encoded_signal = poisson_rate(filtered_signal, interval_length=2)
+encoded_signal = poisson(filtered_signal, interval_length=2)
 ```
 
 For more detailed examples and usage, please refer to the [documentation](https://spikify.readthedocs.io/en/latest/).
