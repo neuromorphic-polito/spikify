@@ -13,7 +13,7 @@ Spikes are generated independently with probability proportional to the input va
 
 .. math::
 
-   P(k; \lambda) = \frac{\lambda^k e^{-\lambda}}{k!}, \quad \lambda = r(t) \cdot \Delta t
+   P(k; \Delta t) = \frac{\lambda^k e^{-\lambda}}{k!}, \quad \lambda = r(t) \cdot \Delta t
 
 where:
 

@@ -64,6 +64,7 @@ def poisson(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.ndarr
     :raises TypeError: If the signal is not a numpy.ndarray
 
     """
+
     # Check for empty signal
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
@@ -97,7 +98,7 @@ def poisson(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.ndarr
         signal_copy[:, f] /= max_amp[f]
 
     # Compute mean over the signal reshaped to interval-sized chunks
-    interval_rate = np.mean(signal_copy.reshape(T // interval_length, interval_length, F), axis=1)
+    interval_rate_mean = np.mean(signal_copy.reshape(T // interval_length, interval_length, F), axis=1)
 
     spikes = np.zeros((T // interval_length, interval_length, F), dtype=np.int8)
 
@@ -105,9 +106,11 @@ def poisson(signal: np.ndarray, interval_length: int, seed: int = 0) -> np.ndarr
     bins = np.linspace(0, 1, interval_length + 1)
 
     for feat in range(F):
-        for idx, rate in enumerate(interval_rate[:, feat]):
+        for idx, rate in enumerate(interval_rate_mean[:, feat]):
             if rate > 0:
-                ISI = -np.log(1 - np.random.random(interval_length)) / (rate * interval_length)  # inter-spike intervals
+                ISI = -np.log(1 - np.random.random(interval_length)) / (  # inter-spike intervals where probability of
+                    rate * interval_length  # having k=0 spikes is equal to rate (time
+                )  # amount to wait to see the next spike)
                 spike_times = np.searchsorted(bins, np.cumsum(ISI)) - 1  # find spike times
                 spike_times = spike_times[spike_times < interval_length]  # clip times within interval
                 spikes[idx, spike_times, feat] = 1
