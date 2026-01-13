@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def phase_encoding(signal: np.ndarray, num_bits: int) -> np.ndarray:
+def phase(signal: np.ndarray, num_bits: int) -> np.ndarray:
     """
     Perform phase encoding on the input signal based on the given settings.
 
@@ -23,20 +23,20 @@ def phase_encoding(signal: np.ndarray, num_bits: int) -> np.ndarray:
     .. code-block:: python
 
         import numpy as np
-        from spikify.encoding.temporal.global_referenced import phase_encoding
+        from spikify.encoding.temporal.global_referenced import phase
         signal = np.array([0.1, 0.2, 0.3, 1.0, 0.5, 0.3, 0.1, 0.2])
         num_bits = 4
-        encoded_signal = phase_encoding(signal, num_bits)
+        encoded_signal = phase(signal, num_bits)
 
 
     .. doctest::
         :hide:
 
         >>> import numpy as np
-        >>> from spikify.encoding.temporal.global_referenced import phase_encoding
+        >>> from spikify.encoding.temporal.global_referenced import phase
         >>> signal = np.array([0.1, 0.2, 0.3, 1.0, 0.5, 0.3, 0.1, 0.2])
         >>> num_bits = 4
-        >>> encoded_signal = phase_encoding(signal, num_bits)
+        >>> encoded_signal = phase(signal, num_bits)
         >>> encoded_signal
         array([1, 1, 1, 1, 1, 0, 0, 0], dtype=uint8)
 
@@ -49,46 +49,52 @@ def phase_encoding(signal: np.ndarray, num_bits: int) -> np.ndarray:
     :raises ValueError: If the input signal is empty or if the number of bits is not appropriate for the signal length.
 
     """
+
     # Check for invalid inputs
     if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
-    if len(signal) % num_bits != 0:
-        raise ValueError(
-            f"The phase_encoding num_bits ({num_bits}) is not a multiple of the signal length ({len(signal)})."
-        )
-
+    # Ensure 2D processing (T, F)
     if signal.ndim == 1:
         signal = signal.reshape(-1, 1)
 
-    S, F = signal.shape
+    T, F = signal.shape
+
+    if T % num_bits != 0:
+        raise ValueError(f"The phase_encoding num_bits ({num_bits}) is not a multiple of the signal length ({T}).")
+
+    signal_copy = np.copy(signal)
+
     # Ensure non-negative signal values
-    signal = np.clip(signal, 0, None)
+    signal_copy = np.clip(signal_copy, 0, None)
 
     # Compute mean over the signal reshaped to bit-sized chunks
-    signal = np.mean(signal.reshape(signal.shape[0] // num_bits, num_bits, signal.shape[1]), axis=1)
-    signal_max = signal.max(axis=0)  # shape (F,)
+    interval_bit_mean = np.mean(signal_copy.reshape(T // num_bits, num_bits, F), axis=1)
 
-    for i in range(signal.shape[1]):  # per ogni feature
-        if signal_max[i] > 0:
-            signal[:, i] /= signal_max[i]
+    max_amp = interval_bit_mean.max(axis=0)
 
-    # Compute the phase angles based on the signal
-    phase = np.arcsin(signal)
+    # Find features that require scaling
+    features_to_scale = np.where(max_amp > 0)[0]
 
-    # Create phase bins and quantize the phase
+    for f in features_to_scale:
+        interval_bit_mean[:, f] /= max_amp[f]
+
+    phase = np.arcsin(interval_bit_mean)
+
     bins = np.linspace(0, np.pi / 2, 2**num_bits + 1)
     levels = np.searchsorted(bins, phase)
 
     # Adjust levels to avoid out-of-range values
     levels = np.clip(levels, 0, 2**num_bits - 1)
 
-    N, F = levels.shape
-    spikes = np.zeros((N * num_bits, F), dtype=np.uint8)
+    spikes = np.zeros((T, F), dtype=np.uint8)
 
-    # Vectorized bit extraction for all features and samples
+    # Shift and extract bits
+    # Each integer is represented in binary using `num_bits` bits.
+    # The signal (levels) is right-shifted bit-by-bit to bring each bit position to the least significant bit,
+    # then masked with &1 to extract it (1 if set, 0 otherwise).
     bits_arr = ((levels[..., None] >> np.arange(num_bits - 1, -1, -1)) & 1).astype(np.uint8)
-    spikes = bits_arr.transpose(0, 2, 1).reshape(N * num_bits, F)
+    spikes = bits_arr.transpose(0, 2, 1).reshape(T, F)
 
     if F == 1:
         spikes = spikes.flatten()
