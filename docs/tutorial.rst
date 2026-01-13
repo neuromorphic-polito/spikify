@@ -39,14 +39,14 @@ Now, let's encode the sinusoidal signal into spikes using the `poisson_rate` met
 
 .. code-block:: python
 
-   from spikify.encoding.rate import poisson_rate
+   from spikify.encoding.rate import poisson
 
    # Set parameters for encoding
    np.random.seed(0)  # For reproducibility
    interval_length = 5  # Length of the encoding interval
 
    # Encode the sinusoidal signal
-   encoded_signal = poisson_rate(signal, interval_length)
+   encoded_signal = poisson(signal, interval_length)
 
    # Encode the filtered signal
    encoded_filtered_signal = poisson_rate(filtered_signal, interval_length)
