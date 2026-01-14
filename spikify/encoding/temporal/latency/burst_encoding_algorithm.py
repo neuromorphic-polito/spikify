@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def burst_encoding(signal: np.ndarray, n_max: int, t_min: int, t_max: int, length: int) -> np.ndarray:
+def burst_encoding(signal: np.ndarray, n_max: int, t_min: int, t_max: int, interval_length: int) -> np.ndarray:
     """
     Perform burst encoding on the input signal.
 
@@ -57,48 +57,53 @@ def burst_encoding(signal: np.ndarray, n_max: int, t_min: int, t_max: int, lengt
     :param t_max: The maximum inter-spike interval (ISI).
     :type t_max: int
     :param length: The total length of the encoded signal.
-    :type length: int
+    :type interval_length: int
     :return: A 1D numpy array representing the burst-encoded spike train.
     :rtype: numpy.ndarray
     :raises ValueError: If the input signal is empty or the length is not a multiple of the signal length.
     :raises ValueError: If the required spike train length exceeds the provided length.
 
     """
-    is_1d = signal.ndim == 1
-    if is_1d:
-        signal = signal[:, None]
-
-    S, F = signal.shape
-
-    if S == 0:
+    # Check for empty signal
+    if len(signal) == 0:
         raise ValueError("Signal cannot be empty.")
 
-    if S % length != 0:
-        raise ValueError(
-            f"The burst_encoding length ({length}) is not a multiple of the signal length ({len(signal)})."
-        )
+    # Ensure 2D processing (T, F)
+    if signal.ndim == 1:
+        signal = signal.reshape(-1, 1)
 
-    signal = np.clip(signal, 0, None)
-    signal = np.mean(signal.reshape(-1, length, F), axis=1)
+    T, F = signal.shape
 
-    signal_max = signal.max(axis=0)
+    if T % interval_length != 0:
+        raise ValueError(f"The interval_length ({interval_length}) is not a factor of the signal length ({T}).")
+
+    signal_copy = signal.copy()
+
+    signal_copy = np.clip(signal_copy, 0, None)
+    signal_copy = np.mean(signal_copy.reshape(-1, interval_length, F), axis=1)
+
+    signal_max = signal_copy.max(axis=0)
     signal_max[signal_max == 0] = 1
-    signal /= signal_max
+    signal_copy /= signal_max
 
-    spike_num = np.ceil(signal * n_max).astype(int)
-    ISI = np.ceil(t_max - signal * (t_max - t_min)).astype(int)
+    spike_num = np.ceil(signal_copy * n_max).astype(int)
+    ISI = np.ceil(t_max - signal_copy * (t_max - t_min)).astype(int)
 
     required_length = np.max(spike_num * (ISI + 1))
-    if length < required_length:
+    if interval_length < required_length:
         raise ValueError(f"Invalid stream length, the min length is {required_length}")
 
-    spikes = np.zeros((signal.shape[0], length, signal.shape[1]), dtype=np.int8)
+    spikes = np.zeros((T // interval_length, interval_length, F), dtype=np.int8)
 
-    for i in range(signal.shape[0]):
-        for f in range(signal.shape[1]):
+    for i in range(signal_copy.shape[0]):
+        for f in range(F):
             spike_times = np.arange(0, spike_num[i, f] * (ISI[i, f] + 1), ISI[i, f] + 1)
-            spikes[i, spike_times[spike_times < length], f] = 1
+            spikes[i, spike_times[spike_times < interval_length], f] = 1
 
-    spikes = spikes.reshape(-1, signal.shape[1])
+    spikes = spikes.reshape(-1, F)
 
-    return spikes.ravel() if is_1d else spikes
+    # Flatten if input was 1D
+    if F == 1:
+        spikes = spikes.flatten()
+
+    return spikes
