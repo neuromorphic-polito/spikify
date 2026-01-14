@@ -9,7 +9,7 @@ import numpy as np
 
 def phase(signal: np.ndarray, num_bits: int) -> np.ndarray:
     """
-    Perform phase encoding on the input signal based on the given settings.
+    Perform Phase Encoding (PE) on the input signal.
 
     This function encodes the input signal by calculating the phase angles
     of the normalized signal and quantizing these angles into a binary
@@ -61,7 +61,7 @@ def phase(signal: np.ndarray, num_bits: int) -> np.ndarray:
     T, F = signal.shape
 
     if T % num_bits != 0:
-        raise ValueError(f"The phase_encoding num_bits ({num_bits}) is not a multiple of the signal length ({T}).")
+        raise ValueError(f"The phase_encoding num_bits ({num_bits}) is not a factor of the signal length ({T}).")
 
     signal_copy = np.copy(signal)
 
@@ -96,6 +96,7 @@ def phase(signal: np.ndarray, num_bits: int) -> np.ndarray:
     bits_arr = ((levels[..., None] >> np.arange(num_bits - 1, -1, -1)) & 1).astype(np.uint8)
     spikes = bits_arr.transpose(0, 2, 1).reshape(T, F)
 
+    # Flatten if input was 1D
     if F == 1:
         spikes = spikes.flatten()
 
