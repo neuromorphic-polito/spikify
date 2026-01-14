@@ -30,3 +30,25 @@ replace = "version = \"{new_version}\""
 filename = "spikify/version.py"
 search = "__version__ = \"{current_version}\""
 replace = "__version__ = \"{new_version}\""
+
+[[tool.bumpversion.files]]
+filename = "codemeta.json"
+search = "\"version\": \"{current_version}\""
+replace = "\"version\": \"{new_version}\""
+
+[[tool.bumpversion.files]]
+filename = "codemeta.json"
+search = "\"downloadUrl\": \"https://github.com/neuromorphic-polito/spikify/releases/tag/{current_version}"
+replace = "\"downloadUrl\": \"https://github.com/neuromorphic-polito/spikify/releases/tag/{new_version}"
+
+[[tool.bumpversion.files]]
+filename = "codemeta.json"
+search = "\"dateModified\": \"\\d{{4}}-\\d{{2}}-\\d{{2}}\""
+replace = "\"dateModified\": \"{now:%Y-%m-%d}\""
+regex = true
+
+[[tool.bumpversion.files]]
+filename = "codemeta.json"
+search = "\"datePublished\": \"\\d{{4}}-\\d{{2}}-\\d{{2}}\""
+replace = "\"datePublished\": \"{now:%Y-%m-%d}\""
+regex = true
