@@ -1,7 +1,7 @@
 .. _modified_hough_spiker_algorithm_desc:
 
 Modified Hough Spiker (MHSA) Encoding
-================================
+=========================================
 
 The Modified Hough Spiker Algorithm (MHSA) is a threshold-based improvement over the original Hough Spiker Algorithm (HSA).
 

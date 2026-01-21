@@ -27,7 +27,7 @@ where:
    :linenos:
 
    Algorithm Poisson Encoding
-   input: s signal, Δt unterval length
+   input: s signal, Δt interval length
    out = zeros(length(s))
    n_blocks = T // Δt
    blocks = reshape(s, (n_blocks, Δt))
@@ -58,9 +58,8 @@ where:
 
 - Extremely dense spike trains — high energy consumption and synaptic events in neuromorphic hardware.
 - Complete loss of precise temporal information — only average rate matters.
-- High latency — many spikes required for accurate rate estimation.
-- Not event-driven — generates spikes even during constant input, unlike temporal contrast methods (TBR, SF, etc.).
-- Less efficient than sparse, deterministic encodings (e.g., TTFS, rank-order) for rapid processing or low-power applications.
+- Not event-driven — generates spikes even during constant input, unlike temporal contrast methods (:ref:`TBR <threshold_based_representation_algorithm_desc>`, :ref:`SF <step_forward_algorithm_desc>`, etc.).
+- Less efficient than sparse, deterministic encodings (e.g., :ref:`TTFS <time_to_first_spike_algorithm_desc>`) for rapid processing or low-power applications.
 
 For details on how to implement this algorithm in Python, refer to the :ref:`Poisson Function <poisson_function>`.
 
