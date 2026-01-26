@@ -14,4 +14,4 @@ Below, you will find links to the specific modules for each rate coding algorith
 .. toctree::
    :maxdepth: 1
 
-   poisson_rate
+   poisson
