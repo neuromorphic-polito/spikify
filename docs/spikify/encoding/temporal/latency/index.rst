@@ -12,4 +12,4 @@ A prime example of this class is Burst Encoding, which utilizes the burst of spi
 .. toctree::
    :maxdepth: 1
 
-   burst_encoding
+   burst_coding
