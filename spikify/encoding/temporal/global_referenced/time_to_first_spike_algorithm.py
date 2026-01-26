@@ -46,7 +46,7 @@ def time_to_first_spike(signal: np.ndarray, interval_length: int) -> np.ndarray:
          >>> interval_length = 4
          >>> encoded_signal = time_to_first_spike(signal, interval_length)
          >>> encoded_signal
-         array([1, 0, 0, 0, 0, 1, 0, 0], dtype=int8)
+         array([0, 1, 0, 0, 0, 1, 0, 0], dtype=int8)
 
      :param signal: Input signal to encode (1D or 2D: timestamps × features).
      :type signal: numpy.ndarray
