@@ -103,9 +103,10 @@ def time_to_first_spike(signal: np.ndarray, interval_length: int) -> np.ndarray:
     for f in range(F):
         spikes[np.arange(T // interval_length), np.clip(levels[:, f], 0, interval_length - 1), f] = 1
 
-    # Reshape the spike array into 1D
+    spikes = spikes.reshape(T, F)
+
+    # Flatten if input was 1D
     if F == 1:
         spikes = spikes.flatten()
-    else:
-        spikes = spikes.reshape(T, F)
+
     return spikes
