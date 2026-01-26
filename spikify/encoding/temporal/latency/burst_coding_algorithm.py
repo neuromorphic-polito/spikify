@@ -11,7 +11,7 @@ def burst_coding(signal: np.ndarray, n_max: int, t_min: int, t_max: int, interva
     """
     Perform Burst enCoding (BC) on the input signal.
 
-    TThis function implements a biologically inspired burst coding scheme where each input
+    This function implements a biologically inspired burst coding scheme where each input
     intensity (normalized P ∈ [0, 1]) is converted into a burst of spikes:
 
     - Number of spikes N_s(P) = ceil(P * n_max)
@@ -22,7 +22,7 @@ def burst_coding(signal: np.ndarray, n_max: int, t_min: int, t_max: int, interva
     intensity per block determines the burst parameters (N_s and ISI). The burst is placed at
     regular intervals starting from the beginning of the output block.
 
-    Larger intensities produce bursts with more spikes and smaller ISIs. The ``interval_length``
+    Higher intensities produce bursts with more spikes and smaller ISIs. The ``interval_length``
     must be large enough to fit the longest burst.
 
     .. note::

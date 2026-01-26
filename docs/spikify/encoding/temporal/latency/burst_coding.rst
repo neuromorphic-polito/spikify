@@ -3,9 +3,9 @@
 Burst Coding (BC)
 ===================
 
-Burst Coding is a biologically inspired rate-like coding strategy that represents input intensity using **two characteristics** of a spike burst: the **number of spikes** (N_s) and the **inter-spike interval** (ISI). Stronger inputs produce bursts with more spikes and shorter ISIs, while weaker inputs produce fewer spikes (or single spikes) with longer ISIs.
+Burst Coding is a biologically inspired rate-like coding strategy that represents input intensity using **two characteristics** of a spike burst: the **number of spikes** (:math:`N_s`) and the **inter-spike interval** (ISI). Stronger inputs produce bursts with more spikes and shorter ISIs, while weaker inputs produce fewer spikes with longer ISIs.
 
-This dual-parameter encoding increases reliability and information density compared to single-spike or pure rate coding, as it leverages both spike count and precise timing within short bursts. It is particularly effective for rapid, robust transmission in sensory pathways and spiking neural networks (SNNs).
+This dual-parameter encoding increases reliability and information density, as it leverages both spike count and precise timing within short bursts. It is particularly effective for rapid, robust transmission in sensory pathways and spiking neural networks (SNNs).
 
 **Algorithm Overview**
 
@@ -57,16 +57,15 @@ Larger P produces bursts with more spikes and smaller ISIs. The burst is placed 
 
 **Advantages**
 
-- Higher information density and reliability than single-spike or pure rate coding (both count and timing used).
+- Higher information density and reliability in which both count and timing are used.
 - Biologically plausible — mimics burst firing in sensory neurons for rapid, robust transmission.
-- More resistant to noise/loss than single-spike latency codes.
-- Efficient for classification/recognition tasks (fewer total spikes than dense rate coding).
+- More robust to noise.
+- Efficient for classification/recognition tasks.
 
 **Disadvantages**
 
-- Requires sufficient time window per burst — longer latency than single-spike methods.
+- Requires sufficient time window per burst.
 - Sensitive to parameter choice (N_max, t_min/t_max) and block length.
-- Less sparse than single-spike encodings for low-intensity inputs.
 - Reconstruction more complex than pure rate (needs both spike count and ISI measurement).
 
 For a practical implementation in Python, see the :ref:`Burst Coding Function <burst_coding_function>`.
