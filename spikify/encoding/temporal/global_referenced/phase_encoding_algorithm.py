@@ -16,6 +16,10 @@ def phase(signal: np.ndarray, num_bits: int) -> np.ndarray:
     spike train representation. The encoding process uses a specified number
     of bits to determine the level of quantization.
 
+     .. note::
+         - PE requires normalized input signals between 0 and 1. If the input signal contains negative
+            values, they are shifted to be non-negative and then normalized.
+
     Refer to the :ref:`phase_encoding_algorithm_desc` for a detailed explanation of the Phase Encoding Algorithm.
 
     **Code Example:**
@@ -63,10 +67,21 @@ def phase(signal: np.ndarray, num_bits: int) -> np.ndarray:
     if T % num_bits != 0:
         raise ValueError(f"The phase_encoding num_bits ({num_bits}) is not a factor of the signal length ({T}).")
 
-    signal_copy = np.copy(signal)
+    signal_copy = signal.copy()
 
-    # Ensure non-negative signal values
-    signal_copy = np.clip(signal_copy, 0, None)
+    # Normalize signal if signal has negative values
+    shift = signal_copy.min(axis=0)
+    shift[shift > 0] = 0  # only shift if negative values are present
+    signal_copy -= shift
+
+    # Compute max amplitude per feature to be used for scaling if max amplitude is grater than 1
+    max_amp = signal_copy.max(axis=0)
+
+    # Find features that require scaling
+    features_to_scale = np.where(max_amp > 1)[0]
+
+    for f in features_to_scale:
+        signal_copy[:, f] /= max_amp[f]
 
     # Compute mean over the signal reshaped to bit-sized chunks
     interval_bit_mean = np.mean(signal_copy.reshape(T // num_bits, num_bits, F), axis=1)

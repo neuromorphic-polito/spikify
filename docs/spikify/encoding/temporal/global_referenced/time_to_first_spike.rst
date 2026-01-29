@@ -1,6 +1,6 @@
 .. _time_to_first_spike_algorithm_desc:
 
-Time-to-First-Spike Encoding
+Time-to-First-Spike (TTFS) Encoding
 ============================
 
 Time-to-First-Spike (TTFS) encoding is a sparse, latency-based temporal coding strategy where input intensity is represented by the **timing of a single first spike** within a fixed time window. Stronger inputs trigger earlier spikes, enabling ultra-rapid information transmission with minimal spikes (typically one per neuron or input block).

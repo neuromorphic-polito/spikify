@@ -11,7 +11,7 @@ class TestPhaseEncoding(unittest.TestCase):
     def test_basic_functionality(self):
         """Test the function's ability to encode a basic signal into phase encoding."""
 
-        signal = np.array([0, 1, 2, 3, 4, 5, 6, 3, 2, 1])
+        signal = np.array([0, 1, 2, 3, 4, 5, 6, 3, 2, 1], dtype=np.float32)
         num_bits = 2
         result = phase(signal, num_bits)
         self.assertEqual(len(result), len(signal))
@@ -35,7 +35,7 @@ class TestPhaseEncoding(unittest.TestCase):
     def test_normalization(self):
         """Test that the signal is normalized when the maximum value is greater than 0."""
 
-        signal = np.array([1, 2, 3, 4])
+        signal = np.array([1, 2, 3, 4], dtype=np.float32)
         num_bits = 2
         result = phase(signal, num_bits)
         self.assertTrue(np.all(np.logical_or(result == 0, result == 1)))
@@ -43,7 +43,7 @@ class TestPhaseEncoding(unittest.TestCase):
     def test_single_value_signal(self):
         """Test the function with a signal that has all identical values."""
 
-        signal = np.array([3, 3, 3, 3, 3, 3])
+        signal = np.array([3, 3, 3, 3, 3, 3], dtype=np.float32)
         num_bits = 2
         result = phase(signal, num_bits)
         self.assertTrue(np.all(result == 1))

@@ -1,6 +1,6 @@
 .. _phase_encoding_algorithm_desc:
 
-Phase Encoding
+Phase Encoding (PE)
 ============================
 
 The concept of encoding based on phase evaluation is rooted in the idea of using an oscillatory reference to encode information. This technique was explored by Montemurro et al. (2008), where the phase of an oscillatory reference is evaluated for encoding. In our implementation, we follow the approach proposed by Kim et al. (2018), where the binary representation of the input, using β fractional bits, serves as the oscillatory reference. The signal is first rectified and normalized for each channel into the range [0, 1].
