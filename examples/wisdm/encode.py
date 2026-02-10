@@ -135,7 +135,7 @@ def convert_dataset_into_spike(dataframe):
             )
             #
             #
-            # Apply Burst encoding and save the data
+            # Apply Burst Coding and save the data
             apply_encoding(
                 dataframe_accel.copy(),
                 path,
