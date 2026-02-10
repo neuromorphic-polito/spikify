@@ -22,7 +22,7 @@ def time_to_first_spike(signal: np.ndarray, interval_length: int) -> np.ndarray:
 
     .. note::
         - TTFS requires normalized input signals between 0 and 1. If the input signal contains negative
-            values, they are shifted to be non-negative and then normalized.
+          values, they are shifted to be non-negative and then normalized.
 
     Refer to the :ref:`time_to_first_spike_algorithm_desc`
     for a detailed explanation of the Time-to-First-Spike Encoding Algorithm.
