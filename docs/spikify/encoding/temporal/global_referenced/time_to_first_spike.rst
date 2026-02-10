@@ -60,6 +60,8 @@ A spike is emitted at the earliest time t where the normalized input exceeds the
 - Quantization errors from discrete binning.
 - Poor for slowly varying or constant inputs (late/no spike).
 
+For a practical implementation in Python, see the :ref:`Time-to-First-Spike Function <time_to_first_spike_function>`.
+
 **References**
 
 - Rueckauer, et al. (2017). "Conversion of analog to spiking neural networks using sparse temporal coding." *ICAS*. 

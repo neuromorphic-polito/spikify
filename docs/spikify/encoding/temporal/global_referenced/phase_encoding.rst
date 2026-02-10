@@ -53,6 +53,8 @@ In implementations like the one in this library, the signal is rectified, normal
 
 - Quantization limits precision; sensitive to normalization and bit depth.
 
+For a practical implementation in Python, see the :ref:`Phase Encoding Function <phase_encoding_function>`.
+
 **References**
 
 - Montemurro, M. A., et al. (2008). "Phase-of-firing coding of natural visual stimuli in primary visual cortex." *Current Biology*.
