@@ -12,51 +12,51 @@ def time_to_first_spike(signal: np.ndarray, interval_length: int) -> np.ndarray:
     Perform Time To First Spike (TTFS) encoding on the input signal.
 
     This function implements a sparse, latency-based temporal coding scheme where
-     input intensity is encoded in the **timing of the first spike** within a fixed
-     time window (``interval_length``). Stronger inputs produce earlier spikes.
+    input intensity is encoded in the **timing of the first spike** within a fixed
+    time window (``interval_length``). Stronger inputs produce earlier spikes.
 
-     The signal is divided into non-overlapping blocks of length ``interval_length``.
-     For each block, the mean intensity is computed and mapped to a spike latency using
-     a logarithmic function (approximating an exponential decaying threshold). A single
-     spike is placed at the corresponding time step within the block.
+    The signal is divided into non-overlapping blocks of length ``interval_length``.
+    For each block, the mean intensity is computed and mapped to a spike latency using
+    a logarithmic function (approximating an exponential decaying threshold). A single
+    spike is placed at the corresponding time step within the block.
 
-     .. note::
-         - TTFS requires normalized input signals between 0 and 1. If the input signal contains negative
-            values, they are shifted to be non-negative and then normalized.
+    .. note::
+        - TTFS requires normalized input signals between 0 and 1. If the input signal contains negative
+        values, they are shifted to be non-negative and then normalized.
 
-     Refer to the :ref:`time_to_first_spike_algorithm_desc`
-     for a detailed explanation of the Time-to-First-Spike Encoding Algorithm.
+    Refer to the :ref:`time_to_first_spike_algorithm_desc`
+    for a detailed explanation of the Time-to-First-Spike Encoding Algorithm.
 
-     **Code Example:**
+    **Code Example:**
 
-     .. code-block:: python
+    .. code-block:: python
 
-         import numpy as np
-         from spikify.encoding.temporal.global_referenced import time_to_first_spike
-         signal = np.array([0.1, 0.2, 0.3, 1.0, 0.5, 0.3, 0.1, 0.2])
-         interval_length = 4
-         encoded_signal = time_to_first_spike(signal, interval_length)
+        import numpy as np
+        from spikify.encoding.temporal.global_referenced import time_to_first_spike
+        signal = np.array([0.1, 0.2, 0.3, 1.0, 0.5, 0.3, 0.1, 0.2])
+        interval_length = 4
+        encoded_signal = time_to_first_spike(signal, interval_length)
 
-     .. doctest::
-         :hide:
+    .. doctest::
+        :hide:
 
-         >>> import numpy as np
-         >>> from spikify.encoding.temporal.global_referenced import time_to_first_spike
-         >>> signal = np.array([0.1, 0.2, 0.3, 1.0, 0.5, 0.3, 0.1, 0.2])
-         >>> interval_length = 4
-         >>> encoded_signal = time_to_first_spike(signal, interval_length)
-         >>> encoded_signal
-         array([0, 1, 0, 0, 0, 1, 0, 0], dtype=int8)
+        >>> import numpy as np
+        >>> from spikify.encoding.temporal.global_referenced import time_to_first_spike
+        >>> signal = np.array([0.1, 0.2, 0.3, 1.0, 0.5, 0.3, 0.1, 0.2])
+        >>> interval_length = 4
+        >>> encoded_signal = time_to_first_spike(signal, interval_length)
+        >>> encoded_signal
+        array([0, 1, 0, 0, 0, 1, 0, 0], dtype=int8)
 
-     :param signal: Input signal to encode (1D or 2D: timestamps × features).
-     :type signal: numpy.ndarray
-     :param interval_length: Length of each time window (block) for latency mapping.
-                             Must evenly divide the signal length. Larger values give
-                             coarser temporal resolution but allow longer latency range.
-     :type interval_length: int
-     :return: A numpy array representing the encoded spike train.
-     :rtype: numpy.ndarray
-     :raises ValueError: If signal is empty or interval_length does not divide signal length.
+    :param signal: Input signal to encode (1D or 2D: timestamps × features).
+    :type signal: numpy.ndarray
+    :param interval_length: Length of each time window (block) for latency mapping.
+                            Must evenly divide the signal length. Larger values give
+                            coarser temporal resolution but allow longer latency range.
+    :type interval_length: int
+    :return: A numpy array representing the encoded spike train.
+    :rtype: numpy.ndarray
+    :raises ValueError: If signal is empty or interval_length does not divide signal length.
 
     """
 

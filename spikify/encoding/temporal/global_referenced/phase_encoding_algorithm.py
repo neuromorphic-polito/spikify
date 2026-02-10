@@ -16,8 +16,8 @@ def phase(signal: np.ndarray, num_bits: int) -> np.ndarray:
     spike train representation. The encoding process uses a specified number
     of bits to determine the level of quantization.
 
-     .. note::
-         - PE requires normalized input signals between 0 and 1. If the input signal contains negative
+    .. note::
+        - PE requires normalized input signals between 0 and 1. If the input signal contains negative
             values, they are shifted to be non-negative and then normalized.
 
     Refer to the :ref:`phase_encoding_algorithm_desc` for a detailed explanation of the Phase Encoding Algorithm.

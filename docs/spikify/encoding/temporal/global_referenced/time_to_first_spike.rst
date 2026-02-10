@@ -1,7 +1,7 @@
 .. _time_to_first_spike_algorithm_desc:
 
-Time-to-First-Spike (TTFS) Encoding
-============================
+Time-to-First-Spike (TTFS)
+======================================
 
 Time-to-First-Spike (TTFS) encoding is a sparse, latency-based temporal coding strategy where input intensity is represented by the **timing of a single first spike** within a fixed time window. Stronger inputs trigger earlier spikes, enabling ultra-rapid information transmission with minimal spikes (typically one per neuron or input block).
 
@@ -50,9 +50,7 @@ A spike is emitted at the earliest time t where the normalized input exceeds the
 **Advantages**
 
 - Extremely sparse (one spike per block/neuron) — minimal energy/synaptic events.
-- Ultra-low latency — information available from first spike.
-- Biologically plausible for rapid sensory processing (e.g., <150 ms visual categorization).
-- Energy-efficient for neuromorphic hardware and event-driven systems.
+- Biologically plausible for rapid sensory processing.
 - Robust in population coding (relative latencies preserved despite jitter).
 
 **Disadvantages**
@@ -61,10 +59,9 @@ A spike is emitted at the earliest time t where the normalized input exceeds the
 - Sensitive to threshold/decay parameters and block length.
 - Quantization errors from discrete binning.
 - Poor for slowly varying or constant inputs (late/no spike).
-- Reconstruction needs accurate latency measurement and inverse mapping.
 
 **References**
 
-- Rueckauer, B., Lungu, I.-A., Hu, Y., Pfeiffer, M., and Liu, S.-C. (2017). Conversion of continuous-valued deep networks to efficient event-driven networks for image classification. Front. Neurosci. 
-- Park, S., Kim, S., Na, B., and Yoon, S. (2020). “T2FSNN: deep spiking neural networks with time-to-first-spike coding,” in 2020 57th ACM/IEEE Design Automation Conference (DAC).
-- Lisman, J. E. (1997). Bursts as a unit of neural information: Making unreliable synapses reliable. Trends Neurosci. 20.
+- Rueckauer, et al. (2017). "Conversion of analog to spiking neural networks using sparse temporal coding." *ICAS*. 
+- Park, S., et al. (2020). “T2FSNN: deep spiking neural networks with time-to-first-spike coding,” *DAC*.
+- Lisman, J. E. (1997). Bursts as a unit of neural information: Making unreliable synapses reliable. *Trends Neurosci*.
