@@ -70,6 +70,6 @@ Larger P produces bursts with more spikes and smaller ISIs. The burst is placed 
 
 For a practical implementation in Python, see the :ref:`Burst Coding Function <burst_coding_function>`.
 
-**References**:
+**References**
 
-- Guo et al. (2021). "Neural coding in spiking neural networks: a comparative study for robust neuromorphic systems" *Front. Neurosci.*.
+- Guo et al. (2021). "Neural coding in spiking neural networks: a comparative study for robust neuromorphic systems" *Front. Neurosci.*
