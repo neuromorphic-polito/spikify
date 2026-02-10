@@ -71,7 +71,7 @@ This package implements several spike encoding families techniques, including:
 |                        | Modified Hough Spiker    | Robust Hough-based encoding          |
 | **Global Referenced**  | Phase Encoding           | Encodes phase information            |
 |                        | Time-to-Spike            | Spikes at specific time delays       |
-| **Latency Encoding**   | Burst Encoding           | Encodes bursts of spikes             |
+| **Latency Encoding**   | Burst Coding             | Encodes bursts of spikes             |
 
 **Tip:**  
 - Use **Poisson Rate** for general-purpose encoding.  

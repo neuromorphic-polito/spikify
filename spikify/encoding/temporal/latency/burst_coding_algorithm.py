@@ -9,7 +9,7 @@ import numpy as np
 
 def burst_coding(signal: np.ndarray, n_max: int, t_min: int, t_max: int, interval_length: int) -> np.ndarray:
     """
-    Perform Burst enCoding (BC) on the input signal.
+    Perform Burst Coding (BC) on the input signal.
 
     This function implements a biologically inspired burst coding scheme where each input
     intensity (normalized P ∈ [0, 1]) is converted into a burst of spikes:

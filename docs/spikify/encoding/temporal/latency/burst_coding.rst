@@ -72,4 +72,4 @@ For a practical implementation in Python, see the :ref:`Burst Coding Function <b
 
 **References**:
 
-- Guo et al. (2021). "Burst Encoding Techniques for Neural Spike Trains." *Journal of Neuroscience Methods*.
+- Guo et al. (2021). "Neural coding in spiking neural networks: a comparative study for robust neuromorphic systems" *Front. Neurosci.*.
