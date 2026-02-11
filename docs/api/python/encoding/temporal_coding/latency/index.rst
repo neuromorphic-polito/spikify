@@ -7,11 +7,11 @@ The ``latency`` folder contains algorithms that encode information based on the 
 
 Contents of the ``latency`` folder:
 
-- **Burst Encoding**: A method that encodes information using the timing and intervals between multiple spikes in a burst, improving the accuracy of signal transmission.
+- **Burst Coding**: A method that encodes information using the timing and intervals between multiple spikes in a burst, improving the accuracy of signal transmission.
 
 Below, you will find links to the specific modules for each latency coding algorithm:
 
 .. toctree::
    :maxdepth: 1
 
-   burst_encoding
+   burst_coding
