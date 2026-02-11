@@ -1,5 +1,5 @@
 """Latency package."""
 
-from .burst_encoding_algorithm import burst_encoding
+from .burst_coding_algorithm import burst_coding
 
-__all__ = ["burst_encoding"]
+__all__ = ["burst_coding"]

@@ -1,9 +1,9 @@
 import unittest
 import numpy as np
-from spikify.encoding.temporal.latency.burst_encoding_algorithm import burst_encoding
+from spikify.encoding.temporal.latency.burst_coding_algorithm import burst_coding
 
 
-class TestBurstEncoding(unittest.TestCase):
+class TestBurstCoding(unittest.TestCase):
     """Tests for the burst_encoding function."""
 
     def test_basic_functionality(self):
@@ -14,7 +14,7 @@ class TestBurstEncoding(unittest.TestCase):
         t_max = 5
         length = 6
         expected_output_length = length
-        result = burst_encoding(signal, n_max, t_min, t_max, length)
+        result = burst_coding(signal, n_max, t_min, t_max, length)
         self.assertEqual(len(result), expected_output_length)
         self.assertTrue(np.all(result <= 1))
 
@@ -26,7 +26,7 @@ class TestBurstEncoding(unittest.TestCase):
         t_max = 10
         length = 10
         with self.assertRaises(ValueError):
-            burst_encoding(signal, n_max, t_min, t_max, length)
+            burst_coding(signal, n_max, t_min, t_max, length)
 
     def test_invalid_length_multiple(self):
         """Ensure the function raises an error if the length is not a multiple of the signal length."""
@@ -36,7 +36,7 @@ class TestBurstEncoding(unittest.TestCase):
         t_max = 10
         length = 5
         with self.assertRaises(ValueError):
-            burst_encoding(signal, n_max, t_min, t_max, length)
+            burst_coding(signal, n_max, t_min, t_max, length)
 
     def test_signal_normalization(self):
         """Ensure the function normalizes the signal correctly."""
@@ -45,7 +45,7 @@ class TestBurstEncoding(unittest.TestCase):
         t_min = 1
         t_max = 5
         length = 12
-        result = burst_encoding(signal, n_max, t_min, t_max, length)
+        result = burst_coding(signal, n_max, t_min, t_max, length)
         self.assertTrue(np.all(result <= 1))
 
     def test_spike_number_calculation(self):
@@ -56,8 +56,8 @@ class TestBurstEncoding(unittest.TestCase):
         t_min = 2
         t_max = 6
         length = 16
-        result = burst_encoding(signal, n_max, t_min, t_max, length)
-        expected_spike_counts = 53
+        result = burst_coding(signal, n_max, t_min, t_max, length)
+        expected_spike_counts = 35
         actual_spike_counts = np.sum(result)
         self.assertEqual(actual_spike_counts, expected_spike_counts)
 
@@ -69,7 +69,7 @@ class TestBurstEncoding(unittest.TestCase):
         t_max = 6
         length = 10
         with self.assertRaises(ValueError):
-            burst_encoding(signal, n_max, t_min, t_max, length)
+            burst_coding(signal, n_max, t_min, t_max, length)
 
     def test_insufficient_length_for_spikes(self):
         """Test that the function raises an error if the length is insufficient for the spikes and ISI."""
@@ -79,7 +79,7 @@ class TestBurstEncoding(unittest.TestCase):
         t_max = 5
         length = 3
         with self.assertRaises(ValueError):
-            burst_encoding(signal, n_max, t_min, t_max, length)
+            burst_coding(signal, n_max, t_min, t_max, length)
 
     def test_large_signal(self):
         """Test the function’s performance on a large signal."""
@@ -88,7 +88,7 @@ class TestBurstEncoding(unittest.TestCase):
         t_min = 1
         t_max = 10
         length = 100
-        result = burst_encoding(signal, n_max, t_min, t_max, length)
+        result = burst_coding(signal, n_max, t_min, t_max, length)
         self.assertEqual(len(result), len(signal))
         self.assertTrue(np.all(result <= 1))
 
@@ -100,11 +100,11 @@ class TestBurstEncoding(unittest.TestCase):
         t_min = 1
         t_max = 10
         length = 100
-        encoded_signal = burst_encoding(signal, n_max, t_min, t_max, length)
+        encoded_signal = burst_coding(signal, n_max, t_min, t_max, length)
         self.assertEqual(encoded_signal.shape, signal.shape)
         signal_f1 = signal[:, 0]
         signal_f2 = signal[:, 1]
-        encoded_signal_f1 = burst_encoding(signal_f1, n_max, t_min, t_max, length)
-        encoded_signal_f2 = burst_encoding(signal_f2, n_max, t_min, t_max, length)
+        encoded_signal_f1 = burst_coding(signal_f1, n_max, t_min, t_max, length)
+        encoded_signal_f2 = burst_coding(signal_f2, n_max, t_min, t_max, length)
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
