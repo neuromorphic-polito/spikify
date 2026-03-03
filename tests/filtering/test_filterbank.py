@@ -117,20 +117,6 @@ class TestFilterBank(unittest.TestCase):
         freq_components = filterbank.decompose(multi_feature_signal)
         self.assertEqual(freq_components.shape, (self.signal_length, self.channels, 3))
 
-    def test_center_frequencies(self):
-        """Test that center frequencies are computed correctly."""
-        filterbank = FilterBank(
-            fs=self.fs,
-            channels=self.channels,
-            f_min=self.f_min,
-            f_max=self.f_max,
-            filter_type="butterworth",
-            order=self.order,
-        )
-        expected_octave = (self.channels - 0.5) * np.log10(2) / np.log10(self.f_max / self.f_min)
-        expected_freq_centers = np.array([self.f_min * (2 ** (ch / expected_octave)) for ch in range(self.channels)])
-        np.testing.assert_array_almost_equal(filterbank.freq_centers, expected_freq_centers)
-
     def test_unsupported_filter(self):
 
         with self.assertRaises(ValueError):
@@ -144,3 +130,60 @@ class TestFilterBank(unittest.TestCase):
             )
 
             filterbank.center_frequencies
+
+    def test_center_frequencies_butterworth(self):
+        """Test that center frequencies are computed correctly."""
+        filterbank = FilterBank(
+            fs=self.fs,
+            channels=self.channels,
+            f_min=self.f_min,
+            f_max=self.f_max,
+            filter_type="butterworth",
+            order=self.order,
+        )
+
+        octave = (self.channels - 0.5) * np.log10(2) / np.log10(self.f_max / self.f_min)
+        freq_centers = np.array([self.f_min * (2 ** (ch / octave)) for ch in range(self.channels)])
+        freq_poles = np.array(
+            [(freq * (2 ** (-1 / (2 * octave))), (freq * (2 ** (1 / (2 * octave))))) for freq in freq_centers]
+        )
+        freq_poles[-1, 1] = self.fs / 2 * 0.99999
+
+        expected_freq_centers = np.array([np.mean(freqs) for freqs in freq_poles])
+        np.testing.assert_array_almost_equal(filterbank.center_frequencies, expected_freq_centers)
+
+    def test_center_frequencies_gammatone(self):
+        """Test that center frequencies are computed correctly."""
+        filterbank = FilterBank(
+            fs=self.fs,
+            channels=self.channels,
+            f_min=self.f_min,
+            f_max=self.f_max,
+            filter_type="gammatone",
+            order=self.order,
+        )
+
+        octave = (self.channels - 0.5) * np.log10(2) / np.log10(self.f_max / self.f_min)
+        expected_freq_centers = np.array([self.f_min * (2 ** (ch / octave)) for ch in range(self.channels)])
+        np.testing.assert_array_almost_equal(filterbank.center_frequencies, expected_freq_centers)
+
+    def test_center_frequencies_sos(self):
+        """Test that center frequencies are computed correctly."""
+        filterbank = FilterBank(
+            fs=self.fs,
+            channels=self.channels,
+            f_min=self.f_min,
+            f_max=self.f_max,
+            filter_type="sos",
+            order=self.order,
+        )
+
+        octave = (self.channels - 0.5) * np.log10(2) / np.log10(self.f_max / self.f_min)
+        freq_centers = np.array([self.f_min * (2 ** (ch / octave)) for ch in range(self.channels)])
+        freq_poles = np.array(
+            [(freq * (2 ** (-1 / (2 * octave))), (freq * (2 ** (1 / (2 * octave))))) for freq in freq_centers]
+        )
+        freq_poles[-1, 1] = self.fs / 2 * 0.99999
+
+        expected_freq_centers = np.array([np.mean(freqs) for freqs in freq_poles])
+        np.testing.assert_array_almost_equal(filterbank.center_frequencies, expected_freq_centers)
