@@ -130,30 +130,28 @@ class FilterBank(ABC):
         :type signal: numpy.ndarray
         :return: Array of filtered signals with shape (timestamps, channels, features).
         :rtype: numpy.ndarray
-        :raises ValueError: If signal is not 1D or 2D.
 
         """
-        if len(signal.shape) == 1:
+        # Ensure 2D processing (T, F)
+        if signal.ndim == 1:
             signal = signal.reshape(-1, 1)
-        elif len(signal.shape) != 2:
-            raise ValueError("Signal must be 1D or 2D array")
 
-        n_timestamps, n_features = signal.shape
+        T, F = signal.shape
         n_channels = len(self.filter_coeffs)
 
         # Initialize output
-        freq_components = np.zeros((n_timestamps, n_channels, n_features))
+        freq_components = np.zeros((T, n_channels, F))
 
         for ch in range(n_channels):
             filter_coeffs = self.filter_coeffs[ch]
 
             if self.filter_type == "sos":
                 # Use sosfilt for second-order sections
-                for feat in range(n_features):
+                for feat in range(F):
                     freq_components[:, ch, feat] = sosfilt(filter_coeffs, signal[:, feat])
             else:
                 # Use lfilter for b,a coefficients
-                for feat in range(n_features):
+                for feat in range(F):
                     num, den = filter_coeffs
                     freq_components[:, ch, feat] = lfilter(num, den, signal[:, feat])
 

@@ -77,18 +77,6 @@ class TestFilterBank(unittest.TestCase):
         freq_components = filterbank.decompose(self.signal)
         self.assertEqual(freq_components.shape, (self.signal_length, self.channels, 1))
 
-    def test_invalid_filter_type(self):
-        """Test that an invalid filter type raises a ValueError."""
-        with self.assertRaises(ValueError):
-            FilterBank(
-                fs=self.fs,
-                channels=self.channels,
-                f_min=self.f_min,
-                f_max=self.f_max,
-                filter_type="invalid_type",
-                order=self.order,
-            )
-
     def test_signal_multiple_shape_decomposition(self):
         """Test that decomposing a too short signal raises a ValueError."""
         filterbank = FilterBank(
@@ -99,7 +87,7 @@ class TestFilterBank(unittest.TestCase):
             filter_type="butterworth",
             order=self.order,
         )
-        signal = np.random.randn(10, 5, 3)  # Invalid shape
+        signal = np.random.randn(10, 5, 3)
         with self.assertRaises(ValueError):
             filterbank.decompose(signal)
 
@@ -113,14 +101,14 @@ class TestFilterBank(unittest.TestCase):
             filter_type="butterworth",
             order=self.order,
         )
-        multi_feature_signal = np.random.randn(self.signal_length, 3)  # 3 features
+        multi_feature_signal = np.random.randn(self.signal_length, 3)
         freq_components = filterbank.decompose(multi_feature_signal)
         self.assertEqual(freq_components.shape, (self.signal_length, self.channels, 3))
 
     def test_unsupported_filter(self):
 
         with self.assertRaises(ValueError):
-            filterbank = FilterBank(
+            FilterBank(
                 fs=self.fs,
                 channels=self.channels,
                 f_min=self.f_min,
@@ -128,8 +116,6 @@ class TestFilterBank(unittest.TestCase):
                 filter_type="gammachirp",
                 order=self.order,
             )
-
-            filterbank.center_frequencies
 
     def test_center_frequencies_butterworth(self):
         """Test that center frequencies are computed correctly."""
