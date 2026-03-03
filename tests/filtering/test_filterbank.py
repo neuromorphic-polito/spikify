@@ -130,3 +130,17 @@ class TestFilterBank(unittest.TestCase):
         expected_octave = (self.channels - 0.5) * np.log10(2) / np.log10(self.f_max / self.f_min)
         expected_freq_centers = np.array([self.f_min * (2 ** (ch / expected_octave)) for ch in range(self.channels)])
         np.testing.assert_array_almost_equal(filterbank.freq_centers, expected_freq_centers)
+
+    def test_unsupported_filter(self):
+
+        with self.assertRaises(ValueError):
+            filterbank = FilterBank(
+                fs=self.fs,
+                channels=self.channels,
+                f_min=self.f_min,
+                f_max=self.f_max,
+                filter_type="gammachirp",
+                order=self.order,
+            )
+
+            filterbank.center_frequencies
