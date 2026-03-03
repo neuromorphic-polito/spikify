@@ -11,7 +11,7 @@ def time_to_first_spike(signal: np.ndarray, interval_length: int) -> np.ndarray:
     """
     Perform Time To First Spike (TTFS) encoding on the input signal.
 
-    This function implements a sparse, latency-based temporal coding scheme where
+    This function implements a sparse temporal coding scheme where
     input intensity is encoded in the **timing of the first spike** within a fixed
     time window (``interval_length``). Stronger inputs produce earlier spikes.
 

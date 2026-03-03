@@ -3,7 +3,7 @@
 Phase Encoding (PE)
 ============================
 
-Phase Encoding (PE) is a temporal coding technique that encodes information by evaluating the phase of an input signal relative to an oscillatory reference, such as slow ongoing brain rhythms (e.g., theta or gamma oscillations). This method leverages the relative timing of spikes to the phase of these rhythms to significantly boost the information carried by spike patterns and stabilize representations against noise.
+Phase Encoding (PE) is a temporal coding technique that encodes information by evaluating the phase angle of an input signal. This method leverages the relative timing of spikes to the phase of these rhythms to significantly boost the information carried by spike patterns and stabilize representations against noise.
 
 In implementations like the one in this library, the signal is rectified, normalized, and the mean per block is mapped to a phase angle via arcsin. The phase is quantized into discrete levels (using β fractional bits as the oscillatory reference) and converted to a binary spike pattern, producing unipolar spikes.
 

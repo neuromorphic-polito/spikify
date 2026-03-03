@@ -3,7 +3,7 @@
 Time-to-First-Spike (TTFS)
 ======================================
 
-Time-to-First-Spike (TTFS) encoding is a sparse, latency-based temporal coding strategy where input intensity is represented by the **timing of a single first spike** within a fixed time window. Stronger inputs trigger earlier spikes, enabling ultra-rapid information transmission with minimal spikes (typically one per neuron or input block).
+Time-to-First-Spike (TTFS) encoding is a sparse temporal coding strategy where input intensity is represented by the **timing of a single first spike** within a fixed time window. Stronger inputs trigger earlier spikes, enabling ultra-rapid information transmission with minimal spikes (typically one per neuron or input block).
 
 This method is biologically plausible for fast sensory responses (e.g., tactile stimuli in milliseconds) and is highly efficient for neuromorphic hardware, as it requires very few synaptic events. It approximates integration against an exponentially decaying threshold, with spike latency inversely related to input strength.
 
