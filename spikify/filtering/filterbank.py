@@ -90,7 +90,7 @@ class FilterBank(ABC):
         :raises ValueError: If filter type is not supported.
 
         """
-        self.filters = []
+        self.filter_coeffs = []
         self.channel_frequencies = []
 
         match self.filter_type:
@@ -98,13 +98,13 @@ class FilterBank(ABC):
             case "butterworth":
                 for low_freq, high_freq in self.freq_poles:
                     num, den = butter(N=self.order, Wn=[low_freq, high_freq], btype="band", fs=self.fs, **kwargs)
-                    self.filters.append((num, den))
+                    self.filter_coeffs.append((num, den))
                     self.channel_frequencies.append((low_freq, high_freq))
 
             case "gammatone":
                 for freq in self.freq_centers:
                     num, den = gammatone(order=self.order, freq=freq, ftype="fir", fs=self.fs, **kwargs)
-                    self.filters.append((num, den))
+                    self.filter_coeffs.append((num, den))
                     self.channel_frequencies.append(freq)
 
             case "sos":
@@ -112,7 +112,7 @@ class FilterBank(ABC):
                     sos = butter(
                         N=self.order, Wn=[low_freq, high_freq], btype="band", output="sos", fs=self.fs, **kwargs
                     )
-                    self.filters.append(sos)
+                    self.filter_coeffs.append(sos)
                     self.channel_frequencies.append((low_freq, high_freq))
 
             case _:
@@ -139,13 +139,13 @@ class FilterBank(ABC):
             raise ValueError("Signal must be 1D or 2D array")
 
         n_timestamps, n_features = signal.shape
-        n_channels = len(self.filters)
+        n_channels = len(self.filter_coeffs)
 
         # Initialize output
         freq_components = np.zeros((n_timestamps, n_channels, n_features))
 
         for ch in range(n_channels):
-            filter_coeffs = self.filters[ch]
+            filter_coeffs = self.filter_coeffs[ch]
 
             if self.filter_type == "sos":
                 # Use sosfilt for second-order sections
