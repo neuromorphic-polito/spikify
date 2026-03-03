@@ -1,40 +1,61 @@
 .. _phase_encoding_algorithm_desc:
 
-Phase Encoding
+Phase Encoding (PE)
 ============================
 
-The concept of encoding based on phase evaluation is rooted in the idea of using an oscillatory reference to encode information. This technique was explored by Montemurro et al. (2008), where the phase of an oscillatory reference is evaluated for encoding. In our implementation, we follow the approach proposed by Kim et al. (2018), where the binary representation of the input, using β fractional bits, serves as the oscillatory reference. The signal is first rectified and normalized for each channel into the range [0, 1].
+Phase Encoding (PE) is a temporal coding technique that encodes information by evaluating the phase angle of an input signal. This method leverages the relative timing of spikes to the phase of these rhythms to significantly boost the information carried by spike patterns and stabilize representations against noise.
 
-**Algorithm Overview**:
+In implementations like the one in this library, the signal is rectified, normalized, and the mean per block is mapped to a phase angle via arcsin. The phase is quantized into discrete levels (using β fractional bits as the oscillatory reference) and converted to a binary spike pattern, producing unipolar spikes.
 
-The phase encoding method works as follows:
+**Algorithm Overview**
 
-1. **Normalization**:
-   The input signal is normalized within the range [0, 1] for each channel, ensuring the signal fits within the required bounds.
+1. **Normalization**: Rectify and normalize the signal to [0, 1] per channel.
 
-2. **Phase Calculation**:
-   The normalized signal is then used to compute the phase angle, which is an essential step for phase encoding. The phase is calculated using the arcsin function, which effectively maps the normalized signal to a phase value.
+2. **Phase Calculation**: Compute phase as arcsin(mean) for block mean intensity.
 
-3. **Quantization**:
-   The computed phase values are then quantized based on the number of bits specified. The phase angle is divided into discrete levels, each representing a binary value.
+3. **Quantization**: Map phase to discrete levels in [0, 2^num_bits - 1].
 
-4. **Binary Representation**:
-   Finally, the quantized phase levels are converted into a binary representation. This binary sequence represents the encoded spikes.
+4. **Binary Representation**: Convert level to binary bits (right-shifted & masked), forming the spike pattern.
 
-**Implementation Steps**:
+**Detailed Pseudocode**
 
-1. **Normalize the Signal**: Scale the signal to fit within the range [0, 1].
-2. **Compute Phase Angles**: Use the arcsin function to determine the phase angles based on the normalized signal.
-3. **Quantize the Phase**: Divide the phase values into discrete levels and assign them binary codes.
-4. **Generate Spike Train**: Convert the quantized levels into a binary spike train.
+.. code-block:: none
+   :linenos:
 
-**Advantages**:
+   Phase Encoding Algorithm
+   input: s signal (length T), num_bits (block size)
 
-Phase encoding is a powerful method that leverages phase information to represent the input signal. This technique is particularly effective for signals that are inherently oscillatory or when the phase information provides significant encoding advantages.
+   out = zeros(T)
+
+   n_blocks = T // num_bits
+   block_means = mean(s over blocks of size num_bits)
+
+   bins = linspace(0, π/2, 2^num_bits + 1)
+
+   for block_idx = 0 to n_blocks-1
+      mean = block_means[block_idx]
+      phase = arcsin(mean)
+      level = searchsorted(bins, phase)
+      level = clip(level, 0, 2^num_bits - 1)
+      bits = (level >> arange(num_bits-1, -1, -1)) & 1
+      global_start = block_idx * num_bits
+      out[global_start : global_start + num_bits] = bits
+   end for
+
+   output: out
+
+**Advantages**
+
+- Stabilizes representations against sensory noise by nesting spikes in low-frequency rhythms.
+- Biologically plausible for sensory cortices.
+
+**Disadvantages**
+
+- Quantization limits precision; sensitive to normalization and bit depth.
 
 For a practical implementation in Python, see the :ref:`Phase Encoding Function <phase_encoding_function>`.
 
-**References**:
+**References**
 
-- Montemurro, M. A., et al. (2008). "Phase-of-Firing Coding of Natural Scenes in Primary Visual Cortex." *Current Biology*.
-- Kim, S., et al. (2018). "Binary Phase Encoding for Oscillatory Reference Signals." *Journal of Computational Neuroscience*.
+- Montemurro, M. A., et al. (2008). "Phase-of-firing coding of natural visual stimuli in primary visual cortex." *Current Biology*.
+- Kim, S., et al. (2018). "Deep neural networks with weighted spikes." *Neurocomputing*.

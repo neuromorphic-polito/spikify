@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from spikify.encoding.temporal.global_referenced.time_to_spike_algorithm import (
+from spikify.encoding.temporal.global_referenced.time_to_first_spike_algorithm import (
     time_to_first_spike,
 )
 
@@ -11,7 +11,7 @@ class TestTimeToFirstSpike(unittest.TestCase):
     def test_basic_functionality(self):
         """Test the function's ability to encode a basic signal into time-to-first-spike encoding."""
 
-        signal = np.array([0, 1, 2, 3, 4, 5, 6, 3, 2, 1, 0, 4])
+        signal = np.array([0, 1, 2, 3, 4, 5, 6, 3, 2, 1, 0, 4], dtype=np.float32)
         interval = 4
         result = time_to_first_spike(signal, interval)
         self.assertEqual(len(result), len(signal))
@@ -35,7 +35,7 @@ class TestTimeToFirstSpike(unittest.TestCase):
     def test_normalization(self):
         """Test that the signal is normalized when the maximum value is greater than 0."""
 
-        signal = np.array([1, 2, 3, 4, 5, 7])
+        signal = np.array([1, 2, 3, 4, 5, 7], np.float32)
         interval = 2
         result = time_to_first_spike(signal, interval)
         self.assertTrue(np.all(np.logical_or(result == 0, result == 1)))
@@ -43,7 +43,7 @@ class TestTimeToFirstSpike(unittest.TestCase):
     def test_single_value_signal(self):
         """Test the function with a signal that has all identical values."""
 
-        signal = np.array([3, 3, 3, 3, 3, 3])
+        signal = np.array([3, 3, 3, 3, 3, 3], dtype=np.float32)
         interval = 2
         result = time_to_first_spike(signal, interval)
         expected_result = np.array([1, 0, 1, 0, 1, 0])
@@ -60,7 +60,7 @@ class TestTimeToFirstSpike(unittest.TestCase):
     def test_intensity_computation(self):
         """Test that the function correctly computes intensity based on the signal."""
 
-        signal = np.array([0, 1, 2, 3, 4, 5])
+        signal = np.array([0, 1, 2, 3, 4, 5], dtype=np.float32)
         interval = 2
         result = time_to_first_spike(signal, interval)
         self.assertEqual(result.shape[0], len(signal))
@@ -78,7 +78,7 @@ class TestTimeToFirstSpike(unittest.TestCase):
     def test_boundary_conditions(self):
         """Test how the function handles boundary conditions where spikes are expected at the extremes of the signal."""
 
-        signal = np.array([0, 1, 0, 1, 0, 2])
+        signal = np.array([0, 1, 0, 1, 0, 2], dtype=np.float32)
         interval = 3
         result = time_to_first_spike(signal, interval)
         self.assertTrue(np.any(result))

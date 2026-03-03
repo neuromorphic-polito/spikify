@@ -24,13 +24,13 @@ def moving_window(
 
     .. code-block:: python
 
-            import numpy as np
-            from spikify.encoding.temporal.contrast import moving_window
-            signal = np.array([0.1, 0.3, 0.2, 0.5, 0.8, 1.0])
-            window_length = 3
-            threshold = 0.2
-            encoded_signal = moving_window(signal, window_length, threshold)
-            encoded_signal
+        import numpy as np
+        from spikify.encoding.temporal.contrast import moving_window
+        signal = np.array([0.1, 0.3, 0.2, 0.5, 0.8, 1.0])
+        window_length = 3
+        threshold = 0.2
+        encoded_signal = moving_window(signal, window_length, threshold)
+        encoded_signal
 
     .. doctest::
         :hide:

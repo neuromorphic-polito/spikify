@@ -1,47 +1,69 @@
 .. _time_to_first_spike_algorithm_desc:
 
-Time-to-First-Spike Encoding
-============================
+Time-to-First-Spike (TTFS)
+======================================
 
-The Time-to-First-Spike (TTFS) encoding method focuses on the time it takes for a neuron to fire its first spike in response to a stimulus. This technique was explored by Rueckauer and Liu (2018) and has been further developed in Park et al. (2020). In our implementation, we employ a dynamic threshold that decays exponentially over time, defined by a membrane potential.
+Time-to-First-Spike (TTFS) encoding is a sparse temporal coding strategy where input intensity is represented by the **timing of a single first spike** within a fixed time window. Stronger inputs trigger earlier spikes, enabling ultra-rapid information transmission with minimal spikes (typically one per neuron or input block).
 
-**Algorithm Overview**:
+This method is biologically plausible for fast sensory responses (e.g., tactile stimuli in milliseconds) and is highly efficient for neuromorphic hardware, as it requires very few synaptic events. It approximates integration against an exponentially decaying threshold, with spike latency inversely related to input strength.
 
-The TTFS encoding process operates as follows:
+**Algorithm Overview**
 
-1. **Dynamic Thresholding**:
-   The membrane potential is modeled as an exponentially decaying function, described by the formula:
-   
-   .. math::
+TTFS uses a dynamic, exponentially decaying threshold to model membrane potential:
 
-       P_{th}(t) = \theta_0 e^{-t/\tau_{th}}
+.. math::
 
-   where :math:`\theta_0` is a constant and :math:`\tau_{th}` is the decay time constant. For our investigation, we set :math:`\theta_0 = 1` and :math:`\tau_{th} = 0.1`.
+   P_{th}(t) = \theta_0 e^{-t / \tau_{th}}
 
-2. **Spike Timing Calculation**:
-   The input signal is normalized, and based on its intensity, the time to the first spike is determined by comparing the input signal to the dynamic threshold. The lower the signal, the earlier the spike occurs.
+A spike is emitted at the earliest time t where the normalized input exceeds the threshold. In practice, intensity is mapped to latency via an inverse (logarithmic) function, and the signal is processed in blocks with one spike per block.
 
-3. **Quantization**:
-   Similar to the phase encoding approach, the spike times are quantized into discrete levels, which map the signal intensity to binary values.
+**Detailed Pseudocode**
 
-4. **Binary Representation**:
-   The spike times are then converted into a binary sequence, representing the encoded signal in a spike train format.
+.. code-block:: none
+   :linenos:
 
-**Implementation Steps**:
+   Time-to-First-Spike Encoding Algorithm
+   input: s signal (length T), interval_length (block size)
 
-1. **Normalize the Signal**: The input signal is rectified and normalized between 0 and 1.
-2. **Compute Dynamic Threshold**: Use an exponentially decaying threshold function to model membrane potential decay.
-3. **Determine Spike Timing**: Calculate the time to first spike based on the signal intensity and dynamic threshold.
-4. **Quantize Spike Times**: Discretize the spike times and assign binary values.
-5. **Generate Spike Train**: Convert the spike timing into a binary spike train for output.
+   out = zeros(T)
 
-**Advantages**:
+   n_blocks = T // interval_length
+   block_means = mean(s over blocks of size interval_length)
 
-TTFS encoding provides a biologically plausible way to represent the intensity of input stimuli by the timing of a single spike. The dynamic threshold approach ensures that even small differences in input intensity can result in distinguishable spike times.
+   bins = linspace(0, 1, interval_length)
 
-For a practical implementation in Python, see the :ref:`Time-to-First-Spike Encoding Function <time_to_first_spike_function>`.
+   for block_idx = 0 to n_blocks-1
+       intensity = block_means[block_idx]
+       if intensity > 0
+           latency_norm = 0.1 * log(1 / intensity)
+           latency_norm = clip(latency_norm, 0, 2)
 
-**References**:
+           step = searchsorted(bins, latency_norm)
 
-- Rueckauer, B., & Liu, S.-C. (2018). "Conversion of Continuous-Valued Deep Networks to Efficient Event-Driven Networks for Image Classification." *Frontiers in Neuroscience*.
-- Park, S., et al. (2020). "Dynamic Threshold Spike Encoding for Robust Neural Coding." *Neural Computation*.
+           t = block_idx * interval_length + clip(step, 0, interval_length-1)
+           out[t] = 1
+       end if
+   end for
+
+   output: out
+
+**Advantages**
+
+- Extremely sparse (one spike per block/neuron) — minimal energy/synaptic events.
+- Biologically plausible for rapid sensory processing.
+- Robust in population coding (relative latencies preserved despite jitter).
+
+**Disadvantages**
+
+- Limited information per neuron (single spike) — requires population for precision.
+- Sensitive to threshold/decay parameters and block length.
+- Quantization errors from discrete binning.
+- Poor for slowly varying or constant inputs (late/no spike).
+
+For a practical implementation in Python, see the :ref:`Time-to-First-Spike Function <time_to_first_spike_function>`.
+
+**References**
+
+- Rueckauer, et al. (2017). "Conversion of analog to spiking neural networks using sparse temporal coding." *ICAS*. 
+- Park, S., et al. (2020). “T2FSNN: deep spiking neural networks with time-to-first-spike coding,” *DAC*.
+- Lisman, J. E. (1997). Bursts as a unit of neural information: Making unreliable synapses reliable. *Trends Neurosci*.
