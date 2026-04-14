@@ -61,7 +61,7 @@ class FilterBank(ABC):
         f_max: float,
         order: int,
         filter_type: Literal["butterworth", "gammatone", "sos"] = "butterworth",
-        **kwargs
+        **kwargs,
     ):
         """Constructor method."""
         super().__init__()
@@ -76,11 +76,6 @@ class FilterBank(ABC):
         )
         self.freq_poles[-1, 1] = self.fs / 2 * 0.99999
 
-        # Validate inputs
-        if self.filter_type not in ["butterworth", "gammatone", "sos"]:
-            raise ValueError("filter_type must be 'butterworth', 'gammatone', or 'sos'")
-
-        # Build filter coefficients
         self._build_filters(**kwargs)
 
     def _build_filters(self, **kwargs):
@@ -92,28 +87,36 @@ class FilterBank(ABC):
 
         :param kwargs: Additional filter parameters for specific filter types.
         :type kwargs: dict
+        :raises ValueError: If filter type is not supported.
 
         """
-        self.filters = []
+        self.filter_coeffs = []
         self.channel_frequencies = []
 
-        if self.filter_type == "butterworth":
-            for low_freq, high_freq in self.freq_poles:
-                num, den = butter(N=self.order, Wn=[low_freq, high_freq], btype="band", fs=self.fs)
-                self.filters.append((num, den))
-                self.channel_frequencies.append((low_freq, high_freq))
+        match self.filter_type:
 
-        elif self.filter_type == "gammatone":
-            for freq in self.freq_centers:
-                num, den = gammatone(order=self.order, freq=freq, ftype="fir", fs=self.fs)
-                self.filters.append((num, den))
-                self.channel_frequencies.append(freq)
+            case "butterworth":
+                for low_freq, high_freq in self.freq_poles:
+                    num, den = butter(N=self.order, Wn=[low_freq, high_freq], btype="band", fs=self.fs, **kwargs)
+                    self.filter_coeffs.append((num, den))
+                    self.channel_frequencies.append((low_freq, high_freq))
 
-        elif self.filter_type == "sos":
-            for low_freq, high_freq in self.freq_poles:
-                sos = butter(N=self.order, Wn=[low_freq, high_freq], btype="band", output="sos", fs=self.fs)
-                self.filters.append(sos)
-                self.channel_frequencies.append((low_freq, high_freq))
+            case "gammatone":
+                for freq in self.freq_centers:
+                    num, den = gammatone(order=self.order, freq=freq, ftype="fir", fs=self.fs, **kwargs)
+                    self.filter_coeffs.append((num, den))
+                    self.channel_frequencies.append(freq)
+
+            case "sos":
+                for low_freq, high_freq in self.freq_poles:
+                    sos = butter(
+                        N=self.order, Wn=[low_freq, high_freq], btype="band", output="sos", fs=self.fs, **kwargs
+                    )
+                    self.filter_coeffs.append(sos)
+                    self.channel_frequencies.append((low_freq, high_freq))
+
+            case _:
+                raise ValueError(f"Filter {self.filter_type} is not supported")
 
     def decompose(self, signal: np.ndarray) -> np.ndarray:
         """
@@ -127,30 +130,28 @@ class FilterBank(ABC):
         :type signal: numpy.ndarray
         :return: Array of filtered signals with shape (timestamps, channels, features).
         :rtype: numpy.ndarray
-        :raises ValueError: If signal is not 1D or 2D.
 
         """
-        if len(signal.shape) == 1:
+        # Ensure 2D processing (T, F)
+        if signal.ndim == 1:
             signal = signal.reshape(-1, 1)
-        elif len(signal.shape) != 2:
-            raise ValueError("Signal must be 1D or 2D array")
 
-        n_timestamps, n_features = signal.shape
-        n_channels = len(self.filters)
+        T, F = signal.shape
+        n_channels = len(self.filter_coeffs)
 
         # Initialize output
-        freq_components = np.zeros((n_timestamps, n_channels, n_features))
+        freq_components = np.zeros((T, n_channels, F))
 
         for ch in range(n_channels):
-            filter_coeffs = self.filters[ch]
+            filter_coeffs = self.filter_coeffs[ch]
 
             if self.filter_type == "sos":
                 # Use sosfilt for second-order sections
-                for feat in range(n_features):
+                for feat in range(F):
                     freq_components[:, ch, feat] = sosfilt(filter_coeffs, signal[:, feat])
             else:
                 # Use lfilter for b,a coefficients
-                for feat in range(n_features):
+                for feat in range(F):
                     num, den = filter_coeffs
                     freq_components[:, ch, feat] = lfilter(num, den, signal[:, feat])
 
