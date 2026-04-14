@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import imageio.v2 as imageio
-from spikify.encoding.rate import poisson
+from spikify.encoders.rate import poisson
 import os
 
 # Set style for better visualization

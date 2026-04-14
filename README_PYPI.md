@@ -26,8 +26,8 @@ Here is a simple example to get started:
 
 ```python
 import numpy as np
-from spikify.filtering import FilterBank
-from spikify.encoding.rate import poisson
+from spikify.filters import FilterBank
+from spikify.encoders.rate import poisson
 
 # Generate a sinusoidal signal
 time = np.linspace(0, 4 * np.pi, 200)

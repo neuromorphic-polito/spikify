@@ -19,5 +19,5 @@ Below, you will find links to the specific modules within the Python API:
 .. toctree::
    :maxdepth: 1
 
-   filtering/index
-   encoding/index
+   filters/index
+   encoders/index
