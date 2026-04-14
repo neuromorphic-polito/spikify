@@ -54,7 +54,7 @@ It's recommended to install spikify in a virtual environment to avoid conflicts 
 
    python -m venv spikify-env
    source spikify-env/bin/activate  # On Windows use `spikify-env\Scripts\activate`
-   pip install spikify
+   pip install innuce-spikify
 
 Getting code from source
 ------------------------

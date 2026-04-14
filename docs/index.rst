@@ -142,8 +142,8 @@ Contents
    :caption: Fundamentals
    :maxdepth: 1
 
-   spikify/filtering/index
-   spikify/encoding/index
+   spikify/filters/index
+   spikify/encoders/index
 
 .. toctree::
    :caption: Development

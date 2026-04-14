@@ -2,7 +2,7 @@
 
 .. title:: Hough Spiker
 
-.. automodule:: spikify.encoding.temporal.deconvolution.hough_spiker_algorithm
+.. automodule:: spikify.encoders.temporal.deconvolution.hough_spiker_algorithm
    :members: hough_spiker
    :undoc-members:
    :show-inheritance:

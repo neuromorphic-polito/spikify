@@ -24,7 +24,7 @@ Before encoding, you may want to filter the signal to focus on specific frequenc
 
 .. code-block:: python
 
-   from spikify.filtering import FilterBank
+   from spikify.filters import FilterBank
 
    filter = FilterBank(fs=50, channels=5, f_min=0.5, f_max=5, order=4, filter_type='butterworth')
 
@@ -39,7 +39,7 @@ Now, let's encode the sinusoidal signal into spikes using the `poisson` method. 
 
 .. code-block:: python
 
-   from spikify.encoding.rate import poisson
+   from spikify.encoders.rate import poisson
 
    # Set parameters for encoding
    np.random.seed(0)  # For reproducibility

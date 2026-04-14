@@ -2,7 +2,7 @@
 
 .. title:: FilterBank
 
-.. autoclass:: spikify.filtering.filterbank.FilterBank
+.. autoclass:: spikify.filters.filterbank.FilterBank
    :members: 
    :undoc-members:
    :show-inheritance:

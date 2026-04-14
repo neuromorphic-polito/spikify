@@ -2,7 +2,7 @@
 
 .. title:: Threshold Based Representation
 
-.. automodule:: spikify.encoding.temporal.contrast.threshold_based_algorithm
+.. automodule:: spikify.encoders.temporal.contrast.threshold_based_algorithm
    :members: threshold_based_representation
    :undoc-members:
    :show-inheritance:
