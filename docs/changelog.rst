@@ -8,6 +8,36 @@ All notable changes to this project will be documented in this file.
 The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.1.0/>`__,
 and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`__.
 
+1.0.0
+-----
+:Released: 2026-04-14
+:Full Changelog: `0.3.0...1.0.0 <https://github.com/neuromorphic-polito/spikify/compare/0.3.0...1.0.0>`__
+
+Improvements
+............
+- Renamed ``filtering`` and ``encoding`` packages to ``filters`` and ``encoders`` for improved consistency and shorter import paths.
+- Renamed ``burst encoding`` to ``burst coding`` to shorten the module path and align with conventional terminology.
+- Renamed the global-referenced phase encoding and Poisson encoding functions for clarity and consistency.
+- Enhanced ``FilterBank`` to enforce 2D signal processing, improve filter coefficient selection, and expand test coverage on center frequencies.
+- Added automatic signal scaling and normalization to several encoding algorithms.
+- Added FIR filter support to the BSA encoder along with updated parameters and documentation.
+- Extended ``codemeta.json`` with auto-updating version, download link, and date fields.
+- Added a PyPI-compatible README with updated logo and layout.
+
+Bug Fixes
+.........
+- Fixed the SF algorithm timestep calculation.
+- Fixed the MW algorithm implementation.
+- Fixed the HSA issue affecting spike generation correctness.
+- Fixed the TBR output by replacing variation prepend with append to match the original algorithm setup.
+- Fixed the ``codemeta.json`` version identifier.
+
+Documentation
+.............
+- Refactored and expanded documentation for TBR, BSA, HSA, SF, MW, ZCSF, burst coding, phase encoding, Poisson encoding, and contrast-based algorithms, including pseudocode and improved descriptions.
+- Renamed documentation paths to reflect the new ``filters`` and ``encoders`` module structure.
+- Clarified descriptions for global-referenced encoding algorithms and filter sections.
+
 0.3.0
 -----
 :Released: 2025-11-12
