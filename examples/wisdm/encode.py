@@ -1,15 +1,15 @@
 from pathlib import Path
 import numpy as np
-from spikify.encoding.rate import poisson_rate
-from spikify.encoding.temporal.latency import burst_encoding
-from spikify.encoding.temporal.contrast import (
+from spikify.encoders.rate import poisson_rate
+from spikify.encoders.temporal.latency import burst_encoding
+from spikify.encoders.temporal.contrast import (
     moving_window,
     step_forward,
     threshold_based_representation,
     zero_cross_step_forward,
 )
-from spikify.encoding.temporal.global_referenced import phase_encoding, time_to_first_spike
-from spikify.encoding.temporal.deconvolution import bens_spiker, hough_spiker, modified_hough_spiker
+from spikify.encoders.temporal.global_referenced import phase_encoding, time_to_first_spike
+from spikify.encoders.temporal.deconvolution import bens_spiker, hough_spiker, modified_hough_spiker
 from datasets import load_dataset
 
 REPO_ID = "neuromorphic-polito/siddha"
@@ -135,7 +135,7 @@ def convert_dataset_into_spike(dataframe):
             )
             #
             #
-            # Apply Burst encoding and save the data
+            # Apply Burst Coding and save the data
             apply_encoding(
                 dataframe_accel.copy(),
                 path,

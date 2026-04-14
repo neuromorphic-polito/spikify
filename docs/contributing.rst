@@ -8,11 +8,7 @@ This page provides a guide for developers wishing to contribute to **spikify**.
 Bugs, Features and  PRs
 -----------------------
 
-For **bug reports** and well-described **technical feature requests**, please use our issue tracker:
-|br| https://github.com/neuromorphic-polito/spikify/issues
-
-For **feature ideas** and **questions**, please use our discussion board:
-|br| https://github.com/neuromorphic-polito/spikify/discussions
+For **bug reports**, **technical feature requests**, **feature ideas**, and **questions**, please use our issue tracker: https://github.com/neuromorphic-polito/spikify/issues
 
 If you have already created a **PR**, you can send it in. Our CI workflow will check (test and code styles) and
 a maintainer will perform a review, before we can merge it.

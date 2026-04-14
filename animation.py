@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import imageio.v2 as imageio
-from spikify.encoding.rate import poisson_rate
+from spikify.encoders.rate import poisson
 import os
 
 # Set style for better visualization
@@ -13,7 +13,7 @@ t = np.linspace(0, 4 * np.pi, 200)  # Longer time axis, more points
 signal = np.sin(2 * t) + 0.5 * np.sin(4 * t)  # More complex signal
 
 # Generate spikes
-spikes = poisson_rate(signal=signal, interval_length=5)
+spikes = poisson(signal=signal, interval_length=5)
 spike_times = t[spikes]
 
 # Color settings
