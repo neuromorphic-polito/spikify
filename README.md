@@ -54,15 +54,15 @@ spikify implements the following spike encoding families:
 | Encoding Family         | Algorithm                | Description                                                                                       |
 |------------------------|--------------------------|---------------------------------------------------------------------------------------------------|
 | **Rate Encoding**      | Poisson Rate             | Models spike generation as a Poisson process; instantaneous firing rate proportional to signal amplitude |
-| **Temporal Encoding**  | Moving Window            | Emits spikes based on amplitude delta within a sliding local window                              |
-|                        | Step Forward             | Fires when signal exceeds a cumulative forward step threshold                                    |
-|                        | Threshold-Based          | Generates ON/OFF spikes at fixed positive/negative threshold crossings                           |
-|                        | Zero-Cross Step Forward  | Combines zero-crossing detection with step-forward threshold logic                               |
-| **Deconvolution-Based**| Ben Spiker               | Reconstructs spike train via deconvolution against an exponential kernel                         |
-|                        | Hough Spiker             | Applies Hough transform to identify linear spike patterns in signal space                        |
+| **Temporal Encoding**  | Threshold-Based          | Fires an ON spike when the signal crosses a positive threshold, and an OFF spike when it crosses a negative one                           |
+|                        | Step Forward             | Fires ON or OFF spikes each time the signal accumulates enough change in either direction                                    |
+|                        | Zero-Cross Step Forward  | Simplified version of the step-forward that encodes only positive signals                               |
+|                        | Moving Window            | Fires positive or negative spikes when the signal rises or drops significantly within a short local window                              |
+| **Deconvolution-Based**     | Hough Spiker             | Implements an iterative subtraction procedure between the signal and a convolution filter                        |
 |                        | Modified Hough Spiker    | Extends Hough Spiker with outlier rejection for noise-robust encoding                            |
-| **Global Referenced**  | Phase Encoding           | Maps signal amplitude to spike phase relative to a global reference oscillation                  |
-|                        | Time-to-Spike            | Encodes amplitude as latency delay from stimulus onset to first spike                            |
+|                        | Bens Spiker               | Extends the Hough Spiker with an additional error control threshold                       |
+| **Global Referenced**  | Phase Encoding           | Use the inverse arcsin transformation of the signal to compute the binary pattern based on a quantized local mean value of the input                  |
+|                        | Time-to-First Spike            | Encodes amplitude as latency delay from stimulus onset to first spike                            |
 | **Latency Encoding**   | Burst Coding             | Represents signal intensity via inter-spike interval within a burst                              |
 
 **Tips:**  
