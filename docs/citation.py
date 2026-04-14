@@ -1,9 +1,7 @@
 import requests
 
-# Replace with your paper's DOI
 DOI = "10.3389/fnins.2022.999029"
 
-# API endpoint for Semantic Scholar
 API_URL = f"https://api.semanticscholar.org/v1/paper/{DOI}"
 
 
