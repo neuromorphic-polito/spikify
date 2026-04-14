@@ -6,7 +6,7 @@
   </picture>
 </p>
 
-Spikify is a Python package designed to transform raw signals into spike trains that can be fed into Spiking Neural Networks (SNNs). This package implements a variety of spike encoding techniques based on recent research to facilitate the integration of time-varying signals into neuromorphic computing frameworks.
+spikify is a Python package designed to transform raw signals into spike trains that can be fed into Spiking Neural Networks (SNNs). This package implements a variety of spike encoding techniques based on recent research to facilitate the integration of time-varying signals into neuromorphic computing frameworks.
 
 ## Introduction
 
@@ -14,17 +14,9 @@ Spiking Neural Networks (SNNs) are a novel type of artificial neural network tha
 
 This package provides a suite of spike encoding techniques that convert time-varying signals into spikes, enabling seamless integration with neuromorphic computing technologies. The encoding techniques implemented in this package are based on the research article: "Spike Encoding Techniques for IoT Time-Varying Signals Benchmarked on a Neuromorphic Classification Task" (Forno et al., 2022).
 
-## Features
-
-* Multiple Spike Encoding Techniques: Includes both rate-based and temporal encoding schemes
-* **Signal Preprocessing:** Tools for filtering and preparing signals, including:
-  * **Gammatone Filter:** Mimics human auditory filtering, useful for audio and speech signals.
-  * **Butterworth Filter:** Smooths and removes noise from signals, ideal for general sensor data.
-  * Easily chain filters before encoding to improve spike train quality.
-
 ## Installation
 
-To install the Spikify package, use pip:
+To install the spikify package, use pip:
 
 ```bash
 pip install innuce-spikify
@@ -57,37 +49,34 @@ For more detailed examples and usage, please refer to the [documentation](https:
 
 ## Encoding Techniques
 
-This package implements several spike encoding families techniques, including:
+spikify implements the following spike encoding families:
 
-| Encoding Family         | Algorithm                | Description                         |
-|------------------------|--------------------------|--------------------------------------|
-| **Rate Encoding**      | Poisson Rate             | Encodes intensity as firing rate     |
-| **Temporal Encoding**  | Moving Window            | Spikes on local changes              |
-|                        | Step Forward             | Spikes on signal steps               |
-|                        | Threshold-Based          | Spikes when crossing thresholds      |
-|                        | Zero-Cross Step Forward  | Spikes on zero-crossings             |
-| **Deconvolution-Based**| Ben Spiker               | Deconvolves spikes from signal       |
-|                        | Hough Spiker             | Uses Hough transform for spikes      |
-|                        | Modified Hough Spiker    | Robust Hough-based encoding          |
-| **Global Referenced**  | Phase Encoding           | Encodes phase information            |
-|                        | Time-to-Spike            | Spikes at specific time delays       |
-| **Latency Encoding**   | Burst Coding             | Encodes bursts of spikes             |
+| Encoding Family         | Algorithm                | Description                                                                                       |
+|------------------------|--------------------------|---------------------------------------------------------------------------------------------------|
+| **Rate Encoding**      | Poisson Rate             | Models spike generation as a Poisson process; instantaneous firing rate proportional to signal amplitude |
+| **Temporal Encoding**  | Moving Window            | Emits spikes based on amplitude delta within a sliding local window                              |
+|                        | Step Forward             | Fires when signal exceeds a cumulative forward step threshold                                    |
+|                        | Threshold-Based          | Generates ON/OFF spikes at fixed positive/negative threshold crossings                           |
+|                        | Zero-Cross Step Forward  | Combines zero-crossing detection with step-forward threshold logic                               |
+| **Deconvolution-Based**| Ben Spiker               | Reconstructs spike train via deconvolution against an exponential kernel                         |
+|                        | Hough Spiker             | Applies Hough transform to identify linear spike patterns in signal space                        |
+|                        | Modified Hough Spiker    | Extends Hough Spiker with outlier rejection for noise-robust encoding                            |
+| **Global Referenced**  | Phase Encoding           | Maps signal amplitude to spike phase relative to a global reference oscillation                  |
+|                        | Time-to-Spike            | Encodes amplitude as latency delay from stimulus onset to first spike                            |
+| **Latency Encoding**   | Burst Coding             | Represents signal intensity via inter-spike interval within a burst                              |
 
-**Tip:**  
+**Tips:**  
 - Use **Poisson Rate** for general-purpose encoding.  
 - Use **Temporal** or **Deconvolution** methods for signals where timing or event structure is important.
 
 ## Filters
 
-Spikify provides preprocessing filters that can be applied to signals before encoding to improve spike train quality and remove noise. These filters help condition the raw signal data for better encoding performance.
+spikify provides preprocessing filters to condition raw signals before encoding. Both filters are implemented as filter banks with configurable channels, frequency bounds, and order.
 
-### Available Filters
-
-| Filter Type        | Description                                        |
-|-------------------|----------------------------------------------------|
-| **Gammatone**     | Mimics human auditory filtering                   |
-| **Butterworth**   | Low-pass filter for noise reduction and smoothing |
-
+| Filter Type      | Description                                                                                          |
+|-----------------|------------------------------------------------------------------------------------------------------|
+| **Gammatone**   | Bandpass filterbank approximating basilar membrane response; models cochlear frequency decomposition |
+| **Butterworth** | IIR low-pass filter with maximally flat passband; attenuates high-frequency noise before encoding   |
 
 ## Encoded Datasets
 
