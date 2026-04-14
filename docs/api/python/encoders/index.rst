@@ -1,9 +1,9 @@
 .. _encoding:
 
-:octicon:`file-directory;0.9em;sd-mr-1 fill-primary` encoding
+:octicon:`file-directory;0.9em;sd-mr-1 fill-primary` encoders
 =============================================================
 
-The ``encoding`` folder within the spikify library contains the essential components for converting raw data into spike trains, a fundamental step in spiking neural networks. This section is organized to reflect the primary structure of the encoding algorithms included in the library:
+The ``encoders`` module within the spikify library contains the essential components for converting raw data into spike trains, a fundamental step in spiking neural networks. This section is organized to reflect the primary structure of the encoding algorithms included in the library:
 
 - **Rate Coding**: Contains algorithms that convert the intensity of input signals into spike frequency.
 - **Temporal Coding**: Encloses algorithms that encode data based on the precise timing of spikes.

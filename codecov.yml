@@ -49,8 +49,8 @@ component_management:
         - "spikify/encoders/rate/**"
         - "tests/encoders/rate/**"
 
-    - component_id: filtering
-      name: Filtering
+    - component_id: filters
+      name: Filters
       paths:
         - "spikify/filters/**"
         - "tests/filters/**"
