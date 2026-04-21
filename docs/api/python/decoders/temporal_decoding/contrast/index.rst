@@ -7,7 +7,7 @@ The ``contrast`` folder within the temporal decoding module includes the algorit
 
 Contents of the ``contrast`` folder:
 
-- **Contrast Decoder**: A unified decoding algorithm compatible with spike trains produced by the Moving Window (MW), Step-Forward (SF), and Threshold-Based (TB) encoders.
+- **Contrast Decoder**: A unified decoding algorithm compatible with spike trains produced by the Moving Window (MW), Step-Forward (SF), Threshold-Based (TB) encoders ans Zero-Crossing Step Forward (ZCSF).
 
 Below, you will find links to the specific modules for the contrast decoding algorithm:
 

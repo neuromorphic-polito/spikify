@@ -16,3 +16,4 @@ Below, you will find links to the specific modules for each temporal decoding al
    :maxdepth: 1
 
    contrast/index
+   deconvolution/index
