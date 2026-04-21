@@ -11,7 +11,8 @@ class TestStepForward(unittest.TestCase):
         signal = np.array([0, 2, 4, 6, 4, 2, 0], dtype=float)
         threshold = 2.0
         expected_spikes = np.array([0, 0, 1, 1, 0, 0, -1])
-        result = step_forward(signal, threshold)
+        result, _ = step_forward(signal, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_empty_signal(self):
@@ -26,7 +27,8 @@ class TestStepForward(unittest.TestCase):
         signal = np.array([1, 1.5, 1.8, 1.6, 1.4, 1.2])
         threshold = 2.0
         expected_spikes = np.array([0, 0, 0, 0, 0, 0])
-        result = step_forward(signal, threshold)
+        result, _ = step_forward(signal, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_single_positive_spike(self):
@@ -34,7 +36,8 @@ class TestStepForward(unittest.TestCase):
         signal = np.array([0, 0, 5, 0, 0], dtype=float)
         threshold = 4.0
         expected_spikes = np.array([0, 0, 1, 0, 0])
-        result = step_forward(signal, threshold)
+        result, _ = step_forward(signal, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_single_negative_spike(self):
@@ -42,7 +45,8 @@ class TestStepForward(unittest.TestCase):
         signal = np.array([0, 0, -5, 0, 0], dtype=float)
         threshold = 4.0
         expected_spikes = np.array([0, 0, -1, 0, 0])
-        result = step_forward(signal, threshold)
+        result, _ = step_forward(signal, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_alternating_spikes(self):
@@ -50,7 +54,8 @@ class TestStepForward(unittest.TestCase):
         signal = np.array([0, 5, 0, -5, 0], dtype=float)
         threshold = 4.0
         expected_spikes = np.array([0, 1, 0, -1, 0])
-        result = step_forward(signal, threshold)
+        result, _ = step_forward(signal, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_signal_with_noise(self):
@@ -58,14 +63,16 @@ class TestStepForward(unittest.TestCase):
         signal = np.array([0, 0.5, 2.5, 1.5, 0, -1, -2.5, -1.5, 0])
         threshold = 2.0
         expected_spikes = np.array([0, 0, 1, 0, 0, -1, -1, 0, 0])
-        result = step_forward(signal, threshold)
+        result, _ = step_forward(signal, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_large_signal(self):
         """Test the function's performance and correctness on a large signal."""
         signal = np.random.randn(1000) * 10  # Random signal with mean 0 and standard deviation 10
         threshold = 15.0
-        result = step_forward(signal, threshold)
+        result, _ = step_forward(signal, threshold)
+        result = result.flatten()
         self.assertEqual(len(result), len(signal))
 
     def test_boundary_conditions(self):
@@ -73,7 +80,8 @@ class TestStepForward(unittest.TestCase):
         signal = np.array([10, 0, -10], dtype=float)
         threshold = 5.0
         expected_spikes = np.array([0, -1, -1])
-        result = step_forward(signal, threshold)
+        result, _ = step_forward(signal, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_with_multiple_features(self):
@@ -84,11 +92,13 @@ class TestStepForward(unittest.TestCase):
         signal_f2 = signal[:, 1]
 
         threshold = [0.1, 0.3]
-        encoded_signal = step_forward(signal, threshold)
+        encoded_signal, _ = step_forward(signal, threshold)
         self.assertEqual(encoded_signal.shape, signal.shape)
 
-        encoded_signal_f1 = step_forward(signal_f1, threshold[0])
-        encoded_signal_f2 = step_forward(signal_f2, threshold[1])
+        encoded_signal_f1, _ = step_forward(signal_f1, threshold[0])
+        encoded_signal_f1 = encoded_signal_f1.flatten()
+        encoded_signal_f2, _ = step_forward(signal_f2, threshold[1])
+        encoded_signal_f2 = encoded_signal_f2.flatten()
 
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
@@ -105,5 +115,5 @@ class TestStepForward(unittest.TestCase):
         """Test that the function raises TypeError when threshold is of invalid dimension."""
         signal = np.random.rand(10, 2)
         threshold = np.array([[0.1, 0.2], [0.3, 0.4]])
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             step_forward(signal, threshold)

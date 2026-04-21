@@ -9,7 +9,7 @@ import numpy as np
 
 def moving_window(
     signal: np.ndarray, window_length: int, threshold: float | int | list[float | int] | np.ndarray
-) -> np.ndarray:
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Perform Moving Window (MW) encoding on the input signal.
 
@@ -29,8 +29,7 @@ def moving_window(
         signal = np.array([0.1, 0.3, 0.2, 0.5, 0.8, 1.0])
         window_length = 3
         threshold = 0.2
-        encoded_signal = moving_window(signal, window_length, threshold)
-        encoded_signal
+        encoded_signal, thresholds = moving_window(signal, window_length, threshold)
 
     .. doctest::
         :hide:
@@ -40,20 +39,23 @@ def moving_window(
         >>> signal = np.array([0.1, 0.3, 0.2, 0.5, 0.8, 1.0])
         >>> window_length = 3
         >>> threshold = 0.2
-        >>> encoded_signal = moving_window(signal, window_length, threshold)
-        >>> encoded_signal
+        >>> encoded_signal, _ = moving_window(signal, window_length, threshold)
+        >>> encoded_signal.flatten()
         array([0, 0, 0, 1, 1, 1], dtype=int8)
 
-    :param signal: The input signal to be encoded. This should be a numpy ndarray.
+    :param signal: Input signal to encode (1D or 2D: time × features or channels).
     :type signal: numpy.ndarray
     :param window_length: The size of the sliding window for calculating the signal base mean.
     :type window_length: int
     :param threshold: Threshold(s) for spike generation; scalar or 1D sequence matching features.
     :type threshold: float | int | list[float | int] | numpy.ndarray
-    :return: A numpy array representing the encoded spike train.
-    :rtype: numpy.ndarray
-    :raises ValueError: If the input signal is empty or if the threshold dimensions do not match the signal features.
-    :raises TypeError: If the threshold parameter is of invalid dimension.
+    :return:
+        - spikes: A numpy array representing the encoded spike train. (values in {-1, 0, +1})
+        - thresholds: Per-feature or channel thresholds used for encoding, returned for use in decoding,
+          shape (features or channels,).
+    :rtype: tuple[numpy.ndarray, numpy.ndarray]
+    :raises ValueError: If the input signal is empty or if the threshold dimensions do not match the signal f
+                        eature dimensions.
 
     """
 
@@ -73,7 +75,7 @@ def moving_window(
     else:
         thresholds = np.asarray(threshold, dtype=float)
         if thresholds.ndim != 1:
-            raise TypeError("Threshold must be a scalar or a 1D sequence of numbers.")
+            raise ValueError("Threshold must be a scalar or a 1D sequence of numbers.")
         if thresholds.size != F:
             raise ValueError("Threshold must match the number of features in the signal.")
 
@@ -100,8 +102,4 @@ def moving_window(
             elif signal[t, f] < base - thresholds[f]:
                 spikes[t, f] = -1
 
-    # Flatten if input was 1D
-    if F == 1:
-        spikes = spikes.flatten()
-
-    return spikes
+    return spikes, thresholds
