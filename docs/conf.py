@@ -18,7 +18,7 @@ project = "spikify"
 now = datetime.datetime.now()
 author = "Benedetto Leto, Gianvito Urgese, Vittorio Fra, Riccardo Pignari"
 copyright = f"{now.year}, {author}."
-version = "1.0.0"
+version = "1.1.0"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
