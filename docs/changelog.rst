@@ -8,6 +8,19 @@ All notable changes to this project will be documented in this file.
 The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.1.0/>`__,
 and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`__.
 
+1.1.0
+-----
+:Released: 2026-04-21
+:Full Changelog: `1.0.0...1.1.0 <https://github.com/neuromorphic-polito/spikify/compare/1.0.0...1.1.0>`__
+
+Improvements
+............
+- Introduced decoding support for contrast-based and deconvolution-based encoders, enabling signal reconstruction workflows.
+- Improved return format consistency by removing implicit flattening of outputs across decoding functions.
+- Clarified argument order and improved API consistency in decoding-related functions.
+- General documentation style improvements and cleanup.
+- Removed unnecessary argument initializations to simplify internal logic.
+
 1.0.0
 -----
 :Released: 2026-04-14
