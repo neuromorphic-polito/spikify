@@ -7,7 +7,9 @@
 import numpy as np
 
 
-def step_forward(signal: np.ndarray, threshold: float | int | list[float | int] | np.ndarray) -> np.ndarray:
+def step_forward(
+    signal: np.ndarray, threshold: float | int | list[float | int] | np.ndarray
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Perform Step-Forward (SF) encoding on the input signal.
 
@@ -25,7 +27,7 @@ def step_forward(signal: np.ndarray, threshold: float | int | list[float | int] 
         from spikify.encoders.temporal.contrast import step_forward
         signal = np.array([0.1, 0.3, 0.4, 0.2, 0.5, 0.6])
         threshold = 0.2
-        encoded_signal = step_forward(signal, threshold)
+        encoded_signal, thresholds = step_forward(signal, threshold)
 
     .. doctest::
         :hide:
@@ -34,18 +36,21 @@ def step_forward(signal: np.ndarray, threshold: float | int | list[float | int] 
         >>> from spikify.encoders.temporal.contrast import step_forward
         >>> signal = np.array([0.1, 0.3, 0.4, 0.2, 0.5, 0.6])
         >>> threshold = 0.2
-        >>> encoded_signal = step_forward(signal, threshold)
-        >>> encoded_signal
+        >>> encoded_signal, _ = step_forward(signal, threshold)
+        >>> encoded_signal.flatten()
         array([0, 0, 1, 0, 0, 1], dtype=int8)
 
-    :param signal: The input signal to be encoded. This should be a numpy ndarray.
+    :param signal: Input signal to encode (1D or 2D: time × features or channels).
     :type signal: numpy.ndarray
     :param threshold: Threshold(s) for spike generation; scalar or 1D sequence matching features.
     :type threshold: float | int | list[float | int] | numpy.ndarray
-    :return: A numpy array representing the encoded spike train.
-    :rtype: numpy.ndarray
-    :raises ValueError: If the input signal is empty or if the threshold dimensions do not match the signal features.
-    :raises TypeError: If the threshold parameter is of invalid dimension.
+    :return:
+        - spikes: A numpy array representing the encoded spike train. (values in {-1, 0, +1})
+        - thresholds: Per-feature or channel thresholds used for encoding, returned for use in decoding,
+                      shape (features or channels,).
+    :rtype: tuple[numpy.ndarray, numpy.ndarray]
+    :raises ValueError: If the input signal is empty or if the threshold dimensions do not match the signal
+            features dimensions.
 
     """
 
@@ -65,7 +70,7 @@ def step_forward(signal: np.ndarray, threshold: float | int | list[float | int] 
     else:
         thresholds = np.asarray(threshold, dtype=float)
         if thresholds.ndim != 1:
-            raise TypeError("Threshold must be a scalar or a 1D sequence of numbers.")
+            raise ValueError("Threshold must be a scalar or a 1D sequence of numbers.")
         if thresholds.size != F:
             raise ValueError("Threshold must match the number of features in the signal.")
 
@@ -86,8 +91,4 @@ def step_forward(signal: np.ndarray, threshold: float | int | list[float | int] 
                 spike[t, feat] = -1
                 base -= thresholds[feat]
 
-    # Flatten if input was 1D
-    if F == 1:
-        spike = spike.flatten()
-
-    return spike
+    return spike, thresholds
