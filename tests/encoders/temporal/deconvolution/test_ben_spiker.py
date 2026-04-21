@@ -16,6 +16,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         cutoff = 0.2
         expected_spikes = np.array([0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0])
         result, _, _ = bens_spiker(signal, window_length, cutoff, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_threshold_sensitivity(self):
@@ -27,9 +28,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         threshold_high = 10.0
         cutoff = 0.2
         result_low, _, _ = bens_spiker(signal, window_length, cutoff, threshold_low)
-        print(result_low)
         result_high, _, _ = bens_spiker(signal, window_length, cutoff, threshold_high)
-        print(result_high)
         self.assertTrue(np.any(result_low))
         self.assertFalse(np.any(result_high))
 
@@ -71,7 +70,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         threshold = np.array([[0.1, 0.2], [0.3, 0.4]])
         window_length = 3
         cutoff = 0.2
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             bens_spiker(signal, window_length, cutoff, threshold)
 
     def test_no_matching_pattern(self):
@@ -84,6 +83,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         cutoff = 0.2
         expected_spikes = np.array([0, 0, 0, 0, 0])
         result, _, _ = bens_spiker(signal, window_length, cutoff, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_varying_filter_window_size(self):
@@ -97,12 +97,14 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         window_length_3 = 3
         expected_spikes_3 = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0])
         result_3, _, _ = bens_spiker(signal, window_length_3, cutoff, threshold)
+        result_3 = result_3.flatten()
         np.testing.assert_array_equal(result_3, expected_spikes_3)
 
         # Test case for filter window size of 5
         window_length_5 = 5
         expected_spikes_5 = np.array([0, 1, 0, 1, 0, 0, 0, 0, 0])
         result_5, _, _ = bens_spiker(signal, window_length_5, cutoff, threshold)
+        result_5 = result_5.flatten()
         np.testing.assert_array_equal(result_5, expected_spikes_5)
 
         # Test case for filter window size of 7
@@ -110,6 +112,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         window_length_7 = 7
         expected_spikes_7 = np.array([1, 0, 1, 0, 0, 0, 0, 0, 0])
         result_7, _, _ = bens_spiker(signal, window_length_7, cutoff, threshold)
+        result_7 = result_7.flatten()
         np.testing.assert_array_equal(result_7, expected_spikes_7)
 
     def test_large_signal(self):
@@ -120,6 +123,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         threshold = 5.0
         cutoff = 0.2
         result, _, _ = bens_spiker(signal, window_length, cutoff, threshold)
+        result = result.flatten()
         self.assertEqual(len(result), len(signal))
 
     def test_with_multiple_features(self):
@@ -134,7 +138,9 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         signal_f1 = signal[:, 0]
         signal_f2 = signal[:, 1]
         encoded_signal_f1, _, _ = bens_spiker(signal_f1, window_length, cutoff, threshold[0])
+        encoded_signal_f1 = encoded_signal_f1.flatten()
         encoded_signal_f2, _, _ = bens_spiker(signal_f2, window_length, cutoff, threshold[1])
+        encoded_signal_f2 = encoded_signal_f2.flatten()
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
 
@@ -155,7 +161,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         window_length = 3
         cutoff = 0.4
         threshold = 0.95
-        _, shift, fir_coeff = bens_spiker(signal, window_length, cutoff, threshold)
+        _, fir_coeff, shift = bens_spiker(signal, window_length, cutoff, threshold)
 
         expected_shift = np.array([-0.1], dtype=np.float32)
         expected_fir_sum = 1.0
@@ -170,7 +176,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         window_length = 3
         cutoff = 0.4
         threshold = 0.95
-        _, shift, fir_coeff = bens_spiker(signal, window_length, cutoff, threshold)
+        _, fir_coeff, shift = bens_spiker(signal, window_length, cutoff, threshold)
 
         expected_shift = np.array([0.0], dtype=np.float32)
         expected_fir_sum = 1.0
@@ -185,7 +191,7 @@ class TestBenSpikerAlgorithm(unittest.TestCase):
         window_length = 3
         cutoff = 0.4
         threshold = 0.95
-        _, shift, fir_coeff = bens_spiker(signal, window_length, cutoff, threshold)
+        _, fir_coeff, shift = bens_spiker(signal, window_length, cutoff, threshold)
 
         expected_shift = np.array([0.0], dtype=np.float32)
         expected_fir_sum = 3.8
