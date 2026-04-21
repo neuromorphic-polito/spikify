@@ -12,6 +12,7 @@ class TestThresholdBasedRepresentation(unittest.TestCase):
         factor = 1.0
         expected_spikes = np.array([1, 1, 1, -1, -1, -1, -1])
         result, _ = threshold_based_representation(signal, factor)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_empty_signal(self):
@@ -27,6 +28,7 @@ class TestThresholdBasedRepresentation(unittest.TestCase):
         factor = 1.0
         expected_spikes = np.array([0, 0, 0, 0, 0])
         result, _ = threshold_based_representation(signal, factor)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_signal_with_noise(self):
@@ -52,12 +54,14 @@ class TestThresholdBasedRepresentation(unittest.TestCase):
         factor_high = 2.0
         expected_spikes_high = np.array([0, 0, 0, 0, 0, 0, 0])
         result_high, _ = threshold_based_representation(signal, factor_high)
+        result_high = result_high.flatten()
         np.testing.assert_array_equal(result_high, expected_spikes_high)
 
         # Lower threshold factor, more sensitivity
         factor_low = 0.1
         expected_spikes_low = np.array([1, 1, 1, -1, -1, -1, -1])
         result_low, _ = threshold_based_representation(signal, factor_low)
+        result_low = result_low.flatten()
         np.testing.assert_array_equal(result_low, expected_spikes_low)
 
     def test_with_multiple_features(self):
@@ -70,7 +74,9 @@ class TestThresholdBasedRepresentation(unittest.TestCase):
         signal_f1 = signal[:, 0]
         signal_f2 = signal[:, 1]
         encoded_signal_f1, _ = threshold_based_representation(signal_f1, threshold[0])
+        encoded_signal_f1 = encoded_signal_f1.flatten()
         encoded_signal_f2, _ = threshold_based_representation(signal_f2, threshold[1])
+        encoded_signal_f2 = encoded_signal_f2.flatten()
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
 
@@ -93,5 +99,5 @@ class TestThresholdBasedRepresentation(unittest.TestCase):
         """Test that the function raises TypeError when factor is of invalid dimension."""
         signal = np.random.rand(10, 2)
         factor = np.array([[1.0, 2.0], [3.0, 4.0]])
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             threshold_based_representation(signal, factor)

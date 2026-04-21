@@ -12,7 +12,8 @@ class TestMovingWindow(unittest.TestCase):
         window_length = 3
         threshold = 0.5
         expected_spikes = np.array([-1, 0, 1, 1, 1, 0, -1, -1, -1])
-        result = moving_window(signal, window_length, threshold)
+        result, _ = moving_window(signal, window_length, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_empty_signal(self):
@@ -37,7 +38,8 @@ class TestMovingWindow(unittest.TestCase):
         window_length = 3
         threshold = 0.5
         expected_spikes = np.array([0, 0, 0, 0, 0])
-        result = moving_window(signal, window_length, threshold)
+        result, _ = moving_window(signal, window_length, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_large_signal(self):
@@ -45,7 +47,8 @@ class TestMovingWindow(unittest.TestCase):
         signal = np.random.randn(1000)
         window_length = 50
         threshold = 0.3
-        result = moving_window(signal, window_length, threshold)
+        result, _ = moving_window(signal, window_length, threshold)
+        result = result.flatten()
         self.assertEqual(len(result), len(signal))
 
     def test_no_spikes(self):
@@ -54,7 +57,8 @@ class TestMovingWindow(unittest.TestCase):
         window_length = 3
         threshold = 5
         expected_spikes = np.array([0, 0, 0, 0, 0])
-        result = moving_window(signal, window_length, threshold)
+        result, _ = moving_window(signal, window_length, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_variable_window_length(self):
@@ -65,14 +69,16 @@ class TestMovingWindow(unittest.TestCase):
         window_length_3 = 3
         threshold_3 = 0.5
         expected_spikes_3 = np.array([-1, 0, 1, 1, 1, 1, 1, 0, -1, -1, -1, -1, -1])
-        result_3 = moving_window(signal, window_length_3, threshold_3)
+        result_3, _ = moving_window(signal, window_length_3, threshold_3)
+        result_3 = result_3.flatten()
         np.testing.assert_array_equal(result_3, expected_spikes_3)
 
         # Test case for window length of 5
         window_length_5 = 5
         threshold_5 = 0.5
         expected_spikes_5 = np.array([-1, -1, 0, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1])
-        result_5 = moving_window(signal, window_length_5, threshold_5)
+        result_5, _ = moving_window(signal, window_length_5, threshold_5)
+        result_5 = result_5.flatten()
         np.testing.assert_array_equal(result_5, expected_spikes_5)
 
     def test_with_multiple_features(self):
@@ -80,12 +86,14 @@ class TestMovingWindow(unittest.TestCase):
         np.random.seed(42)
         signal = np.random.rand(10, 2)
         window_length = 2
-        encoded_signal = moving_window(signal, window_length, threshold=0.1)
+        encoded_signal, _ = moving_window(signal, window_length, threshold=0.1)
         self.assertEqual(encoded_signal.shape, signal.shape)
         signal_f1 = signal[:, 0]
         signal_f2 = signal[:, 1]
-        encoded_signal_f1 = moving_window(signal_f1, window_length, threshold=0.1)
-        encoded_signal_f2 = moving_window(signal_f2, window_length, threshold=0.1)
+        encoded_signal_f1, _ = moving_window(signal_f1, window_length, threshold=0.1)
+        encoded_signal_f1 = encoded_signal_f1.flatten()
+        encoded_signal_f2, _ = moving_window(signal_f2, window_length, threshold=0.1)
+        encoded_signal_f2 = encoded_signal_f2.flatten()
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
 
@@ -94,7 +102,7 @@ class TestMovingWindow(unittest.TestCase):
         signal = np.random.rand(10, 2)
         window_length = 2
         threshold = np.array([[0.1, 0.2], [0.3, 0.4]])
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             moving_window(signal, window_length, threshold)
 
     def test_threshold_dims_different_from_features(self):
