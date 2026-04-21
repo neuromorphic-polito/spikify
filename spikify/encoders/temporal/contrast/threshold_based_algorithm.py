@@ -36,19 +36,21 @@ def threshold_based_representation(
         >>> from spikify.encoders.temporal.contrast import threshold_based_representation
         >>> signal = np.array([0.1, 0.3, 0.4, 0.2, 0.5, 0.6])
         >>> factor = 0.5
-        >>> encoded_signal, threshold = threshold_based_representation(signal, factor)
-        >>> encoded_signal
+        >>> encoded_signal, _ = threshold_based_representation(signal, factor)
+        >>> encoded_signal.flatten()
         array([ 1,  0, -1,  1,  0,  0], dtype=int8)
 
-    :param signal: The input signal to be encoded. This should be a numpy ndarray.
+    :param signal: Input signal to encode (1D or 2D: time × features or channels).
     :type signal: numpy.ndarray
     :param factor: The factor value (`factor`) that controls the noise-reduction threshold.
                    Can be a float, an integer, or a list of floats or integers.
     :type factor: float | int | list[float | int] | numpy.ndarray
-    :return: A tuple containing the encoded spike train and the computed threshold for each feature.
+    :return:
+        - spikes: A numpy array representing the encoded spike train. (values in {-1, 0, +1})
+        - thresholds: Per-feature or channel thresholds used for encoding, returned for use in decoding,
+          shape (features or channels,).
     :rtype: tuple[numpy.ndarray, numpy.ndarray]
     :raises ValueError: If the input signal is empty or if the factor length does not match the number of features.
-    :raises TypeError: If the factor parameter is of invalid dimension.
 
     """
 
@@ -68,7 +70,7 @@ def threshold_based_representation(
     else:
         factors = np.asarray(factor, dtype=float)
         if factors.ndim != 1:
-            raise TypeError("Factor must be a scalar or a 1D sequence of numbers.")
+            raise ValueError("Factor must be a scalar or a 1D sequence of numbers.")
         if factors.size != F:
             raise ValueError("Factor must match the number of features in the signal.")
     spike = np.zeros_like(signal, dtype=np.int8)
@@ -87,8 +89,7 @@ def threshold_based_representation(
     spike[diff > threshold] = 1
     spike[diff < -threshold] = -1
 
-    # Flatten if input was 1D
-    if F == 1:
-        spike = spike.flatten()
+    # Reshape threshold to 1D for return
+    threshold = threshold.flatten()
 
-    return spike, threshold.flatten()
+    return spike, threshold

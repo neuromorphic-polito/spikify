@@ -46,7 +46,7 @@ def hough_spiker(
         signal = np.array([0.1, 0.2, 4.1, 1.0, 3.0, 0.3, 0.1])
         window_length = 3
         cutoff = 0.1
-        encoded_signal, shift, norm, fir_coeffs = hough_spiker(signal, window_length, cutoff)
+        encoded_signal, fir_coeffs, shift, norm = hough_spiker(signal, window_length, cutoff)
 
     .. doctest::
         :hide:
@@ -56,11 +56,11 @@ def hough_spiker(
         >>> signal = np.array([0.1, 0.2, 4.1, 1.0, 3.0, 0.3, 0.1])
         >>> window_length = 3
         >>> cutoff = 0.1
-        >>> encoded_signal, shift, norm, fir_coeffs = hough_spiker(signal, window_length, cutoff)
-        >>> encoded_signal
+        >>> encoded_signal, _, _, _  = hough_spiker(signal, window_length, cutoff)
+        >>> encoded_signal.flatten()
         array([0, 1, 0, 0, 0, 0, 0], dtype=int8)
 
-    :param signal: Input signal to encode (1D or 2D: time × features).
+    :param signal: Input signal to encode (1D or 2D: time × features or channels).
     :type signal: numpy.ndarray
     :param window_length: Length of the FIR filter (number of coefficients).
     :type window_length: int
@@ -79,10 +79,10 @@ def hough_spiker(
     :param fs: Sampling frequency (used for physical frequency units in cutoff; optional).
     :type fs: float | None
     :return:
-        - spikes: Spike train (same shape as input, dtype=int8, values 0 or 1)
-        - shift: Per-feature shift values subtracted to make signal non-negative (1D array)
-        - norm: Per-feature normalization values used to scale signal to [0, 1] (1D array)
-        - fir_bank: Final filter coefficients used, shape (window_length, n_features)
+        - spikes: A numpy array representing the encoded spike train. (values in {0, +1})
+        - fir_bank: Final filter coefficients used (window_length, features or channels).
+        - shift: Per-feature shift values subtracted to make signal non-negative, shape (features or channels,).
+        - norm: Per-feature normalization values used to scale signal to [0, 1], shape (features or channels,).
     :rtype: tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, numpy.ndarray]
     :raises ValueError: If the input signal is empty or if the window_length is greater than the signal lenght.
 
@@ -129,8 +129,4 @@ def hough_spiker(
                 signal_copy[t : t + window_length, f] -= fir_bank[:, f]
                 spikes[t, f] = 1
 
-    # Flatten if input was 1D
-    if F == 1:
-        spikes = spikes.flatten()
-
-    return spikes, shift, norm, fir_bank
+    return spikes, fir_bank, shift, norm

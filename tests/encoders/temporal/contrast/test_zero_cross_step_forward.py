@@ -11,7 +11,8 @@ class TestZeroCrossStepForward(unittest.TestCase):
         signal = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
         threshold = 5.0
         expected_spikes = np.array([0, 0, 0, 0, 0, 0, 1, 1, 1, 1])
-        result = zero_cross_step_forward(signal, threshold)
+        result, _ = zero_cross_step_forward(signal, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_empty_signal(self):
@@ -26,7 +27,8 @@ class TestZeroCrossStepForward(unittest.TestCase):
         signal = np.array([0, 1, 2, 3, 4])
         threshold = 5.0
         expected_spikes = np.array([0, 0, 0, 0, 0])
-        result = zero_cross_step_forward(signal, threshold)
+        result, _ = zero_cross_step_forward(signal, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_all_above_threshold(self):
@@ -34,7 +36,8 @@ class TestZeroCrossStepForward(unittest.TestCase):
         signal = np.array([6, 7, 8, 9, 10])
         threshold = 5.0
         expected_spikes = np.array([1, 1, 1, 1, 1])
-        result = zero_cross_step_forward(signal, threshold)
+        result, _ = zero_cross_step_forward(signal, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_signal_with_negative_values(self):
@@ -42,7 +45,8 @@ class TestZeroCrossStepForward(unittest.TestCase):
         signal = np.array([-1, -2, -3, 4, 5, -6, 7])
         threshold = 5.0
         expected_spikes = np.array([0, 0, 0, 0, 0, 0, 1])
-        result = zero_cross_step_forward(signal, threshold)
+        result, _ = zero_cross_step_forward(signal, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_no_spikes(self):
@@ -50,14 +54,16 @@ class TestZeroCrossStepForward(unittest.TestCase):
         signal = np.array([0, 0, 0, 0, 0])
         threshold = 1.0
         expected_spikes = np.array([0, 0, 0, 0, 0])
-        result = zero_cross_step_forward(signal, threshold)
+        result, _ = zero_cross_step_forward(signal, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_large_signal(self):
         """Test the function's performance and correctness on a large signal."""
         signal = np.random.randint(-10, 20, size=1000)
         threshold = 10.0
-        result = zero_cross_step_forward(signal, threshold)
+        result, _ = zero_cross_step_forward(signal, threshold)
+        result = result.flatten()
         self.assertEqual(len(result), len(signal))
 
     def test_threshold_at_zero(self):
@@ -65,7 +71,8 @@ class TestZeroCrossStepForward(unittest.TestCase):
         signal = np.array([-1, 0, 1, 2, 3])
         threshold = 0.0
         expected_spikes = np.array([0, 0, 1, 1, 1])
-        result = zero_cross_step_forward(signal, threshold)
+        result, _ = zero_cross_step_forward(signal, threshold)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_shape_with_multiple_features(self):
@@ -73,12 +80,14 @@ class TestZeroCrossStepForward(unittest.TestCase):
         np.random.seed(42)
         signal = np.random.rand(10, 2)
         threshold = [0.5, 0.3]
-        encoded_signal = zero_cross_step_forward(signal, threshold)
+        encoded_signal, _ = zero_cross_step_forward(signal, threshold)
         self.assertEqual(encoded_signal.shape, signal.shape)
         signal_f1 = signal[:, 0]
         signal_f2 = signal[:, 1]
-        encoded_signal_f1 = zero_cross_step_forward(signal_f1, threshold[0])
-        encoded_signal_f2 = zero_cross_step_forward(signal_f2, threshold[1])
+        encoded_signal_f1, _ = zero_cross_step_forward(signal_f1, threshold[0])
+        encoded_signal_f1 = encoded_signal_f1.flatten()
+        encoded_signal_f2, _ = zero_cross_step_forward(signal_f2, threshold[1])
+        encoded_signal_f2 = encoded_signal_f2.flatten()
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
 
@@ -94,5 +103,5 @@ class TestZeroCrossStepForward(unittest.TestCase):
         """Test that the function raises TypeError when threshold is of invalid dimension."""
         signal = np.random.rand(10, 2)
         threshold = np.array([[0.1, 0.2], [0.3, 0.4]])
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             zero_cross_step_forward(signal, threshold)

@@ -54,7 +54,7 @@ def modified_hough_spiker(
         window_length = 3
         threshold = 0.5
         cutoff = 0.1
-        encoded_signal, shift, norm, fir_coeffs = modified_hough_spiker(signal, window_length, cutoff, threshold)
+        encoded_signal, fir_coeffs, shift, norm, = modified_hough_spiker(signal, window_length, cutoff, threshold)
 
     .. doctest::
         :hide:
@@ -65,11 +65,11 @@ def modified_hough_spiker(
         >>> window_length = 3
         >>> threshold = 0.5
         >>> cutoff = 0.1
-        >>> encoded_signal, shift, norm, fir_coeffs = modified_hough_spiker(signal, window_length, cutoff, threshold)
-        >>> encoded_signal
+        >>> encoded_signal, _, _, _ = modified_hough_spiker(signal, window_length, cutoff, threshold)
+        >>> encoded_signal.flatten()
         array([0, 0, 1, 1, 0, 0, 1], dtype=int8)
 
-    :param signal: Input signal to encode (1D or 2D: time × features).
+    :param signal: Input signal to encode (1D or 2D: time × features or channels).
     :type signal: numpy.ndarray
     :param window_length: Length of the FIR filter (number of coefficients).
     :type window_length: int
@@ -91,14 +91,13 @@ def modified_hough_spiker(
     :param fs: Sampling frequency (used for physical frequency units in cutoff; optional).
     :type fs: float | None
     :return:
-        - spikes: Spike train (same shape as input, dtype=int8, values 0 or 1)
-        - shift: Per-feature shift values subtracted to make signal non-negative (1D array)
-        - norm: Per-feature normalization values used to scale signal to [0, 1] (1D array)
-        - fir_bank: Final filter coefficients used, shape (window_length, n_features)
+        - spikes: A numpy array representing the encoded spike train. (values in {0, +1})
+        - fir_bank: Final filter coefficients used, shape (window_length, features or channels).
+        - shift: Per-feature shift values subtracted to make signal non-negative, shape (features or channels,).
+        - norm: Per-feature normalization values used to scale signal to [0, 1], shape (features or channels,).
     :rtype: tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, numpy.ndarray]
     :raises ValueError: If the input signal is empty or if the threshold dimensions do not match the signal
                         features or if the window_length is greater than the signal lenght.
-    :raises TypeError: If the threshold parameter is of invalid dimension.
 
     """
     # Check for empty signal
@@ -121,7 +120,7 @@ def modified_hough_spiker(
     else:
         thresholds = np.asarray(threshold, dtype=float)
         if thresholds.ndim != 1:
-            raise TypeError("Threshold must be a scalar or a 1D sequence of numbers.")
+            raise ValueError("Threshold must be a scalar or a 1D sequence of numbers.")
         if thresholds.size != F:
             raise ValueError("Threshold must match the number of features in the signal.")
 
@@ -163,8 +162,4 @@ def modified_hough_spiker(
                 signal_copy[t:end_index, f] -= filter_segment
                 spikes[t, f] = 1
 
-    # Flatten if input was 1D
-    if F == 1:
-        spikes = spikes.flatten()
-
-    return spikes, shift, norm, fir_bank
+    return spikes, fir_bank, shift, norm

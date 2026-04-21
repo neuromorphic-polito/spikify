@@ -15,6 +15,7 @@ class TestHoughSpikerAlgorithm(unittest.TestCase):
         cutoff = 0.1
         expected_spikes = np.array([0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0])
         result, _, _, _ = hough_spiker(signal, window_length, cutoff)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_empty_signal(self):
@@ -54,6 +55,7 @@ class TestHoughSpikerAlgorithm(unittest.TestCase):
         cutoff = 0.2
         expected_spikes = np.array([0, 1, 0, 0, 0, 0, 0, 0])
         result, _, _, _ = hough_spiker(signal, window_length, cutoff)
+        result = result.flatten()
         np.testing.assert_array_equal(result, expected_spikes)
 
     def test_varying_filter_window_size(self):
@@ -66,18 +68,21 @@ class TestHoughSpikerAlgorithm(unittest.TestCase):
         window_length_3 = 3
         expected_spikes_3 = np.array([0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0])
         result_3, _, _, _ = hough_spiker(signal, window_length_3, cutoff)
+        result_3 = result_3.flatten()
         np.testing.assert_array_equal(result_3, expected_spikes_3)
 
         # Test case for filter window size of 5
         window_length_5 = 5
         expected_spikes_5 = np.array([1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0])
         result_5, _, _, _ = hough_spiker(signal, window_length_5, cutoff)
+        result_5 = result_5.flatten()
         np.testing.assert_array_equal(result_5, expected_spikes_5)
 
         # Test case for filter window size of 7
         window_length_7 = 7
         expected_spikes_7 = np.array([1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0])
         result_7, _, _, _ = hough_spiker(signal, window_length_7, cutoff)
+        result_7 = result_7.flatten()
         np.testing.assert_array_equal(result_7, expected_spikes_7)
 
     def test_large_signal(self):
@@ -87,6 +92,7 @@ class TestHoughSpikerAlgorithm(unittest.TestCase):
         window_length = 10
         cutoff = 0.1
         result, _, _, _ = hough_spiker(signal, window_length, cutoff)
+        result = result.flatten()
         self.assertEqual(len(result), len(signal))
 
     def test_with_multiple_features(self):
@@ -100,7 +106,9 @@ class TestHoughSpikerAlgorithm(unittest.TestCase):
         signal_f1 = signal[:, 0]
         signal_f2 = signal[:, 1]
         encoded_signal_f1 = hough_spiker(signal_f1, window_length, cutoff)[0]
+        encoded_signal_f1 = encoded_signal_f1.flatten()
         encoded_signal_f2 = hough_spiker(signal_f2, window_length, cutoff)[0]
+        encoded_signal_f2 = encoded_signal_f2.flatten()
         np.testing.assert_array_equal(encoded_signal[:, 0], encoded_signal_f1)
         np.testing.assert_array_equal(encoded_signal[:, 1], encoded_signal_f2)
 
@@ -110,7 +118,7 @@ class TestHoughSpikerAlgorithm(unittest.TestCase):
         signal = np.array([-0.1, 0.1, 0.2, 0.3, 0.4, 0.3, 0.2, 0.1], dtype=np.float32)
         window_length = 3
         cutoff = 0.4
-        _, shift, norm, fir_coeff = hough_spiker(signal, window_length, cutoff)
+        _, fir_coeff, shift, norm = hough_spiker(signal, window_length, cutoff)
 
         expected_shift = np.array([-0.1], dtype=np.float32)
         expected_norm = np.array([1.0], dtype=np.float32)
@@ -126,7 +134,7 @@ class TestHoughSpikerAlgorithm(unittest.TestCase):
         signal = np.array([0.1, 0.3, 0.5, 0.7, 0.9, 0.6, 0.4, 0.2], dtype=np.float32)
         window_length = 3
         cutoff = 0.4
-        _, shift, norm, fir_coeff = hough_spiker(signal, window_length, cutoff)
+        _, fir_coeff, shift, norm = hough_spiker(signal, window_length, cutoff)
 
         expected_shift = np.array([0.0], dtype=np.float32)
         expected_norm = np.array([1.0], dtype=np.float32)
@@ -142,7 +150,7 @@ class TestHoughSpikerAlgorithm(unittest.TestCase):
         signal = np.array([0.1, 0.3, 0.5, 0.7, 1.9, 1.6, 1.4, 0.2], dtype=np.float32)
         window_length = 3
         cutoff = 0.4
-        _, shift, norm, fir_coeff = hough_spiker(signal, window_length, cutoff)
+        _, fir_coeff, shift, norm = hough_spiker(signal, window_length, cutoff)
 
         expected_shift = np.array([0.0], dtype=np.float32)
         expected_norm = np.array([1.9], dtype=np.float32)

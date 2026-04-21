@@ -21,3 +21,4 @@ Below, you will find links to the specific modules within the Python API:
 
    filters/index
    encoders/index
+   decoders/index
