@@ -66,7 +66,7 @@ def contrast_decoder(
         Should be set to the first sample of the original signal before encoding (e.g. ``signal[0]``), as the
         Contrast family encodes only signal differences and the absolute offset must be restored manually.
     :type start_point: float | int | list[float | int] | numpy.ndarray
-    :return: A numpy array representing the reconstructed continuous signal.
+    :return: A numpy array representing the reconstructed continuous signal approximation.
     :rtype: numpy.ndarray
     :raises ValueError: If the input spike train is empty or if the start_point dimensions do not match
         the spike train feature dimensions.

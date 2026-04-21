@@ -48,7 +48,7 @@ def zero_cross_step_forward(
     :return:
         - spikes: A numpy array representing the encoded spike train. (values in {0, +1})
         - thresholds: Per-feature or channel thresholds used for encoding, returned for use in decoding,
-                      shape (features or channels,).
+          shape (features or channels,).
     :rtype: tuple[numpy.ndarray, numpy.ndarray]
     :raises ValueError: If the input signal is empty or if the threshold dimensions do not match the signal features.
 
